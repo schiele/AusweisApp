@@ -11,7 +11,6 @@ GLink {
 	id: root
 
 	Accessible.focusable: true
-	Accessible.ignored: icon.source.toString() === "" && text === ""
 	Accessible.name: text
 	Accessible.role: Accessible.Button
 	activeFocusOnTab: !Accessible.ignored

@@ -47,7 +47,7 @@ void UiPluginModel::setUpdatePending(bool pNewIsUpdatePending)
 bool UiPluginModel::showUpdateInformationIfPending()
 {
 	const auto& generalSettings = Env::getSingleton<AppSettings>()->getGeneralSettings();
-	if (!(isUpdatePending() && generalSettings.isTrayIconEnabled() && generalSettings.isAutoUpdateCheck()))
+	if (!isUpdatePending() || !generalSettings.isAutoUpdateCheck())
 	{
 		return false;
 	}

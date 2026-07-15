@@ -63,6 +63,7 @@ class AbstractState
 		bool isCancellationByUser() const;
 		void updateStatus(const GlobalStatus& pStatus) const;
 		void updateStartPaosResult(const ECardApiResult& pStartPaosResult);
+		bool isActive() const;
 
 		void stopNfcScanIfNecessary(const QString& pError = QString()) const;
 

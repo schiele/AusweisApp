@@ -39,6 +39,18 @@ StateMaintainCardConnection::StateMaintainCardConnection(const QSharedPointer<Wo
 void StateMaintainCardConnection::run()
 {
 	auto context = getContext();
+
+	if (context->getStatus().isError())
+	{
+		auto failure = context->getFailureCode();
+		if (!failure.has_value())
+		{
+			failure = FailureCode::Reason::Maintain_Card_Connection_Unknown_Error;
+		}
+		Q_EMIT fireAbort(failure.value());
+		return;
+	}
+
 	const CardReturnCode lastPaceResult = context->getLastPaceResult();
 	qCDebug(statemachine) << "Last PACE result:" << lastPaceResult;
 

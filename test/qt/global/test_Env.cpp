@@ -335,7 +335,7 @@ class test_Env
 		{
 			Env::getSingleton<LogHandler>()->resetBacklog();
 			Env::clear();
-			qApp->processEvents();
+			QCoreApplication::instance()->processEvents();
 		}
 
 

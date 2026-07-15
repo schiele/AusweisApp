@@ -19,7 +19,8 @@ class AuthController
 	public:
 		static QSharedPointer<WorkflowRequest> createWorkflowRequest(const QUrl& pUrl,
 				const QVariant& pData = QVariant(),
-				const AuthContext::BrowserHandler& pBrowserHandler = AuthContext::BrowserHandler());
+				const AuthContext::BrowserHandler& pBrowserHandler = AuthContext::BrowserHandler(),
+				const AuthContext::HeaderMap& pCustomHeader = AuthContext::HeaderMap());
 
 		explicit AuthController(QSharedPointer<AuthContext> pContext);
 		~AuthController() override = default;

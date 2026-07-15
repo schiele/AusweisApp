@@ -28,6 +28,7 @@ class test_StateGetTcToken
 	private Q_SLOTS:
 		void initTestCase()
 		{
+			QCoreApplication::setApplicationVersion("1.0.0"_L1);
 			ResourceLoader::getInstance().init();
 			HttpServer::cPort = 0;
 		}
@@ -83,9 +84,23 @@ class test_StateGetTcToken
 		}
 
 
+		void test_SendRequest_data()
+		{
+			QTest::addColumn<AuthContext::HeaderMap>("customHeader");
+
+			QTest::newRow("empty header") << AuthContext::HeaderMap();
+			QTest::newRow("override header") << AuthContext::HeaderMap {
+				{"User-Agent", "DummyAgent"},
+				{"Authorization", "Bearer abc"},
+				};
+		}
+
+
 		void test_SendRequest()
 		{
-			const QSharedPointer<AuthContext> context(new AuthContext());
+			QFETCH(AuthContext::HeaderMap, customHeader);
+
+			const auto context = QSharedPointer<AuthContext>::create(false, QUrl(), AuthContext::BrowserHandler(), customHeader);
 			StateGetTcToken state(context);
 			QSignalSpy spyAbort(&state, &StateGetTcToken::fireAbort);
 
@@ -100,6 +115,18 @@ class test_StateGetTcToken
 			mMockNetworkManager.fireFinished();
 			QCOMPARE(spyAbort.count(), 1);
 			QCOMPARE(context->getFailureCode(), FailureCode::Reason::Get_TcToken_Network_Error);
+
+			const auto request = mMockNetworkManager.getLastRequest();
+			if (customHeader.isEmpty())
+			{
+				QCOMPARE(request.header(QNetworkRequest::UserAgentHeader).toByteArray(), "AusweisApp2/1.0.0 (TR-03124-1/1.4)"_ba);
+				QVERIFY(!request.hasRawHeader("authorization"));
+			}
+			else
+			{
+				QCOMPARE(request.header(QNetworkRequest::UserAgentHeader).toByteArray(), "DummyAgent"_ba);
+				QCOMPARE(request.rawHeader("authorization"), "Bearer abc"_ba);
+			}
 		}
 
 

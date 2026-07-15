@@ -121,11 +121,10 @@ void AbstractState::operator<<(const QMetaObject::Connection& connection)
 
 void AbstractState::clearConnections()
 {
-	for (const auto& connection : std::as_const(mConnections))
+	for (auto& connection : std::exchange(mConnections, {}))
 	{
 		QObject::disconnect(connection);
 	}
-	mConnections.clear();
 }
 
 
@@ -230,4 +229,10 @@ void AbstractState::onReaderStatusChanged(const ReaderManagerPluginInfo& pInfo) 
 #else
 	Q_UNUSED(pInfo)
 #endif
+}
+
+
+bool AbstractState::isActive() const
+{
+	return !mConnections.isEmpty();
 }

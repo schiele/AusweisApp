@@ -41,7 +41,7 @@ FlickableSectionPage {
 
 		function updateTileLimits() {
 			var newMaximumItemWidth = -1;
-			for (var index = 0; index < tileView.count; index++) {
+			for (let index = 0; index < tileView.count; index++) {
 				let item = tileView.itemAtIndex(index);
 				if (!item)
 					continue;

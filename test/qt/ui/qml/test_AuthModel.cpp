@@ -4,6 +4,7 @@
 
 #include "AuthModel.h"
 
+#include "AppSettings.h"
 #include "context/AuthContext.h"
 #include "context/SelfAuthContext.h"
 
@@ -222,23 +223,30 @@ class test_AuthModel
 
 		void test_resultViewButtonText_data()
 		{
+			QTest::addColumn<bool>("autoRedirect");
 			QTest::addColumn<QSharedPointer<AuthContext>>("context");
 			QTest::addColumn<QString>("buttonText");
 			QTest::addColumn<QUrl>("refreshUrl");
 
-			QTest::addRow("No context") << QSharedPointer<AuthContext>(nullptr) << "" << QUrl();
-			QTest::addRow("Auth no refresh Url") << QSharedPointer<AuthContext>(new AuthContext()) << "Back to start page" << QUrl();
-			QTest::addRow("Auth with refresh Url") << QSharedPointer<AuthContext>(new AuthContext()) << "Back to provider" << QUrl(QStringLiteral("not_empty"));
-			QTest::addRow("SelfAuth") << QSharedPointer<AuthContext>(new SelfAuthContext()) << "Back to start page" << QUrl();
+			QTest::addRow("No context (auto)") << true << QSharedPointer<AuthContext>(nullptr) << "" << QUrl();
+			QTest::addRow("No context (manual)") << false << QSharedPointer<AuthContext>(nullptr) << "" << QUrl();
+			QTest::addRow("Auth no refresh Url (auto)") << true << QSharedPointer<AuthContext>(new AuthContext()) << "Back to start page" << QUrl();
+			QTest::addRow("Auth no refresh Url (manual)") << false << QSharedPointer<AuthContext>(new AuthContext()) << "Back to start page" << QUrl();
+			QTest::addRow("Auth with refresh Url (auto)") << true << QSharedPointer<AuthContext>(new AuthContext()) << "Back to start page" << QUrl(QStringLiteral("not_empty"));
+			QTest::addRow("Auth with refresh Url (manual)") << false << QSharedPointer<AuthContext>(new AuthContext()) << "Back to provider" << QUrl(QStringLiteral("not_empty"));
+			QTest::addRow("SelfAuth (auto)") << true << QSharedPointer<AuthContext>(new SelfAuthContext()) << "Back to start page" << QUrl();
+			QTest::addRow("SelfAuth (manual)") << false << QSharedPointer<AuthContext>(new SelfAuthContext()) << "Back to start page" << QUrl();
 		}
 
 
 		void test_resultViewButtonText()
 		{
+			QFETCH(bool, autoRedirect);
 			QFETCH(QSharedPointer<AuthContext>, context);
 			QFETCH(QString, buttonText);
 			QFETCH(QUrl, refreshUrl);
 
+			Env::getSingleton<AppSettings>()->getGeneralSettings().setAutoRedirectAfterAuthentication(autoRedirect);
 			if (context)
 			{
 				context->setRefreshUrl(refreshUrl);
@@ -286,6 +294,28 @@ class test_AuthModel
 			model->resetAuthContext(context);
 
 			QCOMPARE(model->getResultViewButtonLink(), buttonLink);
+		}
+
+
+		void test_cancelWorkflowToQuit()
+		{
+			auto* const model = Env::getSingleton<AuthModel>();
+			QSignalSpy spy(model, &AuthModel::fireAutoFinishBeforeQuitChanged);
+
+			model->resetAuthContext(nullptr);
+			QCOMPARE(model->getAutoFinishBeforeQuit(), false);
+
+			model->cancelWorkflowToQuit();
+			QCOMPARE(spy.count(), 0);
+			QCOMPARE(model->getAutoFinishBeforeQuit(), false);
+
+			const QSharedPointer<AuthContext> context(new AuthContext());
+			model->resetAuthContext(context);
+			QCOMPARE(model->getAutoFinishBeforeQuit(), false);
+
+			model->cancelWorkflowToQuit();
+			QCOMPARE(spy.count(), 1);
+			QCOMPARE(model->getAutoFinishBeforeQuit(), true);
 		}
 
 

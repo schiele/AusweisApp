@@ -151,28 +151,20 @@ FlickableSectionPage {
 		//: MOBILE
 		title: qsTr("Smartphone as card reader")
 
-		GCollapsible {
-			alwaysReserveSelectionTitleHeight: true
-			contentBottomMargin: 0
-			contentTopMargin: 0
+		GMenuItem {
+			description: SettingsModel.deviceName
 			drawTopCorners: true
-			selectionTitle: expanded ? "" : SettingsModel.deviceName
+
 			//: MOBILE
 			title: qsTr("Device name")
 
-			GTextField {
-				function saveInput() {
-					focus = false;
-					SettingsModel.deviceName = text;
+			onClicked: root.push(deviceNameViewComponent)
+
+			Component {
+				id: deviceNameViewComponent
+
+				DeviceNameView {
 				}
-
-				Layout.margins: Style.dimens.pane_spacing
-				maximumLength: 33
-				text: SettingsModel.deviceName
-
-				onAccepted: saveInput()
-				onFocusChanged: if (!focus)
-					saveInput()
 			}
 		}
 		SettingsViewSeparator {
@@ -420,7 +412,7 @@ FlickableSectionPage {
 				Layout.rightMargin: Style.dimens.pane_padding
 				Layout.topMargin: Style.dimens.pane_padding
 
-				//: ALL_PLATFORMS
+				//: MOBILE
 				text: qsTr("New Logfile")
 
 				onClicked: {
@@ -433,7 +425,7 @@ FlickableSectionPage {
 				Layout.leftMargin: Style.dimens.pane_padding
 				Layout.rightMargin: Style.dimens.pane_padding
 
-				//: ALL_PLATFORMS
+				//: MOBILE
 				text: qsTr("15 days old Logfile")
 
 				onClicked: {

@@ -32,7 +32,7 @@ step(security unlock-keychain $ENV{KEYCHAIN_CREDENTIALS} $ENV{HOME}/Library/Keyc
 
 step(${T_CFG} --preset ${PRESET})
 
-if(IPA AND NOT REVIEW)
+if(IPA)
 	step(xcodebuild -configuration MinSizeRel -archivePath AusweisApp.xcarchive -scheme AusweisAppBinary -destination "generic/platform=${PLATFORM}" archive CHDIR ${T_BUILD_DIR})
 	step(xcodebuild -configuration MinSizeRel -archivePath AusweisApp.xcarchive -exportArchive -exportOptionsPlist exportOptions.plist -exportPath . CHDIR ${T_BUILD_DIR})
 else()

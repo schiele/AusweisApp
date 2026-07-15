@@ -147,6 +147,11 @@ void LogFilterModel::setSourceModel(QAbstractItemModel* pSourceModel)
 
 void LogFilterModel::configureLevel(const QString& pLevel, bool pEnabled)
 {
+	if (pEnabled == mSelectedLevels.contains(pLevel))
+	{
+		return;
+	}
+
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 10, 0))
 	beginFilterChange();
 #endif
@@ -172,6 +177,11 @@ void LogFilterModel::configureLevel(const QString& pLevel, bool pEnabled)
 
 void LogFilterModel::configureCategory(const QString& pCategory, bool pEnabled)
 {
+	if (pEnabled == mSelectedCategories.contains(pCategory))
+	{
+		return;
+	}
+
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 10, 0))
 	beginFilterChange();
 #endif

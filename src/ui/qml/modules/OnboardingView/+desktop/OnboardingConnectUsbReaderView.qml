@@ -49,7 +49,7 @@ BaseOnboardingView {
 		showHint: false
 	}
 	GContinueButton {
-		enabled: readerView.hasConnectedReader
+		enabled: ReaderModel.hasConnectedReader
 
 		onClicked: root.continueOnboarding()
 	}

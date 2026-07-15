@@ -14,7 +14,6 @@ GPane {
 	id: root
 
 	property bool enablePaneOptic: true
-	readonly property bool hasConnectedReader: readerRepeater.count > 0
 	readonly property string hintTextBase: "%1<br>%2".arg(
 	//: DESKTOP
 	qsTr("After connecting a new card reader it may take a few seconds to recognize the driver.")).arg(
@@ -41,11 +40,8 @@ GPane {
 		Accessible.role: Accessible.List
 		Layout.topMargin: -root.contentSpacing
 		spacing: Style.dimens.pane_spacing
-		visible: root.hasConnectedReader
 
 		Repeater {
-			id: readerRepeater
-
 			model: ReaderModel.sortedModel
 
 			delegate: CardReaderDelegate {
@@ -73,20 +69,9 @@ GPane {
 			onClicked: readerScanEnabler.restartScan()
 		}
 	}
-	CardReaderDelegate {
-		Layout.fillWidth: true
-		readerHTMLDescription: ""
-		readerImagePath: "qrc:///images/desktop/default_reader.png"
-		readerInstalled: false
-		//: DESKTOP
-		readerName: qsTr("No card reader connected")
-		readerSupported: true
-		showInstalledSupportedIcon: false
-		visible: !root.hasConnectedReader
-	}
 	GSeparator {
 		Layout.fillWidth: true
-		visible: !root.hasConnectedReader && hintAndDateText.visible
+		visible: hintAndDateText.visible
 	}
 	RowLayout {
 		id: hintAndDateText

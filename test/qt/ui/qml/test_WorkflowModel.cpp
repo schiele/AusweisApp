@@ -246,12 +246,12 @@ class test_WorkflowModel
 			QTest::addRow("no_prs_Card_ValidityVerificationFailed") << false << GlobalStatus::Code::Card_ValidityVerificationFailed
 																	<< QString()
 																	<< QString()
-																	<< "Contact your local citizens' office (Bürgeramt) to apply for a new ID card or to unblock the ID card.";
+																	<< tr("Contact your local citizens' office (B\u00FCrgeramt) to apply for a new ID card or to unblock the ID card.");
 
 			QTest::addRow("prs_Card_ValidityVerificationFailed") << true << GlobalStatus::Code::Card_ValidityVerificationFailed
 																 << QString()
 																 << QString()
-																 << "Contact your local citizens' office (Bürgeramt) to apply for a new ID card or to unblock the ID card.";
+																 << tr("Contact your local citizens' office (B\u00FCrgeramt) to apply for a new ID card or to unblock the ID card.");
 		}
 
 
@@ -277,6 +277,39 @@ class test_WorkflowModel
 			context->setStatus(statusCode);
 
 			QCOMPARE(model.getStatusHintText(), text);
+		}
+
+
+		void test_getStatusCodeHelpInfos_data()
+		{
+			QTest::addColumn<GlobalStatus::Code>("statusCode");
+
+			QTest::addRow("Masked Error") << GlobalStatus::Code::Workflow_Network_Ssl_Connection_Unsupported_Algorithm_Or_Length;
+			QTest::addRow("Unmasked Error") << GlobalStatus::Code::Card_Not_Found;
+			QTest::addRow("No error") << GlobalStatus::Code::No_Error;
+		}
+
+
+		void test_getStatusCodeHelpInfos()
+		{
+			QFETCH(GlobalStatus::Code, statusCode);
+
+			auto context = QSharedPointer<WorkflowContext>(new TestWorkflowContext());
+			context->setStatus(GlobalStatus(statusCode));
+			auto* const model = Env::getSingleton<WorkflowModel>();
+			model->resetWorkflowContext(context);
+
+			if (context->getStatus().isMessageMasked())
+			{
+				QCOMPARE(model->getStatusHintText(), tr("If this doesn't help, contact our support."));
+				QVERIFY(model->getStatusHelpLink().contains("https://www.ausweisapp.bund.de"_L1));
+			}
+			else
+			{
+				QCOMPARE(model->getStatusHelpLink(), QString());
+				QCOMPARE(model->getStatusHintText(), QString());
+			}
+
 		}
 
 

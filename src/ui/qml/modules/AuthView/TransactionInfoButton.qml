@@ -13,13 +13,13 @@ GAbstractButton {
 	id: root
 
 	property alias showDataNotRequiredText: dataNotRequiredText.visible
-	property alias transactionText: transactionText.text
+	property alias transactionText: contentText.text
 
 	//: ALL_PLATFORMS
 	Accessible.description: enabled ? qsTr("Show more information about the transaction.") : qsTr("Information about the transaction.")
-	Accessible.name: subheading.text + ". " + transactionTextMetrics.elidedText + (showDataNotRequiredText ? ". " + dataNotRequiredText.text : "")
+	Accessible.name: subheading.text + ". " + contentTextMetrics.elidedText + (showDataNotRequiredText ? ". " + dataNotRequiredText.text : "")
 	Accessible.role: enabled ? Accessible.Button : Accessible.StaticText
-	enabled: transactionText.truncated
+	enabled: contentText.truncated
 	padding: Style.dimens.pane_padding
 
 	background: GPaneBackground {
@@ -47,7 +47,7 @@ GAbstractButton {
 				text: qsTr("Transactional information")
 			}
 			GText {
-				id: transactionText
+				id: contentText
 
 				Accessible.ignored: true
 				elide: Text.ElideRight
@@ -57,12 +57,12 @@ GAbstractButton {
 				visible: !!text
 
 				TextMetrics {
-					id: transactionTextMetrics
+					id: contentTextMetrics
 
-					elide: transactionText.elide
-					elideWidth: transactionText.width * transactionText.maximumLineCount
-					font: transactionText.font
-					text: transactionText.text
+					elide: contentText.elide
+					elideWidth: contentText.width * contentText.maximumLineCount
+					font: contentText.font
+					text: contentText.text
 				}
 			}
 			GText {
@@ -77,7 +77,7 @@ GAbstractButton {
 			Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
 			source: "qrc:///images/material_arrow_right.svg"
 			sourceSize.height: Style.dimens.small_icon_size
-			tintColor: transactionText.color
+			tintColor: contentText.color
 			visible: root.enabled
 		}
 	}

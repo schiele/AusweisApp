@@ -40,12 +40,6 @@ class DatagramHandlerMock
 		}
 
 
-		[[nodiscard]] QList<QNetworkAddressEntry> getAllBroadcastEntries() const override
-		{
-			return QList<QNetworkAddressEntry>();
-		}
-
-
 		void send(const QByteArray&, const QList<QNetworkAddressEntry>&) override
 		{
 		}
@@ -125,7 +119,7 @@ class test_RemoteIfdClient
 			QVERIFY(mIfdList.isNull());
 			QVERIFY(mRemoteConnectorMock.isNull());
 			Env::getSingleton<LogHandler>()->resetBacklog();
-			qApp->processEvents();
+			QCoreApplication::instance()->processEvents();
 		}
 
 

@@ -56,7 +56,7 @@ FlickableSectionPage {
 
 			model: RemoteServiceModel.availablePairedDevices
 
-			delegate: DevicesListDelegate {
+			delegate: DevicesListButton {
 				Layout.fillWidth: true
 				description: root.allowUsage ?
 				//: MOBILE
@@ -82,7 +82,7 @@ FlickableSectionPage {
 
 			model: RemoteServiceModel.unavailablePairedDevices
 
-			delegate: DevicesListDelegate {
+			delegate: DevicesListButton {
 				Layout.fillWidth: true
 				//: MOBILE
 				description: qsTr("Tap to remove device")
@@ -124,7 +124,7 @@ FlickableSectionPage {
 			model: RemoteServiceModel.availableDevicesInPairingMode
 			visible: ApplicationModel.wifiEnabled && count > 0
 
-			delegate: DevicesListDelegate {
+			delegate: DevicesListButton {
 				Layout.fillWidth: true
 				//: MOBILE
 				description: qsTr("Tap to pair")

@@ -75,6 +75,6 @@ CheckBox {
 	FocusFrame {
 		id: focusFrame
 
-		size: root.textStyle.textSize / 8
+		size: description.textStyle.textSize / 8
 	}
 }

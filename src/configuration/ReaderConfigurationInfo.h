@@ -7,6 +7,7 @@
 #include "UpdatableFile.h"
 
 #include <QCoreApplication>
+#include <QSet>
 #include <QSharedData>
 #include <QString>
 

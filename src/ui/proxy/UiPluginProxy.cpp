@@ -49,12 +49,21 @@ bool UiPluginProxy::listen()
 			qCWarning(rproxy) << "UDP proxy port failed:" << mServer->getServerPort();
 		}
 
-		Q_EMIT fireUiDominationRequest(this, tr("Reverse proxy plugin is enabled"));
 		return true;
 	}
 
-	mServer.reset();
+	mServer.clear();
 	return false;
+}
+
+
+void UiPluginProxy::onApplicationStarted()
+{
+	if (mServer)
+	{
+		//: DESKTOP
+		Q_EMIT fireUiDominationRequest(this, tr("Reverse proxy plugin is enabled"));
+	}
 }
 
 

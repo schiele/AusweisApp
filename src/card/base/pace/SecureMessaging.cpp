@@ -4,7 +4,6 @@
 
 #include "apdu/SecureMessagingCommand.h"
 #include "apdu/SecureMessagingResponse.h"
-#include "asn1/ASN1Util.h"
 #include "pace/SecureMessaging.h"
 
 #include <QLoggingCategory>
@@ -100,7 +99,7 @@ CommandApdu SecureMessaging::encrypt(const CommandApdu& pCommandApdu)
 		QByteArray encryptedData = mCipher.encrypt(paddedASN1Struct).prepend(0x01);
 
 		auto encryptedDataObject = newObject<SM_ENCRYPTED_DATA>();
-		Asn1OctetStringUtil::setValue(encryptedData, encryptedDataObject.data());
+		encryptedDataObject->setValue(encryptedData);
 		formattedEncryptedData = encodeObject(encryptedDataObject.data());
 	}
 
@@ -109,7 +108,7 @@ CommandApdu SecureMessaging::encrypt(const CommandApdu& pCommandApdu)
 	if (pCommandApdu.getLe() > CommandApdu::NO_LE)
 	{
 		auto protectedLeObject = newObject<SM_PROTECTED_LE>();
-		Asn1OctetStringUtil::setValue(pCommandApdu.generateLengthField(pCommandApdu.getLe()), protectedLeObject.data());
+		protectedLeObject->setValue(pCommandApdu.generateLengthField(pCommandApdu.getLe()));
 		securedLe = encodeObject(protectedLeObject.data());
 	}
 	QByteArray mac = createMac(securedHeader, formattedEncryptedData, securedLe);
@@ -186,7 +185,7 @@ QByteArray SecureMessaging::createMac(const QByteArray& pSecuredHeader,
 
 	QByteArray mac = mCipherMac.generate(dataToMac);
 	auto macObject = newObject<SM_CHECKSUM>();
-	Asn1OctetStringUtil::setValue(mac, macObject.data());
+	macObject->setValue(mac);
 	return encodeObject(macObject.data());
 }
 
@@ -234,18 +233,18 @@ ResponseApdu SecureMessaging::encrypt(const ResponseApdu& pResponseApdu)
 		QByteArray encryptedData = mCipher.encrypt(paddedResponseData).prepend(0x01);
 
 		auto encryptedDataObject = newObject<SM_ENCRYPTED_DATA>();
-		Asn1OctetStringUtil::setValue(encryptedData, encryptedDataObject.data());
+		encryptedDataObject->setValue(encryptedData);
 		formattedEncryptedData = encodeObject(encryptedDataObject.data());
 	}
 
 	const QByteArray status = pResponseApdu.getStatusBytes();
 	auto formattedStatus = newObject<SM_PROCESSING_STATUS>();
-	Asn1OctetStringUtil::setValue(status, formattedStatus.data());
+	formattedStatus->setValue(status);
 	formattedEncryptedData += encodeObject(formattedStatus.data());
 
 	QByteArray mac = mCipherMac.generate(getSendSequenceCounter() + padToCipherBlockSize(formattedEncryptedData));
 	auto macObject = newObject<SM_CHECKSUM>();
-	Asn1OctetStringUtil::setValue(mac, macObject.data());
+	macObject->setValue(mac);
 
 	return ResponseApdu(formattedEncryptedData + encodeObject(macObject.data()) + status);
 }

@@ -27,11 +27,12 @@ void NfcReader::targetDetected(QNearFieldTarget* pTarget)
 	{
 		return;
 	}
-	qCDebug(card_nfc) << "targetDetected, type:" << pTarget->type();
+	qCDebug(card_nfc) << "targetDetected:" << pTarget << ", type: " << pTarget->type();
 
 	if (mCard)
 	{
-		qCDebug(card_nfc) << "Card already inserted";
+		qCDebug(card_nfc) << "Card already inserted, enqueuing new" << pTarget;
+		mTargetQueue.enqueue(pTarget);
 		return;
 	}
 
@@ -61,9 +62,14 @@ void NfcReader::targetDetected(QNearFieldTarget* pTarget)
 			});
 	fetchCardInfo();
 
-	if (!getCard())
+	if (mCard.isNull() || !mCard->isValid())
 	{
 		removeCardInfo();
+		return;
+	}
+
+	if (!mCard->matchesTarget(pTarget))
+	{
 		return;
 	}
 
@@ -95,8 +101,13 @@ void NfcReader::targetDetected(QNearFieldTarget* pTarget)
 
 void NfcReader::targetLost(const QNearFieldTarget* pTarget)
 {
-	qCDebug(card_nfc) << "targetLost";
-	if (pTarget != nullptr && mCard && mCard->invalidateTarget(pTarget))
+	if (pTarget == nullptr)
+	{
+		return;
+	}
+	qCDebug(card_nfc) << "targetLost:" << pTarget;
+
+	if (mCard && mCard->invalidateTarget(pTarget))
 	{
 		mCard.reset();
 
@@ -107,6 +118,13 @@ void NfcReader::targetLost(const QNearFieldTarget* pTarget)
 			qCInfo(card_nfc) << "Card removed";
 			Q_EMIT fireCardRemoved(getReaderInfo());
 		}
+	}
+
+	mTargetQueue.removeAll(pTarget);
+	if (!mCard && !mTargetQueue.isEmpty())
+	{
+		qCDebug(card_nfc) << "Using enqueued" << mTargetQueue.head();
+		targetDetected(mTargetQueue.dequeue());
 	}
 }
 
@@ -120,6 +138,7 @@ void NfcReader::setProgressMessage(const QString& pMessage)
 NfcReader::NfcReader()
 	: ConnectableReader(ReaderManagerPluginType::NFC, QStringLiteral("NFC"))
 	, mNfManager()
+	, mTargetQueue()
 	, mCard()
 {
 	setInfoBasicReader(true);

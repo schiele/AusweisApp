@@ -29,14 +29,14 @@ class test_IfdStatus
 		{
 			Env::getSingleton<LogHandler>()->init();
 			Env::getSingleton<VolatileSettings>()->setUsedAsSDK(false);
-			qApp->processEvents();
+			QCoreApplication::instance()->processEvents();
 		}
 
 
 		void cleanup()
 		{
 			Env::getSingleton<LogHandler>()->resetBacklog();
-			qApp->processEvents();
+			QCoreApplication::instance()->processEvents();
 		}
 
 

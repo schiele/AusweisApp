@@ -1,4 +1,4 @@
-From 7ea23325fadbc0d4487c9d4ddab92e2dd02d18a4 Mon Sep 17 00:00:00 2001
+From adc9e85cb6823ebd3376c926f6a6c7c60c930dab Mon Sep 17 00:00:00 2001
 From: Michael Weghorn <m.weghorn@posteo.de>
 Date: Tue, 23 Sep 2025 12:48:46 +0200
 Subject: a11y: Fix cursor-based text{Before,After}Offset

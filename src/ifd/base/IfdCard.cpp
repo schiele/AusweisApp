@@ -40,8 +40,8 @@ bool IfdCard::sendMessage(const QSharedPointer<const IfdMessage>& pMessage, IfdM
 	mWaitingForAnswer = true;
 	mExpectedAnswerType = pExpectedAnswer;
 
-	const auto& connectionMR = connect(mDispatcher.data(), &IfdDispatcher::fireReceived, this, &IfdCard::onMessageReceived, Qt::DirectConnection);
-	const auto& connectionDC = connect(mDispatcher.data(), &IfdDispatcherClient::fireClosed, this, &IfdCard::onDispatcherClosed, Qt::DirectConnection);
+	auto connectionMR = connect(mDispatcher.data(), &IfdDispatcher::fireReceived, this, &IfdCard::onMessageReceived, Qt::DirectConnection);
+	auto connectionDC = connect(mDispatcher.data(), &IfdDispatcherClient::fireClosed, this, &IfdCard::onDispatcherClosed, Qt::DirectConnection);
 	const auto& localCopy = mDispatcher;
 	QMetaObject::invokeMethod(localCopy.data(), [localCopy, pMessage] {
 				localCopy->send(pMessage);

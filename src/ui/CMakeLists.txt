@@ -27,4 +27,8 @@ endif()
 
 if(TARGET ${Qt}::Qml)
 	add_subdirectory(qml)
+	if(DESKTOP)
+		add_subdirectory(dev)
+	endif()
 endif()
+

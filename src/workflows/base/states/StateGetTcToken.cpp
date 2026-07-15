@@ -89,6 +89,11 @@ void StateGetTcToken::sendRequest(const QUrl& pUrl)
 {
 	qCDebug(network) << "Fetch TCToken URL:" << pUrl;
 	QNetworkRequest request(pUrl);
+	const auto& customHeader = getContext()->getCustomHeader();
+	for (auto [key, value] : customHeader.asKeyValueRange())
+	{
+		request.setRawHeader(key, value);
+	}
 	mReply = Env::getSingleton<NetworkManager>()->get(request);
 	*this << connect(mReply.data(), &QNetworkReply::sslErrors, this, &StateGetTcToken::onSslErrors);
 	*this << connect(mReply.data(), &QNetworkReply::encrypted, this, &StateGetTcToken::onSslHandshakeDone);

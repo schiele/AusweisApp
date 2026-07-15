@@ -117,7 +117,7 @@ QSharedPointer<QNetworkReply> HttpServerRequestor::waitForReply(QSharedPointer<Q
 	}
 
 	mTimer.start(pTimeOut);
-	const auto connection = connect(pReply.data(), &QNetworkReply::finished, this, &HttpServerRequestor::finished);
+	auto connection = connect(pReply.data(), &QNetworkReply::finished, this, &HttpServerRequestor::finished);
 	mEventLoop.exec();
 
 	if (pReply->isFinished())

@@ -52,7 +52,6 @@
     {
       "name": "ci-macos",
       "inherits": "ci",
-      "toolchainFile": "${sourceParentDir}/cmake/macOS.toolchain.cmake",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "RELEASE"
       }

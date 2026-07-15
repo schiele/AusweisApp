@@ -37,6 +37,7 @@ if(isMultiConfig)
 endif()
 
 include(Version)
+find_package(Governikus QUIET)
 project(${PROJECT_NAME} VERSION ${PROJECT_VERSION} LANGUAGES ${LANGUAGES})
 
 if(ANDROID AND NOT GOVERNIKUS_TOOLCHAIN_FILE)

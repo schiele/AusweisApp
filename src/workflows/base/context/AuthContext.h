@@ -52,12 +52,14 @@ class AuthContext
 
 	public:
 		using BrowserHandler = std::function<QString (const QSharedPointer<AuthContext>&)>;
+		using HeaderMap = QMap<QByteArray, QByteArray>;
 
 	private:
 		bool mTcTokenNotFound;
 		bool mErrorReportedToServer;
 		bool mReceivedBrowserSendFailed;
 		bool mSkipMobileRedirect;
+		bool mAutoFinishBeforeQuit;
 		bool mChangeTransportPin;
 
 		QUrl mActivationUrl;
@@ -84,6 +86,7 @@ class AuthContext
 		QByteArray mSslSession;
 		QByteArray mSslSessionPsk;
 		BrowserHandler mBrowserHandler;
+		HeaderMap mCustomHeader;
 
 		const QList<QSharedPointer<const CVCertificate>>& logCertificates(const QString& pSource, const QList<QSharedPointer<const CVCertificate>>& pCertificates) const;
 
@@ -94,10 +97,10 @@ class AuthContext
 		void fireRefreshUrlChanged();
 
 	protected:
-		explicit AuthContext(const Action pAction, bool pActivateUi = true, const QUrl& pActivationUrl = QUrl(), const BrowserHandler& pHandler = BrowserHandler());
+		explicit AuthContext(const Action pAction, bool pActivateUi = true, const QUrl& pActivationUrl = QUrl(), const BrowserHandler& pHandler = BrowserHandler(), const HeaderMap& pCustomHeader = HeaderMap());
 
 	public:
-		explicit AuthContext(bool pActivateUi = true, const QUrl& pActivationUrl = QUrl(), const BrowserHandler& pHandler = BrowserHandler());
+		explicit AuthContext(bool pActivateUi = true, const QUrl& pActivationUrl = QUrl(), const BrowserHandler& pHandler = BrowserHandler(), const HeaderMap& pCustomHeader = HeaderMap());
 
 		[[nodiscard]] QUrl getActivationUrl() const
 		{
@@ -123,6 +126,18 @@ class AuthContext
 		void setErrorReportedToServer(bool pErrorReportedToServer)
 		{
 			mErrorReportedToServer = pErrorReportedToServer;
+		}
+
+
+		[[nodiscard]] bool autoFinishBeforeQuit() const
+		{
+			return mAutoFinishBeforeQuit;
+		}
+
+
+		void requestAutoFinishBeforeQuit()
+		{
+			mAutoFinishBeforeQuit = true;
 		}
 
 
@@ -187,6 +202,12 @@ class AuthContext
 		[[nodiscard]] BrowserHandler getBrowserHandler() const
 		{
 			return mBrowserHandler;
+		}
+
+
+		[[nodiscard]] const HeaderMap& getCustomHeader() const
+		{
+			return mCustomHeader;
 		}
 
 

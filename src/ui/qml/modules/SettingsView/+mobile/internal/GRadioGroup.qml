@@ -5,12 +5,21 @@
 import QtQuick.Controls
 
 import Governikus.Global
+import Governikus.Type
 
 GCollapsible {
 	id: root
 
-	selectionIcon: radioGroup.checkedButton ? radioGroup.checkedButton.icon.source : ""
-	selectionTitle: radioGroup.checkedButton ? radioGroup.checkedButton.text : ""
+	function onOptionSelected() {
+		if (expanded && !ApplicationModel.screenReaderRunning) {
+			expanded = false;
+		}
+	}
+
+	//: MOBILE
+	a11yDescription: description !== "" ? qsTr("Currently selected is %1").arg(description) : ""
+	description: radioGroup.checkedButton ? radioGroup.checkedButton.text : ""
+	icon: radioGroup.checkedButton ? radioGroup.checkedButton.icon.source : ""
 
 	ButtonGroup {
 		id: radioGroup

@@ -68,7 +68,7 @@ class test_LogHandler
 			Env::getSingleton<LogHandler>()->resetBacklog();
 			Env::getSingleton<LogHandler>()->setUseHandler(true);
 			Env::getSingleton<LogHandler>()->setLogFile(true);
-			qApp->processEvents();
+			QCoreApplication::instance()->processEvents();
 		}
 
 

@@ -13,14 +13,14 @@ CardNotActivatedBaseView {
 	id: root
 
 	onDecisionHasCodeClicked: root.pushSubView(true, {
-		titleBarSettings: titleBarSettings.createObject(root)
+		titleBarSettings: titleBarSettingsComponent.createObject(root)
 	})
 	onDecisionHasNoCodeClicked: root.pushSubView(false, {
-		titleBarSettings: titleBarSettings.createObject(root)
+		titleBarSettings: titleBarSettingsComponent.createObject(root)
 	})
 
 	Component {
-		id: titleBarSettings
+		id: titleBarSettingsComponent
 
 		TitleBarSettings {
 			navigationAction: NavigationAction.Action.Back

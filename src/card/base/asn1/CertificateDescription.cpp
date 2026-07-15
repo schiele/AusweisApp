@@ -188,7 +188,7 @@ QSet<QString> CertificateDescription::getCommCertificates() const
 		for (int i = 0; i < size; i++)
 		{
 			const ASN1_OCTET_STRING* octetString = sk_ASN1_OCTET_STRING_value(mCommCertificates, i);
-			QByteArray byteBuf(reinterpret_cast<char*>(octetString->data), octetString->length);
+			const QByteArray byteBuf = Asn1OctetStringUtil::getValue(octetString);
 			commCerts += QString::fromLatin1(byteBuf.toHex().toUpper());
 		}
 	}

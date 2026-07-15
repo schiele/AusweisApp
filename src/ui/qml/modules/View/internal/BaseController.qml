@@ -13,15 +13,22 @@ Item {
 	id: root
 
 	property bool contentIsScrolled: false
+	property Item lastA11yFocusedItem: null
 	property bool preventScreenshots: false
 	property ProgressTracker progress: null
-	property bool skipFocusUpdate: false
+	property bool skipInitialFocusUpdate: false
 
 	signal activate
 	signal leaveView
 
 	function updateFocus() {
-		if (!visible || skipFocusUpdate) {
+		if (!visible) {
+			return;
+		}
+		if (skipInitialFocusUpdate && !lastA11yFocusedItem) {
+			return;
+		}
+		if (d.forceFocusRestoreA11y()) {
 			return;
 		}
 		if (d.forceFocusFirstA11yItem(root)) {
@@ -42,7 +49,7 @@ Item {
 			if (!view.visible || !ApplicationModel.screenReaderRunning) {
 				return false;
 			}
-			let isA11yFocusable = view.Accessible && view.Accessible.focusable && !view.Accessible.ignored;
+			let isA11yFocusable = !Utils.isAccessibleIgnored(view) && view.Accessible.focusable;
 			if (isA11yFocusable) {
 				view.forceActiveFocus(Qt.MouseFocusReason);
 				return true;
@@ -54,6 +61,14 @@ Item {
 				}
 			}
 			return false;
+		}
+		function forceFocusRestoreA11y() {
+			if (!ApplicationModel.screenReaderRunning || !root.lastA11yFocusedItem) {
+				return false;
+			}
+			root.lastA11yFocusedItem.forceActiveFocus(Qt.MouseFocusReason);
+			root.lastA11yFocusedItem = null;
+			return true;
 		}
 	}
 }

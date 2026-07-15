@@ -38,11 +38,11 @@ OnboardingStartView {
 
 			onContinueOnboarding: push(preparationInfoView)
 			onLeaveView: root.pop()
-			onSetupDesktopUsage: push(setupDesktopUsage)
+			onSetupDesktopUsage: push(setupDesktopUsageComponent)
 		}
 	}
 	Component {
-		id: setupDesktopUsage
+		id: setupDesktopUsageComponent
 
 		SetupDesktopUsage {
 			title: root.title

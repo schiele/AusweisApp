@@ -127,21 +127,21 @@ QByteArray CHAT::getTemplate() const
 
 AccessRole CHAT::getAccessRole() const
 {
-	if (mTemplate->length == 0)
+	if (ASN1_STRING_length(mTemplate) == 0)
 	{
 		return AccessRole::UNKNOWN;
 	}
-	return AccessRole(mTemplate->data[0] >> 6);
+	return AccessRole(ASN1_STRING_get0_data(mTemplate)[0] >> 6);
 }
 
 
 QSet<AccessRight> CHAT::getAccessRights() const
 {
 	quint64 accessRoleAndRights = 0;
-	for (int i = 0; i < mTemplate->length; ++i)
+	for (int i = 0; i < ASN1_STRING_length(mTemplate); ++i)
 	{
 		accessRoleAndRights <<= 8;
-		accessRoleAndRights += mTemplate->data[i];
+		accessRoleAndRights += ASN1_STRING_get0_data(mTemplate)[i];
 	}
 
 	QSet<AccessRight> accessRights;
@@ -195,7 +195,7 @@ void chat_st::setTemplateBit(uint pBitIndex, bool pOn)
 		qCCritical(card) << "Setting template bit > 39 not supported";
 		return;
 	}
-	if (mTemplate->length == 0)
+	if (ASN1_STRING_length(mTemplate) == 0)
 	{
 		const std::array<uchar, 5> nullBytes {0, 0, 0, 0, 0};
 		ASN1_OCTET_STRING_set(mTemplate, nullBytes.data(), static_cast<int>(nullBytes.size()));
@@ -204,12 +204,15 @@ void chat_st::setTemplateBit(uint pBitIndex, bool pOn)
 	// because pBitIndex < 40, it follows that pBitIndex / 8 <= 4, so byteNumber has no underflow
 	auto byteNumber = static_cast<quint8>(4 - (pBitIndex / 8));
 	quint8 bitNumberInByte = pBitIndex % 8;
+	auto templateData = Asn1OctetStringUtil::getValue(mTemplate);
 	if (pOn)
 	{
-		mTemplate->data[byteNumber] = static_cast<uchar>(mTemplate->data[byteNumber] | (0x01 << bitNumberInByte));
+		templateData[byteNumber] = static_cast<char>(templateData[byteNumber] | (0x01 << bitNumberInByte));
 	}
 	else
 	{
-		mTemplate->data[byteNumber] = static_cast<uchar>(mTemplate->data[byteNumber] & ~(0x01 << bitNumberInByte));
+		templateData[byteNumber] = static_cast<char>(templateData[byteNumber] & ~(0x01 << bitNumberInByte));
 	}
+
+	Asn1OctetStringUtil::setValue(templateData, mTemplate);
 }

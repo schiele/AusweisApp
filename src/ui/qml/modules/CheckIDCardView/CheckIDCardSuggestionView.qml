@@ -78,8 +78,13 @@ CheckResultSuggestionView {
 
 		//: ALL_PLATFORMS
 		continueButtonText: qsTr("Retry")
+		hintButtonLink: root.supportedDevicesLink
 		//: ALL_PLATFORMS
-		text: qsTr("It was not possible to establish a stable connection with your ID card.<br><br>Please start the check again. Try a different card position and make sure not to move the card during the test.<br><br>If a connection to the ID card cannot be established even with different card positions, this indicates that the NFC interface of your mobile device cannot supply the ID card with sufficient power.<br><br>Smartphones compatible with %1 can be found on our <a href=\"%2\">website</a>.").arg(Qt.application.name).arg(root.supportedDevicesLink)
+		hintButtonText: qsTr("Open website")
+		//: ALL_PLATFORMS
+		hintText: qsTr("Smartphones compatible with %1 can be found on our website.").arg(Qt.application.name)
+		//: ALL_PLATFORMS
+		text: qsTr("It was not possible to establish a stable connection with your ID card.<br><br>Please start the check again. Try a different card position and make sure not to move the card during the test.<br><br>If a connection to the ID card cannot be established even with different card positions, this indicates that the NFC interface of your mobile device cannot supply the ID card with sufficient power.")
 		//: ALL_PLATFORMS
 		title: qsTr("ID card access failed")
 

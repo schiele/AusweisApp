@@ -15,24 +15,25 @@ RoundedRectangle {
 	id: root
 
 	property int iconHeight: UiPluginModel.scaleFactor * 105
+	required property string readerDriverUrl
 	required property string readerHTMLDescription
 	required property url readerImagePath
 	required property bool readerInstalled
 	required property string readerName
 	required property bool readerSupported
-	property bool showInstalledSupportedIcon: true
+	required property bool showStatusIcon
 
 	//: DESKTOP Text read by screen reader if the text contains a web link to a card reader driver which may be opened.
-	Accessible.name: readerName + ". " + ApplicationModel.stripHtmlTags(readerHTMLDescription) + ". " + (textDescription.hasLink ? qsTr("Press space to open link.") : "")
-	Accessible.role: textDescription.hasLink ? Accessible.Button : Accessible.ListItem
-	activeFocusOnTab: textDescription.hasLink
+	Accessible.name: readerName + ". " + ApplicationModel.stripHtmlTags(readerHTMLDescription) + " " + driverUrl.Accessible.name + ". " + (driverUrl.hasLink ? qsTr("Press space to open link.") : "")
+	Accessible.role: driverUrl.hasLink ? Accessible.Button : Accessible.ListItem
+	activeFocusOnTab: driverUrl.hasLink
 	color: Style.color.paneSublevel.background.basic_unchecked
 	implicitHeight: rowLayout.implicitHeight
 	implicitWidth: rowLayout.implicitWidth
 
-	Keys.onEnterPressed: textDescription.tryActivateLink()
-	Keys.onReturnPressed: textDescription.tryActivateLink()
-	Keys.onSpacePressed: textDescription.tryActivateLink()
+	Keys.onEnterPressed: driverUrl.click()
+	Keys.onReturnPressed: driverUrl.click()
+	Keys.onSpacePressed: driverUrl.click()
 
 	FocusFrame {
 	}
@@ -80,19 +81,28 @@ RoundedRectangle {
 			spacing: Style.dimens.text_spacing
 
 			GText {
-				Accessible.ignored: true
 				Layout.alignment: Qt.AlignLeft
 				clip: true
 				text: root.readerName
 				textStyle: Style.text.headline
 			}
 			GText {
-				id: textDescription
-
-				Accessible.ignored: true
 				Layout.alignment: Qt.AlignLeft
 				text: root.readerHTMLDescription
 				visible: text !== ""
+			}
+			GLink {
+				id: driverUrl
+
+				readonly property bool hasLink: text !== ""
+
+				Accessible.role: Accessible.Link
+				Layout.alignment: Qt.AlignLeft
+				horizontalPadding: 0
+				text: root.readerDriverUrl
+				visible: text !== ""
+
+				onClicked: Qt.openUrlExternally(text)
 			}
 		}
 		StatusAnimation {
@@ -107,7 +117,7 @@ RoundedRectangle {
 				}
 				return Symbol.Type.ERROR;
 			}
-			visible: root.showInstalledSupportedIcon
+			visible: root.showStatusIcon
 		}
 	}
 }

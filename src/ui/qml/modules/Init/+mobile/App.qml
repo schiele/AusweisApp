@@ -105,6 +105,10 @@ ApplicationWindow {
 		}
 	}
 
+	palette {
+		toolTipBase: Style.color.background
+		toolTipText: Style.color.textNormal.basic_unchecked
+	}
 	QtObject {
 		id: d
 

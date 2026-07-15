@@ -279,6 +279,9 @@ Controller {
 			animation: ChangePinModel.statusCodeAnimation
 			//: MOBILE
 			buttonText: qsTr("Back to start page")
+			hintButtonLink: ChangePinModel.statusHelpLink
+			//: DESKTOP
+			hintButtonText: hintButtonLink !== "" ? qsTr("Open website") : ""
 			hintText: ChangePinModel.statusHintText
 			progress: progressTracker
 			statusCode: ChangePinModel.statusCode

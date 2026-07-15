@@ -73,10 +73,11 @@ void IfdListImpl::onProcessUnresponsiveRemoteReaders()
 {
 	const QTime threshold(QTime::currentTime().addMSecs(-mReaderResponsiveTimeout));
 
-	erase_if(mResponsiveList, [this, &threshold](const auto& pEntry) {
+	auto listOfRemovedEntries = QList<QSharedPointer<IfdListEntry>>{};
+	erase_if(mResponsiveList, [this, &threshold, &listOfRemovedEntries](const auto& pEntry) {
 				if (pEntry->getLastSeen() < threshold)
 				{
-					Q_EMIT fireDeviceVanished(pEntry);
+					listOfRemovedEntries << pEntry;
 					return true;
 				}
 				if (pEntry->cleanUpSeenTimestamps(mReaderResponsiveTimeout))
@@ -85,6 +86,10 @@ void IfdListImpl::onProcessUnresponsiveRemoteReaders()
 				}
 				return false;
 			});
+	for (const auto& entry : std::as_const(listOfRemovedEntries))
+	{
+		Q_EMIT fireDeviceVanished(entry);
+	}
 
 	if (mResponsiveList.isEmpty())
 	{

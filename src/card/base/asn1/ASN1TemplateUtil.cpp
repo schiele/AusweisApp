@@ -4,6 +4,8 @@
 
 #include "ASN1TemplateUtil.h"
 
+#include <QByteArrayList>
+
 
 Q_DECLARE_LOGGING_CATEGORY(card)
 

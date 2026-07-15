@@ -68,7 +68,7 @@ class test_HttpRequest
 
 		void tcTokenURL()
 		{
-			const QByteArray data("GET /eID-Client?tcTokenURL=https%3A%2F%2Ftest.governikus-eid.de%3A443%2FAutent-DemoApplication%2FRequestServlet%3Fprovider%3Ddemo_epa_20%26redirect%3Dtrue HTTP/1.1\r\n"
+			const QByteArray data("GET /eID-Client?tcTokenURL=https%3A%2F%2Ftest.governikus-eid.de%2FAutent-DemoApplication%2Fapi%2Feid%2Frequest HTTP/1.1\r\n"
 								  "Host: 127.0.0.1:24727\r\n"
 								  "User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:49.0) Gecko/20100101 Firefox/49.0\r\n"
 								  "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n"
@@ -97,7 +97,7 @@ class test_HttpRequest
 			QCOMPARE(request.getHttpMethod(), HTTP_GET);
 			QCOMPARE(request.getHeader().size(), 9);
 			QCOMPARE(request.getHeader("host"), QByteArray("127.0.0.1:24727"));
-			QCOMPARE(request.getUrl(), QUrl("/eID-Client?tcTokenURL=https%3A%2F%2Ftest.governikus-eid.de%3A443%2FAutent-DemoApplication%2FRequestServlet%3Fprovider%3Ddemo_epa_20%26redirect%3Dtrue"_L1));
+			QCOMPARE(request.getUrl(), QUrl("/eID-Client?tcTokenURL=https%3A%2F%2Ftest.governikus-eid.de%2FAutent-DemoApplication%2Fapi%2Feid%2Frequest"_L1));
 			QCOMPARE(request.getBody().size(), 0);
 
 			request.triggerSocketBuffer();

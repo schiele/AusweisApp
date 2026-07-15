@@ -11,6 +11,7 @@
 #include <openssl/asn1t.h>
 
 #include <QByteArray>
+#include <QSet>
 #include <QSharedPointer>
 
 

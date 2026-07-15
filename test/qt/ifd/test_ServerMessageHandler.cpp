@@ -129,7 +129,7 @@ class test_ServerMessageHandler
 		{
 			Env::getSingleton<ReaderManager>()->shutdown();
 			Env::getSingleton<LogHandler>()->resetBacklog();
-			qApp->processEvents();
+			QCoreApplication::instance()->processEvents();
 		}
 
 

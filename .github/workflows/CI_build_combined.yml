@@ -90,7 +90,7 @@ jobs:
       - name: generate cmake
         run: |
           cmake -G "${{ matrix.build_platform }}" -DCMAKE_BUILD_TYPE="${{ matrix.build_configuration }}" -B ${{ env.BUILD_DIR_APP }} \
-                -DCMAKE_PREFIX_PATH=../_build_libs/dist
+                -DCMAKE_PREFIX_PATH=${{ env.BUILD_DIR_LIBS }}/dist
 
       - name: build cmake
         run: |
@@ -171,7 +171,7 @@ jobs:
       - name: generate cmake
         run: |
           cmake -G "${{ matrix.build_platform }}" -DCMAKE_BUILD_TYPE="${{ matrix.build_configuration }}" \
-                -DCMAKE_PREFIX_PATH=../_build_libs/dist -B ${{ env.BUILD_DIR_APP }}
+                -DCMAKE_PREFIX_PATH=${{ env.BUILD_DIR_LIBS }}/dist -B ${{ env.BUILD_DIR_APP }}
 
       - name: build cmake
         run: |

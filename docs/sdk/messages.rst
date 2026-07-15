@@ -261,7 +261,7 @@ a result and an url parameter to indicate the end of an authentication.
              {
               "major": "http://www.bsi.bund.de/ecard/api/1.1/resultmajor#ok"
              },
-    "url": "https://test.governikus-eid.de/gov_autent/async?refID=_123456789"
+    "url": "https://test.governikus-eid.de/Autent-DemoApplication/refresh-address?sessionId=123456789&ResultMajor=ok"
   }
 
 
@@ -278,7 +278,7 @@ a result and an url parameter to indicate the end of an authentication.
               "message": "The connection to the ID card has been lost. The process was aborted.",
               "reason": "Card_Removed"
              },
-    "url": "https://test.governikus-eid.de/gov_autent/async?refID=_abcdefgh"
+    "url": "https://test.governikus-eid.de/Autent-DemoApplication/refresh-address?sessionId=123456789&ResultMajor=error&ResultMinor=internalError"
   }
 
 

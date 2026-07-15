@@ -52,8 +52,7 @@ class UiPluginQml
 		bool mA11yOnOffSwitchLabelActive;
 
 		void init();
-		[[nodiscard]] static QString getOverridePlatform();
-		[[nodiscard]] QQuickWindow* getRootWindow() const;
+
 		[[nodiscard]] bool isHidden() const;
 		[[nodiscard]] qreal getSystemFontScaleFactor() const;
 		void setFontScaleFactor(qreal pFactor);
@@ -85,7 +84,10 @@ class UiPluginQml
 #ifndef QT_NO_DEBUG
 		static QString adjustQmlImportPath(QQmlEngine* pEngine);
 #endif
+		[[nodiscard]] static QString getOverridePlatform();
 
+		[[nodiscard]] QQmlApplicationEngine* getEngine() const;
+		[[nodiscard]] QQuickWindow* getRootWindow() const;
 		[[nodiscard]] QString getQtVersion() const override;
 		[[nodiscard]] bool isDebugBuild() const override;
 		[[nodiscard]] bool isDeveloperVersion() const override;
@@ -141,5 +143,6 @@ class UiPluginQml
 		void onAppConfigChanged();
 		void onReaderStatusChanged(const ReaderManagerPluginInfo& pInfo) const;
 };
+
 
 } // namespace governikus

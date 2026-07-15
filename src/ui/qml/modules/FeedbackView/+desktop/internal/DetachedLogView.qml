@@ -221,7 +221,7 @@ Rectangle {
 				width: listView.width - root.spacing
 
 				onActiveFocusChanged: if (activeFocus) {
-					listView.handleItemFocused(index);
+					listView.centerViewAtIndex(index);
 				}
 			}
 

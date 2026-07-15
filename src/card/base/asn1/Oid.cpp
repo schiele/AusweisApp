@@ -8,6 +8,8 @@
 #include "EnumHelper.h"
 #include "Initializer.h"
 
+#include <QMap>
+
 #include <openssl/asn1.h>
 
 

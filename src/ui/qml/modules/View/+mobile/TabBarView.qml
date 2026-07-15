@@ -13,7 +13,8 @@ import Governikus.Style
 StackView {
 	id: root
 
-	readonly property bool animationEnabled: !ApplicationModel.screenReaderRunning && SettingsModel.useAnimations
+	readonly property int animationDuration: ApplicationModel.screenReaderRunning ? 0 : Style.animation_duration
+	readonly property bool animationEnabled: SettingsModel.useAnimations
 
 	function doActivate() {
 		if (visible && currentItem && (currentItem as BaseController)) {
@@ -48,14 +49,14 @@ StackView {
 
 		ParallelAnimation {
 			NumberAnimation {
-				duration: Style.animation_duration
+				duration: root.animationDuration
 				easing.type: Easing.InQuint
 				from: 0
 				property: "opacity"
 				to: 1
 			}
 			NumberAnimation {
-				duration: Style.animation_duration * 2
+				duration: root.animationDuration * 2
 				easing.type: Easing.OutCubic
 				from: (root.mirrored ? -0.3 : 0.3) * root.width * (transition.reversed ? 1 : -1)
 				property: "x"
@@ -67,7 +68,7 @@ StackView {
 		enabled: root.animationEnabled
 
 		NumberAnimation {
-			duration: Style.animation_duration
+			duration: root.animationDuration
 			easing.type: Easing.OutQuint
 			from: 1
 			property: "opacity"

@@ -80,10 +80,11 @@ BaseOnboardingView {
 			//: DESKTOP %1 and %2 are replaced with bold highlighting, %3 with the name AusweisApp
 			text: qsTr("Scan the QR code, search your %1app store%2 for %3 or open the following link in your smartphone:").arg("<b>").arg("</b>").arg(Qt.application.name)
 		}
-		GText {
-			readonly property string downloadLink: "https://www.ausweisapp.bund.de/%1/aa2/download".arg(SettingsModel.language)
+		GLink {
+			Accessible.role: Accessible.Link
+			text: "https://www.ausweisapp.bund.de/%1/aa2/download".arg(SettingsModel.language)
 
-			text: "<a href=\"%1\">%1</a>".arg(downloadLink)
+			onClicked: Qt.openUrlExternally(text)
 		}
 		AusweisAppLogo {
 		}

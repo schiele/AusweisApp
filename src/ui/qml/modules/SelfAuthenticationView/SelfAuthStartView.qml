@@ -3,6 +3,7 @@
  */
 
 import QtQuick
+import QtQuick.Layouts
 
 import Governikus.Animations
 import Governikus.Global
@@ -29,7 +30,14 @@ DecisionView {
 	//: ALL_PLATFORMS
 	title: qsTr("Identify")
 
-	customContentSourceComponent: PrivacyStatement {
+	customContentSourceComponent: Hint {
+		Layout.alignment: Qt.AlignHCenter
+		Layout.fillWidth: true
+		//: ALL_PLATFORMS Buttontext for the link to the data privacy statement
+		buttonText: qsTr("Data privacy statement")
+		linkToOpen: "https://www.ausweisapp.bund.de/%1/aa2/privacy".arg(SettingsModel.language)
+		//: ALL_PLATFORMS
+		text: qsTr("Your personal data is neither saved nor processed in any way. Please see our data privacy statement for details on how your personal data is processed.")
 	}
 	iconSourceComponent: SiteWithLogoAnimation {
 		sourceSize.height: Style.dimens.header_icon_size

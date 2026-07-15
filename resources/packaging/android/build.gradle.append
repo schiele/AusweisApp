@@ -22,7 +22,7 @@ android {
 
     lint {
         baseline = file('lint-baseline.xml')
-        disable += ['LintBaseline', 'AndroidGradlePluginVersion']
+        disable += ['LintBaseline']
     }
 
     buildFeatures {

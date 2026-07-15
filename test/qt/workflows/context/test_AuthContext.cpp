@@ -49,6 +49,19 @@ class test_AuthContext
 		}
 
 
+		void test_requestAutoFinishBeforeQuit()
+		{
+			AuthContext context;
+			QCOMPARE(context.autoFinishBeforeQuit(), false);
+
+			context.requestAutoFinishBeforeQuit();
+			QCOMPARE(context.autoFinishBeforeQuit(), true);
+
+			context.requestAutoFinishBeforeQuit();
+			QCOMPARE(context.autoFinishBeforeQuit(), true);
+		}
+
+
 		void test_requestChangePinView()
 		{
 			AuthContext context;

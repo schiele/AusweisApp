@@ -54,6 +54,7 @@ class WorkflowModel
 	Q_PROPERTY(governikus::EnumGlobalStatusCode::GlobalStatusCode statusCode READ getStatusCode NOTIFY fireResultChanged)
 	Q_PROPERTY(QString statusCodeDisplayString READ getStatusCodeDisplayString NOTIFY fireResultChanged)
 	Q_PROPERTY(QString statusHintText READ getStatusHintText NOTIFY fireResultChanged)
+	Q_PROPERTY(QString statusHelpLink READ getStatusHelpLink NOTIFY fireResultChanged)
 	Q_PROPERTY(governikus::EnumGAnimation::GAnimation statusCodeAnimation READ getStatusCodeAnimation NOTIFY fireResultChanged)
 	Q_PROPERTY(bool showRemoveCardFeedback READ showRemoveCardFeedback NOTIFY fireRemoveCardFeedbackChanged)
 	Q_PROPERTY(bool cardInitiallyAppeared READ getCardInitiallyAppeared NOTIFY fireHasCardChanged)
@@ -76,6 +77,7 @@ class WorkflowModel
 
 		[[nodiscard]] QString getCurrentState() const;
 		[[nodiscard]] virtual QString getResultString() const;
+		[[nodiscard]] virtual QString getStatusHelpLink() const;
 		[[nodiscard]] bool isError() const;
 		[[nodiscard]] bool isMaskedError() const;
 		[[nodiscard]] bool isPukInoperative() const;

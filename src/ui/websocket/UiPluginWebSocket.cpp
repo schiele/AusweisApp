@@ -69,6 +69,7 @@ bool UiPluginWebSocket::initialize()
 				}
 			});
 	connect(&mServer, &QWebSocketServer::newConnection, this, &UiPluginWebSocket::onNewConnection);
+	connect(&mServer, &QWebSocketServer::serverError, this, &UiPluginWebSocket::onServerError);
 	return true;
 }
 
@@ -215,6 +216,16 @@ void UiPluginWebSocket::onJsonMessage(const QByteArray& pMessage)
 	if (mConnection)
 	{
 		mConnection->sendTextMessage(QString::fromUtf8(pMessage));
+	}
+}
+
+
+void UiPluginWebSocket::onServerError(QWebSocketProtocol::CloseCode closeCode)
+{
+	if (closeCode != QWebSocketProtocol::CloseCodeNormal)
+	{
+		qCWarning(websocket) << "Websocket Server Error:" << closeCode << mServer.errorString();
+		onClientDisconnected();
 	}
 }
 

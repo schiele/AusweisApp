@@ -62,16 +62,20 @@ QSharedPointer<MockNetworkReply> MockNetworkManager::getReply(const QNetworkRequ
 
 QSharedPointer<QNetworkReply> MockNetworkManager::get(QNetworkRequest& pRequest)
 {
-	mLastRequest = pRequest;
-	return getReply(pRequest);
+	return processRequest(pRequest, [this] (const QNetworkRequest& request){
+				mLastRequest = request;
+				return getReply(request);
+			});
 }
 
 
 QSharedPointer<QNetworkReply> MockNetworkManager::post(QNetworkRequest& pRequest, const QByteArray& pData)
 {
-	mLastRequest = pRequest;
-	mLastData = QByteArray(pData);
-	return getReply(pRequest);
+	return processRequest(pRequest, [this, pData] (const QNetworkRequest& request){
+				mLastRequest = request;
+				mLastData = QByteArray(pData);
+				return getReply(request);
+			});
 }
 
 

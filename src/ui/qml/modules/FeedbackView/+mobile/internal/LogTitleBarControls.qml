@@ -9,11 +9,11 @@ import Governikus.TitleBar
 Row {
 	id: root
 
-	property alias filter: filterButton.filter
 	property alias showFilter: filterButton.visible
 	property alias showRemove: removeAllButton.visible
 	property alias showShare: shareButton.visible
 
+	signal filterClicked
 	signal removeAllClicked
 	signal shareClicked(point popupPosition)
 
@@ -22,16 +22,12 @@ Row {
 	TitleBarAction {
 		id: filterButton
 
-		property bool filter: false
-
-		Accessible.checked: filter
 		//: MOBILE
 		Accessible.name: qsTr("Filter")
-		Accessible.role: Accessible.CheckBox
-		icon.source: filter ? "qrc:///images/filter_off.svg" : "qrc:///images/filter.svg"
+		icon.source: "qrc:///images/filter.svg"
 		visible: false
 
-		onClicked: filter = !filter
+		onClicked: root.filterClicked()
 	}
 	TitleBarAction {
 		id: shareButton

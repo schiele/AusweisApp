@@ -48,6 +48,12 @@ class test_StateCheckRefreshAddress
 		}
 
 	private Q_SLOTS:
+		void initTestCase()
+		{
+			QCoreApplication::setApplicationVersion("1.0.0"_L1);
+		}
+
+
 		void init()
 		{
 			mMockNetworkManager.reset(new MockNetworkManager());
@@ -313,6 +319,51 @@ class test_StateCheckRefreshAddress
 			{
 				QCOMPARE(mAuthContext->getStatus().getStatusCode(), status);
 				QCOMPARE(mAuthContext->getFailureCode(), failureCode);
+			}
+		}
+
+
+		void sendRequest_data()
+		{
+			QTest::addColumn<AuthContext::HeaderMap>("customHeader");
+
+			QTest::newRow("empty header") << AuthContext::HeaderMap();
+			QTest::newRow("override header") << AuthContext::HeaderMap {
+				{"User-Agent", "DummyAgent"},
+				{"Authorization", "Bearer abc"},
+				};
+		}
+
+
+		void sendRequest()
+		{
+			QFETCH(AuthContext::HeaderMap, customHeader);
+
+			const auto context = QSharedPointer<AuthContext>::create(false, QUrl(), AuthContext::BrowserHandler(), customHeader);
+			StateCheckRefreshAddress state(context);
+			QSignalSpy spyAbort(&state, &StateCheckRefreshAddress::fireAbort);
+
+			MockNetworkReply* const reply = new MockNetworkReply(QByteArray(), HTTP_STATUS_OK);
+			reply->setError(QNetworkReply::UnknownNetworkError, QString());
+			mMockNetworkManager->setNextReply(reply);
+
+			state.sendGetRequest();
+
+			QTest::ignoreMessage(QtCriticalMsg, "An error occurred: QNetworkReply::UnknownNetworkError \"Unknown error\"");
+			mMockNetworkManager->fireFinished();
+			QCOMPARE(spyAbort.count(), 1);
+			QCOMPARE(context->getFailureCode(), FailureCode::Reason::Check_Refresh_Address_Unknown_Network_Error);
+
+			const auto request = mMockNetworkManager->getLastRequest();
+			if (customHeader.isEmpty())
+			{
+				QCOMPARE(request.header(QNetworkRequest::UserAgentHeader).toByteArray(), "AusweisApp2/1.0.0 (TR-03124-1/1.4)"_ba);
+				QVERIFY(!request.hasRawHeader("authorization"));
+			}
+			else
+			{
+				QCOMPARE(request.header(QNetworkRequest::UserAgentHeader).toByteArray(), "DummyAgent"_ba);
+				QCOMPARE(request.rawHeader("authorization"), "Bearer abc"_ba);
 			}
 		}
 

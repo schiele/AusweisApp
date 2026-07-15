@@ -1,0 +1,2 @@
+NFCReaderUsageDescription = "The AusweisApp uses NFC, to access the eID card.";
+NSLocalNetworkUsageDescription = "The AusweisApp needs access to the local network, to be able to use \"Smartphone as card reader (SaC)\"";

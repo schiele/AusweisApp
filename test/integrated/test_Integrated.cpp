@@ -21,7 +21,7 @@ void cb(const char* pMessage)
 	{
 		std::cout << "**** AusweisApp is initialized" << "\x1b[0m" << std::endl;
 		ausweisapp_send(R"({"cmd": "GET_INFO"})");
-		ausweisapp_send(R"({"cmd": "RUN_AUTH", "tcTokenURL": "https://test.governikus-eid.de/AusweisAuskunft/WebServiceRequesterServlet?mode=json"})");
+		ausweisapp_send(R"({"cmd": "RUN_AUTH", "tcTokenURL": "https://test.governikus-eid.de/Autent-DemoApplication/api/eid/request"})");
 		return;
 	}
 

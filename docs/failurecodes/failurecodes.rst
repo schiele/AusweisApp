@@ -221,14 +221,6 @@ List of possible failure codes:
       PUK could not be taken over after the user-input.
     | **Possible Solutions:** :ref:`failure_code_contact_support`.
 
-  - | **Establish_Pace_Channel_Puk_Inoperative**
-    | An attempt was made to set up a PACE channel with the PUK to unlock the PIN. However, the PUK
-      can no longer be used because it has already been used 10 times.
-    | **Possible Solutions:** The PIN can be unlocked with the PUK after three incorrect entries.
-      However, this is only possible ten times and you have reached that limit. However you can set
-      a new PIN at the citizens' office (Bürgeramt) or let it be set with the CAN at
-      https://www.pin-ruecksetzbrief-bestellen.de.
-
   - | **Establish_Pace_Channel_Unknown_Password_Id**
     | The establishment of a PACE channel was finished. However, an unsupported
       password type was used (PIN, CAN, PUK are supported).
@@ -239,11 +231,28 @@ List of possible failure codes:
       with keyboard mode enabled.
     | **Possible Solutions:** Complete the workflow without canceling.
 
+  - | **Reset_Retry_Counter_Puk_Inoperative**
+    | An attempt was made to set up a PACE channel with the PUK to unlock the PIN. However, the PUK
+      can no longer be used because it has already been used 10 times.
+    | **Possible Solutions:** The PIN can be unlocked with the PUK after three incorrect entries.
+      However, this is only possible ten times and you have reached that limit. However you can set
+      a new PIN at the citizens' office (Bürgeramt) or let it be set with the CAN at
+      https://www.pin-ruecksetzbrief-bestellen.de.
+
+  - | **Reset_Retry_Counter_Unexpected_StatusCode**
+    | The command to reset the retry counter has been transmitted and answered.
+      However, the answer is blank, unknown, or unexpected.
+    | **Possible Solutions:** :ref:`failure_code_contact_support`.
+
   - | **Maintain_Card_Connection_Pace_Unrecoverable**
     | An error occurred while setting up the PACE channel that was not due to user error.
     | **Possible Solutions:** The connection to the ID card could not be established with the PIN,
       CAN, or PUK. The entered passwords have no influence on this. Please note
       :ref:`failure_code_card_position`.
+
+  - | **Maintain_Card_Connection_Unknown_Error**
+    | An unknown error occurred while trying to connect to the card.
+    | **Possible Solutions:** :ref:`failure_code_card_position`.
 
   - | **Did_Authenticate_Eac1_Card_Command_Failed**
     | The 4th card command of the terminal authentication according to TR-0110-3 section B.3 failed.

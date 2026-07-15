@@ -5,7 +5,6 @@
 #include "CVCertificate.h"
 
 #include "ASN1TemplateUtil.h"
-#include "ASN1Util.h"
 
 
 Q_DECLARE_LOGGING_CATEGORY(card)

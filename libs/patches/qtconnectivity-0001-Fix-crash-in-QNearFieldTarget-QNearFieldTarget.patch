@@ -1,0 +1,40 @@
+From 4a5c19d68bec9e56df33fe52afbd5cb03acc466c Mon Sep 17 00:00:00 2001
+From: Lars Schmertmann <Lars.Schmertmann@governikus.de>
+Date: Tue, 5 May 2026 14:26:52 +0200
+Subject: Fix crash in QNearFieldTarget::QNearFieldTarget
+
+When we try to create a QNearFieldTarget for unittests we run into a crash:
+ 1 QAtomicOps<QThreadData *>::loadRelaxed<QThreadData *> qatomic_cxx11.h         203
+ 2 QBasicAtomicPointer<QThreadData>::loadRelaxed         qbasicatomic.h          171
+ 3 QObject::thread                                       qobject.cpp            1594
+ 4 QObject::QObject                                      qobject.cpp             935
+ 5 QNearFieldTargetPrivate::QNearFieldTargetPrivate      qnearfieldtarget_p.cpp   15
+ 6 QNearFieldTarget::QNearFieldTarget                    qnearfieldtarget.cpp    219
+
+It is crashing because the used parent (this) is not fully
+initialized when QObject try to determine the thread.
+
+There is no need to define the parent in the constructor
+parameter because the parent is set in line 399 anyways.
+
+Pick-to: 6.11 6.8
+Change-Id: Idb811b3d5df7e8adfce49116bc7378b161896669
+Reviewed-by: Ivan Solovev <ivan.solovev@qt.io>
+(cherry picked from commit 8890f19f29d33e6f4f7179ff74bb856ba6b1643c)
+---
+ src/nfc/qnearfieldtarget.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git x/qtconnectivity/src/nfc/qnearfieldtarget.cpp y/qtconnectivity/src/nfc/qnearfieldtarget.cpp
+index 75265fd20878c363b675591224926be517041fe3..b8f3387e0181c8e4c139314f103f2fe6aca3e39e 100644
+--- x/qtconnectivity/src/nfc/qnearfieldtarget.cpp
++++ y/qtconnectivity/src/nfc/qnearfieldtarget.cpp
+@@ -216,7 +216,7 @@ QNearFieldTarget::RequestId &QNearFieldTarget::RequestId::operator=(const Reques
+     Constructs a new near field target with \a parent.
+ */
+ QNearFieldTarget::QNearFieldTarget(QObject *parent)
+-:   QNearFieldTarget(new QNearFieldTargetPrivate(this), parent)
++:   QNearFieldTarget(new QNearFieldTargetPrivate(), parent)
+ {
+ }
+ 

@@ -5,7 +5,6 @@
 #include "SecureMessagingCommand.h"
 
 #include "asn1/ASN1TemplateUtil.h"
-#include "asn1/ASN1Util.h"
 
 #include <QLoggingCategory>
 #include <QtEndian>
@@ -35,7 +34,7 @@ SecureMessagingCommand::SecureMessagingCommand(const CommandApdu& pApdu)
 	}
 
 	mChecksum = decodeObject<SM_CHECKSUM>(data, false);
-	if (mChecksum == nullptr || mChecksum->length != 8)
+	if (mChecksum == nullptr || mChecksum->getLength() != 8)
 	{
 		qCCritical(card) << "Error on decoding mac";
 		return;

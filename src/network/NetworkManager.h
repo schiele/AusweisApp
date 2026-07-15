@@ -14,6 +14,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkProxy>
 #include <QNetworkReply>
+#include <QSet>
 #include <QSsl>
 
 class test_NetworkManager;
@@ -38,8 +39,6 @@ class NetworkManager
 
 		bool prepareConnection(QNetworkRequest& pRequest) const;
 		[[nodiscard]] QSharedPointer<QNetworkReply> trackConnection(QNetworkReply* pResponse);
-		[[nodiscard]] QSharedPointer<QNetworkReply> processRequest(QNetworkRequest& pRequest,
-				const std::function<QSharedPointer<QNetworkReply>(QNetworkRequest&)>& pInvoke);
 		[[nodiscard]] QSharedPointer<QNetworkReply> processUpdaterRequest(QNetworkRequest& pRequest,
 				const std::function<QSharedPointer<QNetworkReply>(QNetworkRequest&)>& pInvoke);
 		void onSslErrors(QSharedPointer<QNetworkReply> response, const QList<QSslError>& pErrors) const;
@@ -52,6 +51,9 @@ class NetworkManager
 	protected:
 		NetworkManager();
 		~NetworkManager() override = default;
+
+		[[nodiscard]] QSharedPointer<QNetworkReply> processRequest(QNetworkRequest& pRequest,
+				const std::function<QSharedPointer<QNetworkReply>(QNetworkRequest&)>& pInvoke);
 
 	public:
 		enum class NetworkError

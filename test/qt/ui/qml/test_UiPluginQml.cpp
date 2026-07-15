@@ -27,10 +27,13 @@
 #include <QSignalSpy>
 #include <QtTest>
 
+
 using namespace Qt::Literals::StringLiterals;
 using namespace governikus;
 
+
 Q_DECLARE_METATYPE(QSharedPointer<WorkflowRequest>)
+
 
 class test_UiPluginQml
 	: public QObject
@@ -280,6 +283,67 @@ class test_UiPluginQml
 			plugin.setA11yOnOffSwitchLabelActive(false);
 			QVERIFY(!plugin.isA11yOnOffSwitchLabelActive());
 			QCOMPARE(spy.count(), 2);
+		}
+
+
+		void test_domination()
+		{
+			UiPluginQml plugin;
+			QSignalSpy spy(&plugin, &UiPluginModel::fireDominatorChanged);
+
+			plugin.onUiDominationReleased();
+			QCOMPARE(spy.count(), 0);
+
+			plugin.onUiDomination(&plugin, QString(), false);
+			QCOMPARE(spy.count(), 0);
+
+			plugin.onUiDomination(nullptr, QString(), false);
+			QCOMPARE(spy.count(), 0);
+
+			plugin.onUiDomination(nullptr, QString(), true);
+			QCOMPARE(spy.count(), 1);
+
+			plugin.onUiDominationReleased();
+			QCOMPARE(spy.count(), 2);
+
+			plugin.onUiDominationReleased();
+			QCOMPARE(spy.count(), 2);
+		}
+
+
+		void test_windowSize()
+		{
+			UiPluginQml plugin;
+			QCOMPARE(plugin.getInitialWindowSize(), QSize(960, 720));
+
+			qputenv("OVERRIDE_PLATFORM", "dummy"_ba);
+			QCOMPARE(plugin.getInitialWindowSize(), QSize(960, 720));
+
+			qputenv("OVERRIDE_PLATFORM", "android"_ba);
+			QCOMPARE(plugin.getInitialWindowSize(), QSize(432, 768));
+
+			qputenv("OVERRIDE_PLATFORM", "ios"_ba);
+			QCOMPARE(plugin.getInitialWindowSize(), QSize(432, 768));
+		}
+
+
+		void test_scaleFactor()
+		{
+			UiPluginQml plugin;
+			QCOMPARE(plugin.getScaleFactor(), 1.0);
+			QSignalSpy spy(&plugin, &UiPluginModel::fireScaleFactorChanged);
+
+			plugin.setScaleFactor(1.0);
+			QCOMPARE(spy.count(), 0);
+			QCOMPARE(plugin.getScaleFactor(), 1.0);
+
+			plugin.setScaleFactor(2.0);
+			QCOMPARE(spy.count(), 1);
+			QCOMPARE(plugin.getScaleFactor(), 2.0);
+
+			plugin.setScaleFactor(0.5);
+			QCOMPARE(spy.count(), 2);
+			QCOMPARE(plugin.getScaleFactor(), 0.5);
 		}
 
 

@@ -51,10 +51,11 @@ class test_Asn1OctetStringUtil
 					});
 			Asn1OctetStringUtil::setValue(bytes, asn1OctetString);
 
-			QCOMPARE(asn1OctetString->length, 15);
+			QCOMPARE(ASN1_STRING_length(asn1OctetString), 15);
+			const auto* data = ASN1_STRING_get0_data(asn1OctetString);
 			for (int i = 0; i < 15; i++)
 			{
-				QCOMPARE(asn1OctetString->data[i], static_cast<uchar>(i + 1));
+				QCOMPARE(data[i], static_cast<uchar>(i + 1));
 			}
 		}
 

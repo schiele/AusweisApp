@@ -13,14 +13,14 @@ CardNotActivatedBaseView {
 	id: root
 
 	onDecisionHasCodeClicked: root.pushSubView(true, {
-		navigationAction: navigationAction.createObject(root)
+		navigationAction: navigationActionComponent.createObject(root)
 	})
 	onDecisionHasNoCodeClicked: root.pushSubView(false, {
-		navigationAction: navigationAction.createObject(root)
+		navigationAction: navigationActionComponent.createObject(root)
 	})
 
 	Component {
-		id: navigationAction
+		id: navigationActionComponent
 
 		NavigationAction {
 			action: NavigationAction.Action.Back

@@ -10,18 +10,18 @@ import Governikus.Style
 GAbstractButton {
 	id: root
 
-	readonly property bool flowVertically: height > topPadding + image.implicitHeight + layout.spacing + text.effectiveMaxLinesHeight + bottomPadding
-	property alias image: image.source
+	readonly property bool flowVertically: height > topPadding + tileImage.implicitHeight + layout.spacing + tileText.effectiveMaxLinesHeight + bottomPadding
+	property alias image: tileImage.source
 	readonly property int insetBaseValue: Style.dimens.pane_spacing
 	readonly property int paddingBaseValue: Style.dimens.pane_spacing
-	property alias title: text.text
+	property alias title: tileText.text
 
 	Accessible.name: title
 	Accessible.role: Accessible.Button
 	Layout.maximumHeight: Number.POSITIVE_INFINITY
-	Layout.maximumWidth: leftPadding + image.implicitWidth + layout.spacing + Math.ceil(text.implicitWidth) + rightPadding
-	Layout.minimumHeight: topPadding + Math.max(image.implicitHeight, text.effectiveMaxLinesHeight) + bottomPadding
-	Layout.minimumWidth: leftPadding + image.implicitWidth + rightPadding
+	Layout.maximumWidth: leftPadding + tileImage.implicitWidth + layout.spacing + Math.ceil(tileText.implicitWidth) + rightPadding
+	Layout.minimumHeight: topPadding + Math.max(tileImage.implicitHeight, tileText.effectiveMaxLinesHeight) + bottomPadding
+	Layout.minimumWidth: leftPadding + tileImage.implicitWidth + rightPadding
 	bottomInset: Math.ceil(insetBaseValue * 1.5)
 	bottomPadding: bottomInset + paddingBaseValue
 	implicitHeight: topPadding + layout.implicitHeight + bottomPadding
@@ -51,14 +51,14 @@ GAbstractButton {
 		rows: 3
 
 		TintableIcon {
-			id: image
+			id: tileImage
 
 			Accessible.ignored: true
 			sourceSize.height: Style.dimens.medium_icon_size
 			tintColor: Style.color.textTitle.basic_checked
 		}
 		GText {
-			id: text
+			id: tileText
 
 			Accessible.ignored: true
 			elide: Text.ElideRight

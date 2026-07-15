@@ -14,21 +14,40 @@ Q_DECLARE_LOGGING_CATEGORY(card)
 
 using namespace governikus;
 
+static_assert(std::is_standard_layout_v<Asn1OctetStringUtil>, "virtual method is not allowed because of OpenSSL parsing and reinterpret_cast!");
 
-void Asn1OctetStringUtil::setValue(const QByteArray& pValue, ASN1_OCTET_STRING* pAsn1OctetString)
+bool Asn1OctetStringUtil::setValue(const QByteArray& pValue, ASN1_OCTET_STRING* pAsn1OctetString)
 {
-	ASN1_OCTET_STRING_set(pAsn1OctetString, reinterpret_cast<unsigned const char*>(pValue.data()), static_cast<int>(pValue.length()));
+	return ASN1_OCTET_STRING_set(pAsn1OctetString, reinterpret_cast<unsigned const char*>(pValue.data()), static_cast<int>(pValue.length())) == 1;
 }
 
 
-QByteArray Asn1OctetStringUtil::getValue(ASN1_OCTET_STRING* pAsn1OctetString)
+QByteArray Asn1OctetStringUtil::getValue(const ASN1_OCTET_STRING* pAsn1OctetString)
 {
 	if (pAsn1OctetString == nullptr)
 	{
 		return QByteArray();
 	}
 
-	return QByteArray(reinterpret_cast<char*>(pAsn1OctetString->data), pAsn1OctetString->length);
+	return QByteArray(reinterpret_cast<const char*>(ASN1_STRING_get0_data(pAsn1OctetString)), ASN1_STRING_length(pAsn1OctetString));
+}
+
+
+QByteArray Asn1OctetStringUtil::getValue(const Asn1OctetStringUtil* pString)
+{
+	return getValue(reinterpret_cast<const ASN1_OCTET_STRING*>(pString));
+}
+
+
+bool Asn1OctetStringUtil::setValue(const QByteArray& pValue)
+{
+	return setValue(pValue, reinterpret_cast<ASN1_OCTET_STRING*>(this));
+}
+
+
+int Asn1OctetStringUtil::getLength() const
+{
+	return ASN1_STRING_length(reinterpret_cast<const ASN1_OCTET_STRING*>(this));
 }
 
 
@@ -132,15 +151,16 @@ QDate Asn1BCDDateUtil::convertFromUnpackedBCDToQDate(const ASN1_OCTET_STRING* pD
 		return QDate();
 	}
 
-	if (pDateBCD->length != 6)
+	if (ASN1_STRING_length(pDateBCD) != 6)
 	{
 		qCCritical(card) << "Invalid date length.";
 		return QDate();
 	}
 
-	int year = 2000 + pDateBCD->data[0] * 10 + pDateBCD->data[1];
-	int month = pDateBCD->data[2] * 10 + pDateBCD->data[3];
-	int day = pDateBCD->data[4] * 10 + pDateBCD->data[5];
+	const uchar* data = ASN1_STRING_get0_data(pDateBCD);
+	int year = 2000 + data[0] * 10 + data[1];
+	int month = data[2] * 10 + data[3];
+	int day = data[4] * 10 + data[5];
 
 	return QDate(year, month, day);
 }

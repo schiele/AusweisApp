@@ -175,6 +175,45 @@ class test_StateMaintainCardConnection
 		}
 
 
+		void test_Run_GlobalStatusSet_data()
+		{
+			QTest::addColumn<GlobalStatus::Code>("statusCode");
+			QTest::addColumn<std::optional<FailureCode>>("failureCode");
+
+			QTest::newRow("global_status_ok") << GlobalStatus::Code::No_Error << std::optional<FailureCode>();
+			QTest::newRow("global_status_with_failurecode") << GlobalStatus::Code::Card_Communication_Error << std::optional<FailureCode>(FailureCode::Reason::Connect_Card_Connection_Failed);
+			QTest::newRow("global_status_without_failurecode") << GlobalStatus::Code::Card_Communication_Error << std::optional<FailureCode>();
+		}
+
+
+		void test_Run_GlobalStatusSet()
+		{
+			QFETCH(GlobalStatus::Code, statusCode);
+			QFETCH(std::optional<FailureCode>, failureCode);
+			mContext->setStatus(statusCode);
+			if (failureCode.has_value())
+			{
+				mContext->setFailureCode(failureCode.value());
+			}
+
+			QSignalSpy spyAbort(mState.data(), &StateMaintainCardConnection::fireAbort);
+			QSignalSpy spyNoCardConnection(mState.data(), &StateMaintainCardConnection::fireNoCardConnection);
+
+			mState->run();
+
+			if (statusCode != GlobalStatus::Code::No_Error)
+			{
+				QCOMPARE(spyAbort.count(), 1);
+				QCOMPARE(spyNoCardConnection.count(), 0);
+			}
+			else
+			{
+				QCOMPARE(spyAbort.count(), 0);
+				QCOMPARE(spyNoCardConnection.count(), 1);
+			}
+		}
+
+
 };
 
 QTEST_GUILESS_MAIN(test_StateMaintainCardConnection)

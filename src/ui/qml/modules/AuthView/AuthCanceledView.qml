@@ -71,7 +71,7 @@ FlickableSectionPage {
 		text: !root.isSelfAuth ?
 		//: ALL_PLATFORMS
 		qsTr("Back to provider") : root.startedByOnboarding ?
-		//: ALL_PLATFORM
+		//: ALL_PLATFORMS
 		qsTr("Back to setup") :
 		//: ALL_PLATFORMS
 		qsTr("Back to start page")

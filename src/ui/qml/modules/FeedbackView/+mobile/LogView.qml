@@ -5,7 +5,6 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Layouts
 
 import Governikus.Global
 import Governikus.Style
@@ -31,122 +30,63 @@ SectionPage {
 		showFilter: true
 		showShare: true
 
-		onFilterChanged: logStack.currentIndex = filter ? 0 : 1
+		onFilterClicked: {
+			root.push(logFilterView);
+		}
 		onShareClicked: pPopupPosition => {
 			logModel.shareLogFile(pPopupPosition);
 		}
 	}
 
-	LogModel {
-		id: logModel
+	Component {
+		id: logFilterView
 
+		LogFilterView {
+			enableTileStyle: root.enableTileStyle
+			filterModel: logFilterModel
+		}
 	}
 	LogFilterModel {
-		id: filterModel
+		id: logFilterModel
 
-		sourceModel: logModel
+		sourceModel: LogModel {
+			id: logModel
+
+		}
 	}
-	StackLayout {
-		id: logStack
+	GListView {
+		id: logView
 
 		anchors.fill: parent
-		currentIndex: 1
+		clip: true
+		model: logFilterModel
 
-		GFlickableColumnLayout {
-			clip: true
-			spacing: Style.dimens.text_spacing
+		delegate: LogViewDelegate {
+			boldFont: ListView.isCurrentItem && logView.activeFocus
+			width: logView.width
 
-			GOptionsContainer {
-				Layout.fillWidth: true
-				containerPadding: Style.dimens.pane_padding
-				containerSpacing: Style.dimens.groupbox_spacing
-				//: MOBILE
-				title: qsTr("Filter")
-
-				Subheading {
-					//: MOBILE
-					text: qsTr("Level")
-				}
-				GridLayout {
-					columnSpacing: Style.dimens.groupbox_spacing
-					columns: Math.max(1, (parent.width + columnSpacing) / (levelRepeater.maxItemWidth + columnSpacing))
-					rowSpacing: Style.dimens.groupbox_spacing
-					uniformCellWidths: true
-
-					GRepeater {
-						id: levelRepeater
-
-						model: filterModel.levels
-
-						delegate: GCheckBox {
-							required property string modelData
-
-							checked: filterModel.selectedLevels.indexOf(text) !== -1
-							text: modelData
-
-							onCheckedChanged: filterModel.configureLevel(text, checked)
-						}
-					}
-				}
-				Subheading {
-					//: MOBILE
-					text: qsTr("Category")
-				}
-				GridLayout {
-					columnSpacing: Style.dimens.groupbox_spacing
-					columns: Math.max(1, (parent.width + columnSpacing) / (categoryRepeater.maxItemWidth + columnSpacing))
-					rowSpacing: Style.dimens.groupbox_spacing
-					uniformCellWidths: true
-
-					GRepeater {
-						id: categoryRepeater
-
-						model: filterModel.categories
-
-						delegate: GCheckBox {
-							required property string modelData
-
-							checked: filterModel.selectedCategories.indexOf(text) !== -1
-							text: modelData
-
-							onCheckedChanged: filterModel.configureCategory(text, checked)
-						}
-					}
-				}
+			Accessible.onScrollDownAction: logView.scrollPageDown()
+			Accessible.onScrollUpAction: logView.scrollPageUp()
+			onActiveFocusChanged: if (activeFocus) {
+				logView.centerViewAtIndex(index);
 			}
 		}
-		GListView {
-			id: logView
 
-			Layout.fillHeight: true
-			Layout.fillWidth: true
-			clip: true
-			model: filterModel
-
-			delegate: LogViewDelegate {
-				boldFont: ListView.isCurrentItem && logView.activeFocus
-				width: logView.width
-
-				Accessible.onScrollDownAction: logView.scrollPageDown()
-				Accessible.onScrollUpAction: logView.scrollPageUp()
+		Connections {
+			function onFireNewLogMsg() {
+				if (logView.atYEnd)
+					logView.positionViewAtEnd();
 			}
 
-			Connections {
-				function onFireNewLogMsg() {
-					if (logView.atYEnd)
-						logView.positionViewAtEnd();
-				}
-
-				target: logModel
-			}
-			GText {
-				anchors.centerIn: parent
-				horizontalAlignment: Text.AlignHCenter
-				//: MOBILE No log entries, placeholder text.
-				text: qsTr("Currently there are no log entries matching your filter.")
-				visible: logView.count === 0
-				width: parent.width - 2 * Style.dimens.pane_spacing
-			}
+			target: logModel
+		}
+		GText {
+			anchors.centerIn: parent
+			horizontalAlignment: Text.AlignHCenter
+			//: MOBILE No log entries, placeholder text.
+			text: qsTr("Currently there are no log entries matching your filter.")
+			visible: logView.count === 0
+			width: parent.width - 2 * Style.dimens.pane_spacing
 		}
 	}
 }

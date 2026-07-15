@@ -84,7 +84,25 @@ SectionPage {
 				text: qsTr("Delete all logs")
 				tintIcon: true
 
-				onClicked: confirmationPopup.open()
+				onClicked: if (enableButton)
+					confirmationPopup.open()
+
+				ConfirmationPopup {
+					id: confirmationPopup
+
+					//: DESKTOP
+					okButtonText: qsTr("Delete")
+					//: DESKTOP All logfiles are about to be removed, user confirmation required.
+					text: qsTr("All old logs will be deleted.")
+					//: DESKTOP
+					title: qsTr("Delete all logs")
+					width: UiPluginModel.scaleFactor * 360
+
+					onConfirmed: {
+						LogFilesModel.removeOtherLogFiles();
+						saveLog.forceActiveFocus();
+					}
+				}
 			}
 			GButton {
 				property QtObject detachedLogViewItem: null
@@ -125,7 +143,7 @@ SectionPage {
 				width: logView.width - Style.dimens.pane_padding
 
 				onActiveFocusChanged: if (activeFocus) {
-					logView.handleItemFocused(index);
+					logView.centerViewAtIndex(index);
 				}
 
 				RoundedRectangle {
@@ -176,18 +194,5 @@ SectionPage {
 				target: root
 			}
 		}
-	}
-	ConfirmationPopup {
-		id: confirmationPopup
-
-		//: DESKTOP
-		okButtonText: qsTr("Delete")
-		//: DESKTOP All logfiles are about to be removed, user confirmation required.
-		text: qsTr("All old logs will be deleted.")
-		//: DESKTOP
-		title: qsTr("Delete all logs")
-		width: UiPluginModel.scaleFactor * 360
-
-		onConfirmed: LogFilesModel.removeOtherLogFiles()
 	}
 }

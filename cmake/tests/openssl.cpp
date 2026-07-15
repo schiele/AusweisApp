@@ -26,6 +26,10 @@
 	#error RSA-PSK is required.
 #endif
 
+#ifdef OPENSSL_NO_EC_EXPLICIT_CURVES
+	#error Enable "ec_explicit_curves" in OpenSSL or use -DUSE_LEGACY_OPENSSL_API=ON if possible.
+#endif
+
 int main(int argc, char** argv)
 {
 	QCoreApplication app(argc, argv);
@@ -40,7 +44,7 @@ int main(int argc, char** argv)
 	}
 
 	// The AusweisApp requires at least one of an RSA-PSK cipher. LibreSSL and OpenSSL <= 1.0.2 does not support that!
-	const QStringList ciphers({"RSA-PSK-AES256-GCM-SHA384", "RSA-PSK-AES256-CBC-SHA384", "RSA-PSK-AES128-GCM-SHA256", "RSA-PSK-AES128-CBC-SHA256", "RSA-PSK-AES256-CBC-SHA"});
+	const QStringList ciphers({"RSA-PSK-AES256-GCM-SHA384", "RSA-PSK-AES128-GCM-SHA256", "RSA-PSK-AES256-CBC-SHA"});
 	return std::any_of(ciphers.constBegin(), ciphers.constEnd(), [](const QString& pCipherName)
 			{
 				return !QSslCipher(pCipherName).isNull();

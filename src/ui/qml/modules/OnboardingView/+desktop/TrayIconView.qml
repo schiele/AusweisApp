@@ -50,7 +50,7 @@ DecisionView {
 		startEnabled: false
 	}
 
-	onPrimaryButtonChanged: {
+	onPrimaryButtonClicked: {
 		SettingsModel.trayIconEnabled = true;
 		leaveView();
 	}

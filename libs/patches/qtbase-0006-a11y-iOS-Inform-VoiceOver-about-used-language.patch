@@ -1,4 +1,4 @@
-From c61f114078f5cd8f244fa616c2db047b0ccb8c15 Mon Sep 17 00:00:00 2001
+From 15ff1fa8371c755bf0c52be000d6351c6dc2d3c8 Mon Sep 17 00:00:00 2001
 From: Jan Moeller <Jan.Moeller@governikus.de>
 Date: Thu, 20 Nov 2025 09:39:01 +0100
 Subject: a11y iOS: Inform VoiceOver about used language

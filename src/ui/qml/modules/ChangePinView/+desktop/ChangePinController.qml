@@ -390,6 +390,9 @@ ProgressView {
 			animation: ChangePinModel.statusCodeAnimation
 			//: DESKTOP
 			buttonText: qsTr("Back to start page")
+			hintButtonLink: ChangePinModel.statusHelpLink
+			//: DESKTOP
+			hintButtonText: hintButtonLink !== "" ? qsTr("Open website") : ""
 			hintText: ChangePinModel.statusHintText
 			mailButtonVisible: ChangePinModel.errorIsMasked
 			progress: progressTracker

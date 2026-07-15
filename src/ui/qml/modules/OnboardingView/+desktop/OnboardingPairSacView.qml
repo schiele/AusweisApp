@@ -40,12 +40,13 @@ BaseOnboardingView {
 		contentPadding: 0
 
 		GCollapsible {
+			alwaysReserveDescriptionHeight: true
 			arrowToLeft: true
 			backgroundColor: Style.color.transparent
+			//: DESKTOP
+			description: expanded ? "" : qsTr("Click the arrow to show.")
 			drawBottomCorners: true
 			drawTopCorners: true
-			//: DESKTOP
-			selectionTitle: expanded ? "" : qsTr("Click the arrow to show.")
 			startExpanded: true
 			//: DESKTOP
 			title: qsTr("Pairing instructions")

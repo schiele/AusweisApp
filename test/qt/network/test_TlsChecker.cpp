@@ -50,7 +50,7 @@ class test_TlsChecker
 		void cleanup()
 		{
 			Env::getSingleton<LogHandler>()->resetBacklog();
-			qApp->processEvents();
+			QCoreApplication::instance()->processEvents();
 		}
 
 

@@ -29,12 +29,13 @@ const QList<QSharedPointer<const CVCertificate>>& AuthContext::logCertificates(c
 }
 
 
-AuthContext::AuthContext(const Action pAction, bool pActivateUi, const QUrl& pActivationUrl, const BrowserHandler& pHandler)
+AuthContext::AuthContext(const Action pAction, bool pActivateUi, const QUrl& pActivationUrl, const BrowserHandler& pHandler, const HeaderMap& pCustomHeader)
 	: WorkflowContext(pAction, pActivateUi)
 	, mTcTokenNotFound(true)
 	, mErrorReportedToServer(false)
 	, mReceivedBrowserSendFailed(false)
 	, mSkipMobileRedirect(false)
+	, mAutoFinishBeforeQuit(false)
 	, mChangeTransportPin(false)
 	, mActivationUrl(pActivationUrl)
 	, mTcTokenUrl()
@@ -59,12 +60,13 @@ AuthContext::AuthContext(const Action pAction, bool pActivateUi, const QUrl& pAc
 	, mCvcChainBuilder()
 	, mSslSession()
 	, mBrowserHandler(pHandler)
+	, mCustomHeader(pCustomHeader)
 {
 }
 
 
-AuthContext::AuthContext(bool pActivateUi, const QUrl& pActivationUrl, const BrowserHandler& pHandler)
-	: AuthContext(Action::AUTH, pActivateUi, pActivationUrl, pHandler)
+AuthContext::AuthContext(bool pActivateUi, const QUrl& pActivationUrl, const BrowserHandler& pHandler, const HeaderMap& pCustomHeader)
+	: AuthContext(Action::AUTH, pActivateUi, pActivationUrl, pHandler, pCustomHeader)
 {
 }
 

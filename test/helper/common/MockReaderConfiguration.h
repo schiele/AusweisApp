@@ -20,6 +20,8 @@ class MockReaderConfiguration
 		~MockReaderConfiguration() override = default;
 
 		void clearReaderConfiguration();
+
+		QList<ReaderConfigurationInfo>& readerConfigurationInfos();
 };
 
 } // namespace governikus

@@ -1,6 +1,11 @@
 Changelog
 =========
 
+Version 2.5.4
+^^^^^^^^^^^^^
+* Added parameter ``header`` to :ref:`run_auth`.
+
+
 Version 2.5.0
 ^^^^^^^^^^^^^
 * Removed support for iOS 16.
@@ -21,7 +26,7 @@ Version 2.4.1
 Version 2.4.0
 ^^^^^^^^^^^^^
 * Updated Android NDK to r28c (28.2.13676358).
-* Removed parameter **private** of the Simulator's :ref:`filesystem`.
+* Removed parameter ``private`` of the Simulator's :ref:`filesystem`.
 * Removed parameter ``pIsSecureSessionId`` from ``sessionIdGenerated`` on Android.
 * Gradle: useLegacyPackaging is no longer required and needs to be removed to support 16 KB page sizes on Android.
 
@@ -57,22 +62,22 @@ Version 2.2.0
 
   * The message :ref:`pause_message`.
 
-  * Extended parameter **card** of the message :ref:`reader` to signal an unknown card.
+  * Extended parameter ``card`` of the message :ref:`reader` to signal an unknown card.
 
-* Added parameter **content** to the :ref:`filesystem` of the Simulator.
-* Declared parameter **private** of the Simulator's :ref:`filesystem` deprecated.
+* Added parameter ``content`` to the :ref:`filesystem` of the Simulator.
+* Declared parameter ``private`` of the Simulator's :ref:`filesystem` deprecated.
 
 
 Version 1.26.4
 ^^^^^^^^^^^^^^
-* Added parameter **keys** to the command :ref:`set_card`.
-* Added parameter **reason** to the message :ref:`change_pin`.
+* Added parameter ``keys`` to the command :ref:`set_card`.
+* Added parameter ``reason`` to the message :ref:`change_pin`.
 
 
 Version 1.26.3
 ^^^^^^^^^^^^^^
 * Added variable "AUSWEISAPP2_AUTOMATIC_DEVELOPERMODE" to the mode :ref:`automatic`.
-* Added parameter **reason** to message :ref:`auth`.
+* Added parameter ``reason`` to message :ref:`auth`.
 
 
 Version 1.24.0
@@ -81,26 +86,26 @@ Version 1.24.0
 
   * The commands :ref:`get_status` and :ref:`set_card`.
 
-  * Removed the parameter **handleInterrupt** of the commands :ref:`run_auth` and :ref:`run_change_pin`.
+  * Removed the parameter ``handleInterrupt`` of the commands :ref:`run_auth` and :ref:`run_change_pin`.
 
-  * Added the parameter **status** to the commands :ref:`run_auth` and :ref:`run_change_pin`.
+  * Added the parameter ``status`` to the commands :ref:`run_auth` and :ref:`run_change_pin`.
 
-  * Renamed parameter **reader** to **readers** in message :ref:`reader`
+  * Renamed parameter ``reader`` to ``readers`` in message :ref:`reader`
 
   * Added message :ref:`status`.
 
 * Added mode :ref:`automatic` for Desktop Systems.
-* Added parameter **insertable** to message :ref:`reader`.
+* Added parameter ``insertable`` to message :ref:`reader`.
 
 
 Version 1.22.3
 ^^^^^^^^^^^^^^
- * Added parameter **developerMode** to the command :ref:`run_auth`.
+ * Added parameter ``developerMode`` to the command :ref:`run_auth`.
 
 
 Version 1.22.1
 ^^^^^^^^^^^^^^
-* Added parameter **handleInterrupt** and **messages** to the commands :ref:`run_auth` and :ref:`run_change_pin`
+* Added parameter ``handleInterrupt`` and ``messages`` to the commands :ref:`run_auth` and :ref:`run_change_pin`
   for :ref:`api_level` **1**.
 * Added the command :ref:`interrupt`.
 
@@ -119,9 +124,9 @@ Version 1.20.0
 
 Version 1.16.0
 ^^^^^^^^^^^^^^
-* Changed parameter **value** for the commands :ref:`set_pin`, :ref:`set_can`, and :ref:`set_puk` for readers with
+* Changed parameter ``value`` for the commands :ref:`set_pin`, :ref:`set_can`, and :ref:`set_puk` for readers with
   a keypad.
-* Added parameter **keypad** to message :ref:`reader`.
+* Added parameter ``keypad`` to message :ref:`reader`.
 
 
 Version 1.14.2

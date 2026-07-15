@@ -8,6 +8,7 @@
 #include "asn1/ASN1Util.h"
 
 #include <QLoggingCategory>
+#include <QMap>
 
 
 using namespace Qt::Literals::StringLiterals;

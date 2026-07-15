@@ -48,7 +48,7 @@ class test_ResponseApdu
 		void cleanup()
 		{
 			Env::getSingleton<LogHandler>()->resetBacklog();
-			qApp->processEvents();
+			QCoreApplication::instance()->processEvents();
 		}
 
 

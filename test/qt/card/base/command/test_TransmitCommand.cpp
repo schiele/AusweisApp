@@ -29,14 +29,14 @@ class test_TransmitCommand
 			Env::getSingleton<LogHandler>()->init();
 			TestFileHelper::createTranslations(translationDir.path());
 			LanguageLoader::getInstance().setPath(translationDir.path());
-			qApp->processEvents();
+			QCoreApplication::instance()->processEvents();
 		}
 
 
 		void cleanup()
 		{
 			Env::getSingleton<LogHandler>()->resetBacklog();
-			qApp->processEvents();
+			QCoreApplication::instance()->processEvents();
 		}
 
 

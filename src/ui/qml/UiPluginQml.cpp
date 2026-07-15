@@ -126,7 +126,7 @@ UiPluginQml::UiPluginQml()
 
 	connect(Env::getSingleton<ReaderManager>(), &ReaderManager::fireStatusChanged, this, &UiPluginQml::onReaderStatusChanged);
 
-	qApp->installEventFilter(this);
+	QCoreApplication::instance()->installEventFilter(this);
 }
 
 
@@ -153,6 +153,9 @@ void UiPluginQml::init()
 	{
 		qputenv("QT_QUICK_CONTROLS_HOVER_ENABLED", "1");
 	}
+#ifdef Q_OS_ANDROID
+	qputenv("QT_ANDROID_ENABLE_WORKAROUND_TO_DISABLE_PREDICTIVE_TEXT", "1");
+#endif
 
 	const auto basicStyle = QStringLiteral("Basic");
 	if (QQuickStyle::name() != basicStyle)
@@ -311,15 +314,15 @@ void UiPluginQml::onWorkflowFinished(const QSharedPointer<WorkflowRequest>& pReq
 		Env::getSingleton<CertificateDescriptionModel>()->resetContext();
 		Env::getSingleton<ChatModel>()->resetContext();
 
-		const auto& generalSettings = Env::getSingleton<AppSettings>()->getGeneralSettings();
-
-		if (!context.objectCast<SelfAuthContext>()
-				&& !context->hasNextWorkflowPending()
-				&& generalSettings.isAutoCloseWindowAfterAuthentication()
-				&& !showUpdateInformationIfPending()
-				&& !authContext->changeTransportPin())
+		if (!context.objectCast<SelfAuthContext>() && !context->hasNextWorkflowPending())
 		{
-			onHideUi();
+			const auto& settings = Env::getSingleton<AppSettings>()->getGeneralSettings();
+			const bool skipUpdate = authContext->autoFinishBeforeQuit() && !settings.isTrayIconEnabled();
+			const bool showUpdate = skipUpdate ? false : showUpdateInformationIfPending();
+			if (!showUpdate && settings.isAutoCloseWindowAfterAuthentication())
+			{
+				onHideUi();
+			}
 		}
 	}
 
@@ -334,6 +337,13 @@ void UiPluginQml::onWorkflowFinished(const QSharedPointer<WorkflowRequest>& pReq
 		Env::getSingleton<ChatModel>()->resetContext();
 		Env::getSingleton<CertificateDescriptionModel>()->resetContext();
 	}
+
+#if defined(Q_OS_ANDROID) || defined(Q_OS_IOS)
+	if (!context->hasNextWorkflowPending())
+	{
+		Env::getSingleton<Service>()->runUpdateIfNeeded();
+	}
+#endif
 }
 
 
@@ -411,7 +421,12 @@ void UiPluginQml::onShowUi(UiModule pModule)
 
 	Q_EMIT fireShowRequest(pModule);
 
-	Env::getSingleton<Service>()->runUpdateIfNeeded();
+#if defined(Q_OS_ANDROID) || defined(Q_OS_IOS)
+	if (Env::getSingleton<ApplicationModel>()->getCurrentWorkflow() == ApplicationModel::Workflow::NONE)
+#endif
+	{
+		Env::getSingleton<Service>()->runUpdateIfNeeded();
+	}
 }
 
 
@@ -531,6 +546,12 @@ void UiPluginQml::doShutdown()
 }
 
 
+QQmlApplicationEngine* UiPluginQml::UiPluginQml::getEngine() const
+{
+	return mEngine.data();
+}
+
+
 QQuickWindow* UiPluginQml::getRootWindow() const
 {
 	if (!mEngine || mEngine->rootObjects().isEmpty())
@@ -538,7 +559,7 @@ QQuickWindow* UiPluginQml::getRootWindow() const
 		return nullptr;
 	}
 
-	return qobject_cast<QQuickWindow*>(mEngine->rootObjects().first());
+	return qobject_cast<QQuickWindow*>(mEngine->rootObjects().constFirst());
 }
 
 
@@ -556,7 +577,11 @@ void UiPluginQml::onQmlWarnings(const QList<QQmlError>& pWarnings)
 #ifndef QT_NO_DEBUG
 	for (const auto& warning : pWarnings)
 	{
-		Env::getSingleton<ApplicationModel>()->showFeedback(QStringLiteral("Got QML warning: %1").arg(warning.toString()));
+		const auto& warningString = warning.toString();
+		if (!warningString.contains(QStringLiteral("RangeError: Maximum call stack size exceeded.")))
+		{
+			Env::getSingleton<ApplicationModel>()->showFeedback(QStringLiteral("Got QML warning: %1").arg(warningString));
+		}
 	}
 #endif
 }

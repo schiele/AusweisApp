@@ -5,7 +5,6 @@ extend-exclude = [
     "CONTRIBUTING.rst",
     "README.rst",
     "docs/**",
-    "src/external/**",
     "resources/**",
     "libs/**",
     "test/fixture/**",

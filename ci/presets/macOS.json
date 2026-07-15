@@ -4,11 +4,14 @@
     "ci.json"
   ],
   "configurePresets": [
-     {
+    {
       "name": "ci-macos",
       "inherits": "ci-with-libs",
-      "generator": "Xcode",
-      "toolchainFile": "${sourceDir}/cmake/macOS.toolchain.cmake",
+      "generator": "Xcode"
+    },
+    {
+      "name": "ci-macos-debug",
+      "inherits": "ci-macos",
       "cacheVariables": {
         "BUILD_SHARED_LIBS": "ON",
         "SANITIZER": "ON"
@@ -16,9 +19,7 @@
     },
     {
       "name": "ci-macos-release",
-      "inherits": "ci-with-libs",
-      "generator": "Xcode",
-      "toolchainFile": "${sourceDir}/cmake/macOS.toolchain.cmake",
+      "inherits": "ci-macos",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "MinSizeRel"
       }

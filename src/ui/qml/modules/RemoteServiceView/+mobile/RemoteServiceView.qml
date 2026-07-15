@@ -350,7 +350,7 @@ FlickableSectionPage {
 
 			model: RemoteServiceModel.allDevices
 
-			delegate: DevicesListDelegate {
+			delegate: DevicesListItem {
 				Layout.fillWidth: true
 				linkQualityVisible: false
 				titleColor: Style.color.textNormal.basic_unchecked
@@ -363,8 +363,6 @@ FlickableSectionPage {
 		GLink {
 			id: addPairingLink
 
-			//: MOBILE
-			Accessible.name: qsTr("Start pairing of a new device")
 			Layout.alignment: Qt.AlignLeft
 			horizontalPadding: 0
 			icon.source: "qrc:///images/material_add.svg"

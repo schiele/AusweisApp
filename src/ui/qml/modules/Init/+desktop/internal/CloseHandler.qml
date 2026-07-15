@@ -108,7 +108,7 @@ Item {
 		onCancelled: close()
 		onConfirmed: {
 			root.abortWorkflow();
-			if (!UiPluginModel.isUpdatePending || ApplicationModel.currentWorkflow !== ApplicationModel.Workflow.AUTHENTICATION) {
+			if (AuthModel.autoFinishBeforeQuit || !UiPluginModel.isUpdatePending || ApplicationModel.currentWorkflow !== ApplicationModel.Workflow.AUTHENTICATION) {
 				root.closeOrHide();
 			}
 			close();

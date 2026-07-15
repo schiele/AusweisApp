@@ -13,6 +13,7 @@ GPane {
 
 	property alias buttonIconSource: hintButton.icon.source
 	property alias buttonText: hintButton.text
+	property alias buttonTooltip: hintButton.enabledTooltipText
 	property string linkToOpen
 	property alias text: hintText.text
 

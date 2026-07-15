@@ -32,7 +32,7 @@ DecisionView {
 		startEnabled: false
 	}
 
-	onPrimaryButtonChanged: {
+	onPrimaryButtonClicked: {
 		SettingsModel.autoStartApp = true;
 		leaveView();
 	}

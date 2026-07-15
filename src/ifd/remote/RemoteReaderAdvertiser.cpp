@@ -41,7 +41,7 @@ void RemoteReaderAdvertiserImpl::timerEvent(QTimerEvent* pEvent)
 
 void RemoteReaderAdvertiserImpl::sendDiscovery()
 {
-	const auto& broadcastEntries = mHandler->getAllBroadcastEntries();
+	const auto& broadcastEntries = DatagramHandler::getAllBroadcastEntries();
 
 	QSet<QHostAddress> sender;
 	for (const auto& broadcastEntry : broadcastEntries)
