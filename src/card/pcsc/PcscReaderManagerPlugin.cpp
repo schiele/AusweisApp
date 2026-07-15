@@ -5,6 +5,7 @@
 #include "PcscReaderManagerPlugin.h"
 
 #include <QLoggingCategory>
+#include <QVarLengthArray>
 
 
 using namespace governikus;

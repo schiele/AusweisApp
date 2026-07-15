@@ -15,7 +15,7 @@ QtObject {
 				return;
 			}
 
-			const isA11yFocusable = currentItem.Accessible && currentItem.Accessible.focusable && !currentItem.Accessible.ignored;
+			const isA11yFocusable = !Utils.isAccessibleIgnored(currentItem) && currentItem.Accessible.focusable;
 			if (isA11yFocusable) {
 				accessibleItems.push(currentItem);
 			}

@@ -98,7 +98,7 @@ canceled automatically before the shutdown.
 
 Info.plist
 ----------
-You need to enable the card identifier in your applications ``Info.plist`` like this,
+You need to enable the card identifier in your application's ``Info.plist`` like this,
 otherwise iOS will not recognize any identity cards. Also, it is necessary to provide
 a message why your application needs access to the NFC hardware.
 

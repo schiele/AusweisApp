@@ -120,8 +120,8 @@ class test_StatePreVerification
 			const_cast<QDateTime*>(&mState->mValidationDateTime)->setDate(QDate(2020, 05, 25));
 			auto* signature = mAuthContext->getDidAuthenticateEac1()->getCvCertificates().at(0)->mSignature;
 
-			QCOMPARE(Asn1OctetStringUtil::getValue(signature).size(), 64);
-			Asn1OctetStringUtil::setValue(Randomizer::getInstance().createBytes(64), signature);
+			QCOMPARE(signature->getLength(), 64);
+			signature->setValue(Randomizer::getInstance().createBytes(64));
 
 			QSignalSpy spy(mState.data(), &StatePreVerification::fireAbort);
 			mAuthContext->setStateApproved();
@@ -170,7 +170,7 @@ class test_StatePreVerification
 				settings.removeLinkCertificate(cvc);
 			}
 
-			const int expectedCvcaSize = 19;
+			const int expectedCvcaSize = 20;
 			QCOMPARE(mState->mTrustedCvcas.size(), expectedCvcaSize);
 			const_cast<QDateTime*>(&mState->mValidationDateTime)->setDate(QDate(2020, 05, 25));
 			auto& trustedCvcas = const_cast<QList<QSharedPointer<const CVCertificate>>&>(mState->mTrustedCvcas);

@@ -143,7 +143,7 @@ ProgressView {
 		case "StateSendDIDAuthenticateResponseEAC1":
 			userCancelAndManualRedirect = false;
 			if (AuthModel.isCancellationByUser()) {
-				if (SettingsModel.autoRedirectAfterAuthentication) {
+				if (SettingsModel.autoRedirectAfterAuthentication || AuthModel.autoFinishBeforeQuit) {
 					push(regularAbortedAuthView);
 				} else {
 					userCancelAndManualRedirect = true;
@@ -486,9 +486,9 @@ ProgressView {
 
 		SelfAuthenticationData {
 			okButtonText: root.startedByOnboarding ?
-			//: MOBILE
+			//: DESKTOP
 			qsTr("Back to setup") :
-			//: MOBILE
+			//: DESKTOP
 			qsTr("Back to start page")
 			title: root.title
 
@@ -534,9 +534,12 @@ ProgressView {
 			animation: AuthModel.statusCodeAnimation
 			buttonIcon: AuthModel.resultViewButtonIcon
 			buttonText: root.startedByOnboarding ?
-			//: MOBILE
+			//: DESKTOP
 			qsTr("Back to setup") : AuthModel.resultViewButtonText
 			header: AuthModel.resultHeader
+			hintButtonLink: AuthModel.statusHelpLink
+			//: DESKTOP
+			hintButtonText: hintButtonLink !== "" ? qsTr("Open website") : ""
 			hintText: AuthModel.statusHintText
 			linkToOpen: AuthModel.resultViewButtonLink
 			mailButtonVisible: AuthModel.errorIsMasked

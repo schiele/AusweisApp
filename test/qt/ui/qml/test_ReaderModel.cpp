@@ -116,14 +116,16 @@ class test_ReaderModel
 			mMockReaderConfiguration->clearReaderConfiguration();
 
 			ReaderModel readerModel;
-			QCOMPARE(readerModel.rowCount(QModelIndex()), 0);
+			QVERIFY(!readerModel.hasConnectedReader());
+			QCOMPARE(readerModel.rowCount(), 1);
 		}
 
 
 		void test_settings()
 		{
 			ReaderModel readerModel;
-			QCOMPARE(readerModel.rowCount(QModelIndex()), 0);
+			QVERIFY(!readerModel.hasConnectedReader());
+			QCOMPARE(readerModel.rowCount(), 1);
 		}
 
 
@@ -136,7 +138,7 @@ class test_ReaderModel
 			mUsbIds += UsbId(0x0C4B, 0x0501);    // REINER SCT cyberJack RFID komfort
 
 			ReaderModel readerModel;
-			QCOMPARE(readerModel.rowCount(QModelIndex()), 1);
+			QCOMPARE(readerModel.rowCount(), 1);
 			const auto& index = readerModel.index(0, 0, QModelIndex());
 			const auto& htmlDescription = readerModel.data(index, ReaderModel::UserRoles::READER_HTML_DESCRIPTION).toString();
 			QVERIFY(htmlDescription.startsWith(tr("The smartcard service of your system is not reachable.")));
@@ -148,7 +150,8 @@ class test_ReaderModel
 			mUsbIds += UsbId(0x1, 0x2);    // Unknown
 
 			ReaderModel readerModel;
-			QCOMPARE(readerModel.rowCount(QModelIndex()), 0);
+			QVERIFY(!readerModel.hasConnectedReader());
+			QCOMPARE(readerModel.rowCount(), 1);
 		}
 
 
@@ -163,7 +166,7 @@ class test_ReaderModel
 
 			QModelIndex index;
 			ReaderModel readerModel;
-			QCOMPARE(readerModel.rowCount(QModelIndex()), 2);
+			QCOMPARE(readerModel.rowCount(), 2);
 			index = readerModel.index(0, 0, QModelIndex());
 			QCOMPARE(readerModel.data(index, ReaderModel::UserRoles::READER_HTML_DESCRIPTION).toString(), tr("The smartcard service of your system is not reachable."));
 			index = readerModel.index(1, 0, QModelIndex());
@@ -185,7 +188,7 @@ class test_ReaderModel
 
 			QModelIndex index;
 			ReaderModel readerModel;
-			QCOMPARE(readerModel.rowCount(QModelIndex()), 2);
+			QCOMPARE(readerModel.rowCount(), 2);
 			index = readerModel.index(0, 0, QModelIndex());
 			QCOMPARE(readerModel.data(index, ReaderModel::UserRoles::READER_HTML_DESCRIPTION).toString(), tr("Driver installed"));
 			index = readerModel.index(1, 0, QModelIndex());
@@ -200,7 +203,30 @@ class test_ReaderModel
 			mReaderInfos += ReaderInfo("Governikus Special Reader"_L1, ReaderManagerPluginType::PCSC);
 
 			ReaderModel readerModel;
-			QCOMPARE(readerModel.rowCount(QModelIndex()), 1);
+			QCOMPARE(readerModel.rowCount(), 1);
+		}
+
+
+		void test_RoleData()
+		{
+			const auto ri = ReaderConfigurationInfo(42, {}, "DummyReader"_L1, "DummyUrl"_L1, {}, {});
+			mMockReaderConfiguration->readerConfigurationInfos().append(ri);
+
+			mMockReaderManager.setIsScanRunning(true);
+
+			QModelIndex index;
+			ReaderModel readerModel;
+			readerModel.mConnectedReaders = {ri};
+			QCOMPARE(readerModel.rowCount(), 1);
+			index = readerModel.index(0, 0, QModelIndex());
+			const auto& htmlDescription = readerModel.data(index, ReaderModel::UserRoles::READER_HTML_DESCRIPTION).toString();
+			QVERIFY(htmlDescription.startsWith(tr("No driver installed")));
+			QCOMPARE(readerModel.data(index, ReaderModel::UserRoles::READER_NAME).toString(), "DummyReader"_L1);
+			QCOMPARE(readerModel.data(index, ReaderModel::UserRoles::READER_DRIVER_URL).toString(), "DummyUrl"_L1);
+			QCOMPARE(readerModel.data(index, ReaderModel::UserRoles::READER_IMAGE_PATH).toString(), "qrc:///images/desktop/default_reader.png"_L1);
+			QVERIFY(readerModel.data(index, ReaderModel::UserRoles::READER_SUPPORTED).toBool());
+			QVERIFY(!readerModel.data(index, ReaderModel::UserRoles::READER_INSTALLED).toBool());
+			QVERIFY(readerModel.data(index, ReaderModel::UserRoles::SHOW_STATUS_ICON).toBool());
 		}
 
 
@@ -210,6 +236,77 @@ class test_ReaderModel
 			QSignalSpy spy(&readerModel, &ReaderModel::fireModelChanged);
 			readerModel.onTranslationChanged();
 			QCOMPARE(spy.count(), 1);
+		}
+
+
+		void test_readerCountChanged_data()
+		{
+			QTest::addColumn<QList<ReaderInfo>>("initialReader");
+			QTest::addColumn<QList<ReaderInfo>>("finalReader");
+
+			const auto dummy1 = ReaderInfo("DummyReader1"_L1, ReaderManagerPluginType::PCSC);
+			const auto dummy2 = ReaderInfo("DummyReader2"_L1, ReaderManagerPluginType::PCSC);
+
+			QTest::addRow("One reader added") << QList<ReaderInfo>() << QList<ReaderInfo>({dummy1});
+			QTest::addRow("Second reader added") << QList<ReaderInfo>({dummy1}) << QList<ReaderInfo>({dummy1, dummy2});
+			QTest::addRow("Second reader added - different order") << QList<ReaderInfo>({dummy1}) << QList<ReaderInfo>({dummy2, dummy1});
+			QTest::addRow("One reader removed") << QList<ReaderInfo>({dummy1}) << QList<ReaderInfo>();
+			QTest::addRow("Second reader removed") << QList<ReaderInfo>({dummy1, dummy2}) << QList<ReaderInfo>({dummy1});
+			QTest::addRow("Second reader removed - different order") << QList<ReaderInfo>({dummy2, dummy1}) << QList<ReaderInfo>({dummy1});
+		}
+
+
+		void test_readerCountChanged()
+		{
+			QFETCH(QList<ReaderInfo>, initialReader);
+			QFETCH(QList<ReaderInfo>, finalReader);
+
+			mReaderInfos = initialReader;
+			mMockReaderManager.setIsScanRunning(true);
+
+			ReaderModel readerModel;
+			const int initialCount = std::max(1, static_cast<int>(initialReader.count()));
+			QCOMPARE(readerModel.rowCount(), initialCount);
+
+			mReaderInfos = finalReader;
+			const int finalCount = std::max(1, static_cast<int>(finalReader.count()));
+			QSignalSpy spyNotify(&readerModel, finalCount > initialCount ? &QAbstractListModel::rowsAboutToBeInserted : &QAbstractListModel::rowsAboutToBeRemoved);
+			QSignalSpy spyResult(&readerModel, finalCount > initialCount ? &QAbstractListModel::rowsInserted : &QAbstractListModel::rowsRemoved);
+			QSignalSpy spyDataChanged(&readerModel, &QAbstractListModel::dataChanged);
+
+			readerModel.onUpdateContent();
+			QCOMPARE(readerModel.rowCount(), finalCount);
+			QCOMPARE(spyNotify.count(), finalCount != initialCount ? 1 : 0);
+			QCOMPARE(spyResult.count(), finalCount != initialCount ? 1 : 0);
+			QCOMPARE(spyDataChanged.count(), 1);
+		}
+
+
+		void test_hasConnectedReader()
+		{
+			ReaderModel readerModel;
+			QCOMPARE(readerModel.rowCount(), 1);
+			QVERIFY(!readerModel.hasConnectedReader());
+
+			mReaderInfos += ReaderInfo("DummyReader1"_L1, ReaderManagerPluginType::PCSC);
+			readerModel.onUpdateContent();
+			QCOMPARE(readerModel.rowCount(), 1);
+			QVERIFY(readerModel.hasConnectedReader());
+		}
+
+
+		void test_handleDummyReaderInfo()
+		{
+			ReaderModel readerModel;
+			QCOMPARE(readerModel.rowCount(), 1);
+			const QModelIndex index = readerModel.index(0);
+			QCOMPARE(readerModel.data(index, ReaderModel::UserRoles::READER_NAME).toString(), "No card reader connected"_L1);
+			QCOMPARE(readerModel.data(index, ReaderModel::UserRoles::READER_IMAGE_PATH).toString(), "qrc:///images/desktop/default_reader.png"_L1);
+			QCOMPARE(readerModel.data(index, ReaderModel::UserRoles::READER_DRIVER_URL).toString(), ""_L1);
+			QCOMPARE(readerModel.data(index, ReaderModel::UserRoles::READER_HTML_DESCRIPTION).toString(), ""_L1);
+			QVERIFY(!readerModel.data(index, ReaderModel::UserRoles::READER_SUPPORTED).toBool());
+			QVERIFY(!readerModel.data(index, ReaderModel::UserRoles::READER_INSTALLED).toBool());
+			QVERIFY(!readerModel.data(index, ReaderModel::UserRoles::SHOW_STATUS_ICON).toBool());
 		}
 
 

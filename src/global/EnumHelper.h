@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <QByteArrayList>
 #include <QDebug>
 #include <QMetaEnum>
 #include <type_traits>

@@ -5,7 +5,6 @@
 #include "SecureMessagingResponse.h"
 
 #include "asn1/ASN1TemplateUtil.h"
-#include "asn1/ASN1Util.h"
 
 #include <QLoggingCategory>
 
@@ -29,7 +28,7 @@ SecureMessagingResponse::SecureMessagingResponse(const ResponseApdu& pApdu)
 
 
 	mProcessingStatus = decodeObject<SM_PROCESSING_STATUS>(data);
-	if (mProcessingStatus == nullptr || mProcessingStatus->length != 2)
+	if (mProcessingStatus == nullptr || mProcessingStatus->getLength() != 2)
 	{
 		qCCritical(card) << "Error on decoding status";
 		return;
@@ -38,7 +37,7 @@ SecureMessagingResponse::SecureMessagingResponse(const ResponseApdu& pApdu)
 
 
 	mChecksum = decodeObject<SM_CHECKSUM>(data);
-	if (mChecksum == nullptr || mChecksum->length != 8)
+	if (mChecksum == nullptr || mChecksum->getLength() != 8)
 	{
 		qCCritical(card) << "Error on decoding mac";
 		return;

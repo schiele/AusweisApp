@@ -15,7 +15,7 @@ ListView {
 	property alias scrollBarColor: scrollBar.color
 	property real scrollBarTopPadding: 0
 
-	function handleItemFocused(pIndex) {
+	function centerViewAtIndex(pIndex) {
 		positionViewAtIndex(pIndex, ListView.Center);
 		currentIndex = pIndex;
 	}
@@ -50,9 +50,6 @@ ListView {
 		if (ScrollBar.vertical)
 			(ScrollBar.vertical as GScrollBar).highlight();
 	}
-	function isListElementEmptyFunc(pItem) {
-		return false;
-	}
 	function scrollPageDown() {
 		scrollBar.increase();
 	}
@@ -65,7 +62,7 @@ ListView {
 			return;
 
 		var item = itemAtIndex(index);
-		while (isListElementEmptyFunc(item)) {
+		while (!item.enabled) {
 			index++;
 			if (index === count - 1)
 				return;
@@ -99,7 +96,7 @@ ListView {
 	Keys.onDownPressed: {
 		do {
 			root.incrementCurrentIndex();
-		} while (isListElementEmptyFunc(currentItem) && root.currentIndex + 1 < root.count)
+		} while (!currentItem.enabled && root.currentIndex + 1 < root.count)
 	}
 	Keys.onPressed: event => {
 		handleKeyPress(event);
@@ -107,7 +104,7 @@ ListView {
 	Keys.onUpPressed: {
 		do {
 			root.decrementCurrentIndex();
-		} while (isListElementEmptyFunc(currentItem) && root.currentIndex > 0)
+		} while (!currentItem.enabled && root.currentIndex > 0)
 	}
 	onVisibleChanged: if (visible)
 		highlightScrollbar()

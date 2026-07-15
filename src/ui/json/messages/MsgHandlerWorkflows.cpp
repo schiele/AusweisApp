@@ -9,6 +9,8 @@
 using namespace governikus;
 
 
+QLatin1String MsgHandlerWorkflows::cErrorAttribute = QLatin1String("error");
+
 void MsgHandlerWorkflows::handleWorkflowProperties(const QJsonObject& pObj, MsgContext& pContext) const
 {
 	initMessages(pObj[QLatin1String("messages")].toObject());
@@ -62,5 +64,11 @@ void MsgHandlerWorkflows::initProgressStatus(const QJsonValue& pValue, MsgContex
 
 void MsgHandlerWorkflows::setError(const QLatin1String pError)
 {
-	setValue(QLatin1String("error"), pError);
+	setValue(cErrorAttribute, pError);
+}
+
+
+bool MsgHandlerWorkflows::hasError() const
+{
+	return contains(cErrorAttribute);
 }

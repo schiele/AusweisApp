@@ -13,6 +13,9 @@ namespace governikus
 class MsgHandlerWorkflows
 	: public MsgHandler
 {
+	private:
+		static QLatin1String cErrorAttribute;
+
 	protected:
 		void handleWorkflowProperties(const QJsonObject& pObj, MsgContext& pContext) const;
 
@@ -21,6 +24,7 @@ class MsgHandlerWorkflows
 		void initHandleInterrupt(const QJsonValue& pValue, const MsgContext& pContext) const;
 		void initProgressStatus(const QJsonValue& pValue, MsgContext& pContext) const;
 		void setError(const QLatin1String pError);
+		bool hasError() const;
 
 		using MsgHandler::MsgHandler;
 };

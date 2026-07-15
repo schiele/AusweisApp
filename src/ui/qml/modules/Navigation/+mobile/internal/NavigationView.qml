@@ -58,7 +58,7 @@ Control {
 				//: MOBILE Relative position of current navigation tab in navigation view. %1 is replaced with the current tab's index, %2 with the total count of tabs
 				readonly property string tabPositionA11y: qsTr("%1 of %2").arg(index + 1).arg(repeater.count)
 
-				Accessible.ignored: root.Accessible.ignored
+				Accessible.ignored: Utils.isAccessibleIgnored(root)
 				Accessible.name: {
 					//: MOBILE
 					var a11yName = [text, qsTr("Tab"), tabPositionA11y];

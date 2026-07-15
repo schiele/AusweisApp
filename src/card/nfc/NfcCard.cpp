@@ -21,8 +21,11 @@ NfcCard::NfcCard(QNearFieldTarget* pNearFieldTarget)
 {
 	qCDebug(card_nfc) << "Card created";
 
-	pNearFieldTarget->setParent(nullptr);
-	connect(pNearFieldTarget, &QNearFieldTarget::error, this, &NfcCard::fireTargetError);
+	if (pNearFieldTarget)
+	{
+		pNearFieldTarget->setParent(nullptr);
+		connect(pNearFieldTarget, &QNearFieldTarget::error, this, &NfcCard::fireTargetError);
+	}
 }
 
 
@@ -34,13 +37,19 @@ bool NfcCard::isValid() const
 
 bool NfcCard::invalidateTarget(const QNearFieldTarget* pNearFieldTarget)
 {
-	if (pNearFieldTarget == mNearFieldTarget.data())
+	if (matchesTarget(pNearFieldTarget))
 	{
 		mIsValid = false;
 		return true;
 	}
 
 	return false;
+}
+
+
+bool NfcCard::matchesTarget(const QNearFieldTarget* pNearFieldTarget) const
+{
+	return mNearFieldTarget.data() == pNearFieldTarget;
 }
 
 

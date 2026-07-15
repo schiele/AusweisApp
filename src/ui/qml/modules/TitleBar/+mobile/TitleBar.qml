@@ -70,13 +70,20 @@ Rectangle {
 			bottom: parent.bottom
 			horizontalCenter: parent.horizontalCenter
 		}
-		TitleBarNavigation {
-			Layout.minimumHeight: Style.dimens.small_icon_size
+		Item {
+			Layout.minimumHeight: titleBarNavigation.implicitHeight
+			Layout.preferredWidth: titleBarNavigation.implicitWidth
 			Layout.topMargin: Style.dimens.titlebar_padding
-			enabled: root.navigationAction ? root.navigationAction.enabled : false
-			navAction: root.navigationAction ? root.navigationAction.action : NavigationAction.Action.None
 
-			onClicked: root.navigationAction.clicked()
+			TitleBarNavigation {
+				id: titleBarNavigation
+
+				anchors.fill: parent
+				navAction: root.navigationAction ? root.navigationAction.action : NavigationAction.Action.None
+				visible: root.navigationAction ? root.navigationAction.enabled && (icon.source.toString() !== "" || text !== "") : false
+
+				onClicked: root.navigationAction.clicked()
+			}
 		}
 		RowLayout {
 			spacing: Style.dimens.pane_spacing
@@ -91,14 +98,11 @@ Rectangle {
 				maximumLineCount: 2
 				textStyle: Style.text.title
 			}
-			GSpacer {
-				Layout.fillWidth: true
-			}
 			Loader {
 				id: rightActionLoader
 
 				function setRightAction(pRightAction) {
-					if (SettingsModel.useAnimations && pRightAction !== null) {
+					if (SettingsModel.useAnimations && !ApplicationModel.screenReaderRunning) {
 						rightActionStackAnimateOut.newSourceComponent = pRightAction;
 						rightActionStackAnimateOut.start();
 						return;
@@ -107,6 +111,7 @@ Rectangle {
 				}
 
 				Layout.alignment: Qt.AlignRight | Qt.AlignTop
+				visible: status === Loader.Ready
 
 				PropertyAnimation {
 					id: rightActionStackAnimateOut
@@ -115,13 +120,14 @@ Rectangle {
 
 					duration: Style.animation_duration
 					easing.type: Easing.InCubic
+					from: 1
 					property: "opacity"
 					target: rightActionLoader.item
 					to: 0
 
 					onStopped: {
 						rightActionLoader.sourceComponent = newSourceComponent;
-						if (newSourceComponent !== null) {
+						if (newSourceComponent) {
 							rightActionStackAnimateIn.start();
 						}
 					}
@@ -131,6 +137,7 @@ Rectangle {
 
 					duration: Style.animation_duration
 					easing.type: Easing.OutCubic
+					from: 0
 					property: "opacity"
 					target: rightActionLoader.item
 					to: 1

@@ -17,13 +17,6 @@ GListView {
 
 	property real maximumContentWidth: Number.POSITIVE_INFINITY
 
-	function isListElementEmptyFunc(pItem) {
-		let delegate = pItem as FormattedTextPaneDelegate;
-		if (delegate)
-			return delegate.content === "";
-		return true;
-	}
-
 	displayMarginBeginning: Style.dimens.pane_padding
 	displayMarginEnd: Style.dimens.pane_padding
 	footerPositioning: ListView.InlineFooter
@@ -33,10 +26,11 @@ GListView {
 		anchors.horizontalCenter: parent ? parent.horizontalCenter : undefined
 		anchors.horizontalCenterOffset: -Style.dimens.pane_padding / 2
 		count: root.count
+		enabled: content !== ''
 		width: Math.min(root.width - Style.dimens.pane_padding, root.maximumContentWidth)
 
 		onActiveFocusChanged: if (activeFocus) {
-			root.handleItemFocused(index);
+			root.centerViewAtIndex(index);
 		}
 		onScrollDownAction: root.scrollPageDown()
 		onScrollUpAction: root.scrollPageUp()

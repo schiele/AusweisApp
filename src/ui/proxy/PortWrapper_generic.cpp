@@ -26,12 +26,17 @@ PortWrapper::PortWrapper(quint16 pLocalPort, quint16 pPeerPort)
 	{
 		const auto& filename = portFile.absoluteFilePath();
 		const auto port = readPortFile(filename);
-		if (port > 0 && port != pLocalPort)
+
+		if (port < 1)
+		{
+			qCWarning(rproxy) << "Ignore invalid port file:" << filename;
+			continue;
+		}
+
+		if (port != pLocalPort)
 		{
 			mPorts << port;
 		}
-
-		qCWarning(rproxy) << "Ignore invalid port file:" << filename;
 	}
 
 	qCDebug(rproxy) << "Found instances on Ports:" << mPorts;

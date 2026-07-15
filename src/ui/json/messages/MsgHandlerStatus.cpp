@@ -27,7 +27,7 @@ QJsonValue MsgHandlerStatus::getWorkflow(const MsgContext& pContext) const
 			case Action::CHANGE_PIN:
 				return QLatin1String("CHANGE_PIN");
 
-			// SDK do NOT support those workflows
+			// SDK does NOT support those workflows
 			case Action::SELF_AUTH:
 			case Action::REMOTE_SERVICE:
 				return QLatin1String("UNKNOWN");

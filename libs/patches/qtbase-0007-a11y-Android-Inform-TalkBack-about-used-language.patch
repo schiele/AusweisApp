@@ -1,4 +1,4 @@
-From 5932fbfdd32f6df548700a1e8b62ad700d37c3dc Mon Sep 17 00:00:00 2001
+From a0cd7a8894d50557474ceb141880e9b9da068d26 Mon Sep 17 00:00:00 2001
 From: Jan Moeller <Jan.Moeller@governikus.de>
 Date: Thu, 6 Nov 2025 08:58:59 +0100
 Subject: a11y Android: Inform TalkBack about used language

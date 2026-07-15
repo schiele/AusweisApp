@@ -74,6 +74,7 @@ class QmlTestRunner
 			const auto& prefix = UiPluginQml::adjustQmlImportPath(pEngine);
 			pEngine->rootContext()->setContextProperty(QStringLiteral("importPrefix"), prefix);
 			pEngine->rootContext()->setContextProperty(QStringLiteral("testRunner"), this);
+			pEngine->rootContext()->setContextProperty(QStringLiteral("platformSelector"), UiPluginQml::getOverridePlatform());
 
 			connect(pEngine, &QQmlEngine::warnings, this, [](const QList<QQmlError>& pWarnings){
 						bool fail = false;

@@ -57,6 +57,9 @@ SectionPage {
 
 				Accessible.onScrollDownAction: listView.scrollPageDown()
 				Accessible.onScrollUpAction: listView.scrollPageUp()
+				onActiveFocusChanged: if (activeFocus) {
+					listView.centerViewAtIndex(delegateItem.index);
+				}
 			}
 		}
 

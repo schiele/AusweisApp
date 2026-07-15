@@ -1,4 +1,4 @@
-From 5c2dd794c04f2825010d94450cf4352b757b8683 Mon Sep 17 00:00:00 2001
+From f9e78f0110386a08a1b04872d28fb19f4c9174c7 Mon Sep 17 00:00:00 2001
 From: Paul Wicking <paul.wicking@qt.io>
 Date: Thu, 26 Mar 2026 07:09:43 +0100
 Subject: qyieldcpu: Fix compilation with macOS 26.4 SDK

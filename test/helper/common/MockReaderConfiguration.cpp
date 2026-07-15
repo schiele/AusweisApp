@@ -11,3 +11,9 @@ void MockReaderConfiguration::clearReaderConfiguration()
 {
 	mReaderConfigurationInfos.clear();
 }
+
+
+QList<ReaderConfigurationInfo>& MockReaderConfiguration::readerConfigurationInfos()
+{
+	return mReaderConfigurationInfos;
+}

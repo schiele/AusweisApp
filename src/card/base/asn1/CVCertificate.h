@@ -6,6 +6,8 @@
 
 #include "CVCertificateBody.h"
 
+#include "asn1/ASN1Util.h"
+
 #include <QByteArrayList>
 #include <QDateTime>
 #include <QDebug>
@@ -35,11 +37,7 @@ namespace governikus
 
 
 struct SIGNATURE
-	: public ASN1_OCTET_STRING
-{
-	// we use inheritance, because the structure ValidityDate is already a typedef of ASN1_OCTET_STRING
-	// and we cannot have two template specializations for the same type.
-};
+	: public Asn1OctetStringUtil {};
 
 
 using CVCertificate = struct cvcertificate_st

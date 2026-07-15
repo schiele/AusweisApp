@@ -1,0 +1,2 @@
+NFCReaderUsageDescription = "AusweisApp використовує NFC для доступу до eID-картки.";
+NSLocalNetworkUsageDescription = "Програмі AusweisApp потрібен доступ до локальної мережі, щоб мати змогу використовувати смартфон як зчитувач карток (SaC).";

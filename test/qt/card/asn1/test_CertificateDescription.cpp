@@ -344,7 +344,7 @@ class test_CertificateDescription
 				for (int i = 0; i < sk_ASN1_OCTET_STRING_num(certDescr->mCommCertificates); i++)
 				{
 					ASN1_OCTET_STRING* octetString = sk_ASN1_OCTET_STRING_value(certDescr->mCommCertificates, i);
-					QByteArray byteBuf(reinterpret_cast<char*>(octetString->data), octetString->length);
+					QByteArray byteBuf(reinterpret_cast<const char*>(ASN1_STRING_get0_data(octetString)), ASN1_STRING_length(octetString));
 					QVERIFY(!byteBuf.isEmpty());
 				}
 			}

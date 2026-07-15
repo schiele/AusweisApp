@@ -454,6 +454,9 @@ Controller {
 			errorDescription: AuthModel.errorText
 			//: MOBILE
 			header: qsTr("Authentication failed")
+			hintButtonLink: AuthModel.statusHelpLink
+			//: MOBILE
+			hintButtonText: hintButtonLink !== "" ? qsTr("Open website") : ""
 			hintText: AuthModel.statusHintText
 			//: MOBILE
 			mailButtonText: AuthModel.errorIsMasked ? qsTr("Send log") : ""

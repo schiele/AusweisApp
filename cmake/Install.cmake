@@ -51,7 +51,7 @@ if((WIN32 OR MAC) AND TARGET ${Qt}::Qml)
 		set(_lib_dir ${QT_INSTALL_ARCHDATA}/qml/${entry})
 		file(GLOB_RECURSE _libs "${_lib_dir}/*.dll" "${_lib_dir}/*.dylib")
 		list(APPEND LIBS ${_libs})
-		install(DIRECTORY ${_lib_dir} DESTINATION ${DEFAULT_FILE_DESTINATION}/qml COMPONENT Runtime PATTERN "*.dylib" EXCLUDE)
+		install(DIRECTORY ${_lib_dir} DESTINATION ${DEFAULT_FILE_DESTINATION}/qml COMPONENT Runtime PATTERN "*.dylib" EXCLUDE PATTERN "*test*" EXCLUDE PATTERN "*.dSYM" EXCLUDE)
 	endforeach()
 endif()
 
@@ -151,7 +151,7 @@ elseif(MAC)
 			file(GLOB_RECURSE DYLIB "${_dir}/${entry}/*.dylib")
 			foreach(_lib ${DYLIB})
 				file(RELATIVE_PATH _lib_dest "${_dir}" "${_lib}")
-				if(NOT _lib_dest MATCHES "XmlListModel|LocalStorage|Shapes") # not needed stuff
+				if(NOT _lib_dest MATCHES "XmlListModel|LocalStorage|Shapes|test|dSYM") # not needed stuff
 					get_filename_component(_lib_dest_dir ${_lib_dest} DIRECTORY)
 					install(FILES ${_lib} DESTINATION ${MACOS_BUNDLE_RESOURCES_DIR}/qml/${_lib_dest_dir} COMPONENT Runtime)
 				endif()

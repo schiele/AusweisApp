@@ -97,6 +97,9 @@ class test_StateConnectCard
 				QSignalSpy spyContinue(mState.data(), &StateConnectCard::fireContinue);
 				QSignalSpy spyAbort(mState.data(), &StateConnectCard::fireAbort);
 
+				mState->operator<<(connect(mState.data(), &StateConnectCard::fireRetry, this, [](){})); // Mocks an active state in the state machine.
+				QCOMPARE(mState->isActive(), true);
+
 				QTest::ignoreMessage(QtDebugMsg, "Card connection command completed");
 				QTest::ignoreMessage(QtDebugMsg, "Card connection failed");
 				mState->onCommandDone(createCardConnectionCommand(rName));
@@ -117,6 +120,26 @@ class test_StateConnectCard
 				QVERIFY(mState->getContext()->getCardInitiallyAppeared());
 
 				mContext->resetCardConnection();
+			}
+		}
+
+
+		void test_OnCommandDoneUnconnected()
+		{
+			TestHookThread workerThread;
+
+			{
+				QSignalSpy spyContinue(mState.data(), &StateConnectCard::fireContinue);
+				QSignalSpy spyAbort(mState.data(), &StateConnectCard::fireAbort);
+				QSignalSpy spyRetry(mState.data(), &StateConnectCard::fireRetry);
+
+				QTest::ignoreMessage(QtDebugMsg, "State not active anymore, ignore CardConnectionCommand result.");
+				QCOMPARE(mState->isActive(), false);
+				mState->onCommandDone(createCardConnectionCommand("reader name"_L1));
+				QCOMPARE(mState->isActive(), false);
+				QCOMPARE(spyContinue.count(), 0);
+				QCOMPARE(spyAbort.count(), 0);
+				QCOMPARE(spyRetry.count(), 0);
 			}
 		}
 

@@ -69,10 +69,12 @@ function(GENERATE_QML_MODULES _system)
 		endif()
 
 		file(GLOB_RECURSE files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "${name}/*.qml" "${name}/*.js")
+		GET_PLATFORM_LIBRARY_FILES(files_src PATH "${name}" WITH_HEADER)
 
 		FILTER_VERSIONED("${files}" files)
 		FILTER_SELECTOR("${files}" files "${_system}")
-		if("${files}" STREQUAL "")
+
+		if("${files}" STREQUAL "" AND "${files_src}" STREQUAL "")
 			continue()
 		endif()
 
@@ -108,6 +110,7 @@ function(GENERATE_QML_MODULES _system)
 
 		set(ModuleLibrary AusweisAppUiQmlModule${_system}${name})
 		add_library(${ModuleLibrary} STATIC)
+		target_link_libraries(${ModuleLibrary} PUBLIC ${Qt}::Quick)
 		qt_add_qml_module(${ModuleLibrary}
 			URI "Governikus.${name}"
 			VERSION "${PROJECT_VERSION}"
@@ -118,11 +121,13 @@ function(GENERATE_QML_MODULES _system)
 			${RESOURCE_PREFIX}
 			IMPORT_PATH ${CMAKE_CURRENT_BINARY_DIR}/${import_path}
 			IMPORT_PATH ${CMAKE_CURRENT_BINARY_DIR}/common
+			SOURCES ${files_src}
 		)
 
 		target_compile_options(${ModuleLibrary} PRIVATE "${INCOMPATIBLE_QT_COMPILER_FLAGS}")
 		target_compile_options(${ModuleLibrary}plugin PRIVATE "${INCOMPATIBLE_QT_COMPILER_FLAGS}")
 		target_link_libraries(AusweisAppUiQmlModules ${type} ${ModuleLibrary} ${type} ${ModuleLibrary}plugin)
+		target_include_directories(${ModuleLibrary} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/${name})
 	endforeach()
 endfunction()
 

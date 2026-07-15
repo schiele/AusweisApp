@@ -94,11 +94,8 @@ QString GlobalStatus::toErrorDescription(const bool pSimplifiedVersion) const
 {
 	if (pSimplifiedVersion && isMessageMasked())
 	{
-		const QString hyperlink = QStringLiteral("<a href=\"https://www.ausweisapp.bund.de/%1/aa2/support\">").arg(LanguageLoader::getLocaleCode());
-		//: ALL_PLATFORMS Technical error description. Generic message with link to support section of the homepage. %1: HTML hyperlink start tag %2: HTML hyperlink end tag
-		QString message = tr("A secure connection to the provider could not be established. Check the network connection and try again later. If this doesn't help, contact our %1support%2.").arg(hyperlink, QStringLiteral("</a>"));
-
-		return message;
+		//: ALL_PLATFORMS
+		return tr("A secure connection to the provider could not be established. Check the network connection and try again later.");
 	}
 	return toErrorDescriptionInternal();
 }

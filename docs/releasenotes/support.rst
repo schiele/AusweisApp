@@ -56,13 +56,13 @@ und sollte daher mit allen marktüblichen Browsern verwendet werden können.
 Im Rahmen der Qualitätssicherung werden die folgenden Browserversionen
 getestet.
 
-- Chrome 149
+- Chrome 150
 
 - Firefox 152
 
-- Safari 26.2 (macOS)
+- Safari 26.5 (macOS)
 
-- Edge 149
+- Edge 150
 
 
 
@@ -128,15 +128,15 @@ Im mobilen Umfeld ist die Funktionalität jedoch abhängig von der vom
 Anbieter umgesetzten Aktivierung. Daher empfehlen wir einen der
 folgenden Browser zu verwenden.
 
-- Chrome 149 (iOS/Android)
+- Chrome 150 (iOS/Android)
 
 - Firefox 152 (iOS/Android)
 
-- Edge 149 (iOS/Android)
+- Edge 150 (iOS/Android)
 
-- Samsung Internet 29 (Android)
+- Samsung Internet 30 (Android)
 
-- Safari 26.2 (iOS)
+- Safari 26.5 (iOS)
 
 
 Kartenleser

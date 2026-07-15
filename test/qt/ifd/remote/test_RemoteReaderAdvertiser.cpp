@@ -43,12 +43,6 @@ class DatagramHandlerMock
 		}
 
 
-		[[nodiscard]] QList<QNetworkAddressEntry> getAllBroadcastEntries() const override
-		{
-			return QList<QNetworkAddressEntry>();
-		}
-
-
 		void send(const QByteArray& pData, const QList<QNetworkAddressEntry>&) override
 		{
 			mList << pData;

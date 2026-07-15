@@ -26,7 +26,8 @@ class NfcCard
 		explicit NfcCard(QNearFieldTarget* pNearFieldTarget);
 
 		[[nodiscard]] bool isValid() const;
-		bool invalidateTarget(const QNearFieldTarget* pNearFieldTarget);
+		[[nodiscard]] bool invalidateTarget(const QNearFieldTarget* pNearFieldTarget);
+		[[nodiscard]] bool matchesTarget(const QNearFieldTarget* pNearFieldTarget) const;
 
 		CardReturnCode establishConnection() override;
 		CardReturnCode releaseConnection() override;

@@ -102,9 +102,13 @@ void TlsServer::onPreSharedKeyAuthenticationRequired(QSslPreSharedKeyAuthenticat
 
 void TlsServer::onError(QAbstractSocket::SocketError pSocketError)
 {
-	qCDebug(ifd) << "Socket error:" << pSocketError << mSocket->errorString();
-	mSocket->deleteLater();
-	mSocket.clear();
+	qCDebug(ifd) << "Socket error:" << pSocketError;
+	if (mSocket)
+	{
+		qCDebug(ifd) << "Socket error:" << mSocket->errorString();
+		mSocket->deleteLater();
+		mSocket.clear();
+	}
 	Q_EMIT fireSocketError(pSocketError);
 }
 

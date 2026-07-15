@@ -146,42 +146,6 @@
 		},
 		{
 			"shortName": {
-				"": "Adoption Digital"
-			},
-			"longName": {
-				"": "Adoption Digital"
-			},
-			"longDescription": {
-				"": "Der Online-Dienst 'Adoption Digital' ist ein digitaler Dienst mit dem Ziel den Bürger:innen, die ein Kind adoptieren möchten, eine vereinfachte Möglichkeit anzubieten einen Antrag auf Adoption zu stellen. Mit Hilfe des Online-Dienstes können Antragstellende die nötigen Formulare bequem von zu Hause aus online ausfüllen. Neben eines Kontaktformulars zur ersten Kontaktaufnahme mit der entsprechenden Adoptionsvermittlungsstelle, bietet der Online-Dienst auch Formulare für die weitere Antragstellung. Interessierte Bürger:innen können das entsprechende Bewerbungsformular zur Fremdkind-, Stiefkind- oder Verwandtenkindadoption ebenfalls im Online-Dienst ausfüllen. Geforderte Nachweise können direkt hochgeladen und dem Formular angehängt werden oder zu einem späteren Zeitpunkt digital nachgereicht werden. Der Online-Dienst erspart nicht nur Antragstellenden, sondern auch den Adoptionsvermittlungsstellen und Behörden Zeit und Aufwand. Für Bürger:innen, die sich zunächst informieren möchten, stellt der Online-Dienst erste wichtige Informationen über eine Adoption und dessen Prozess zur Verfügung."
-			},
-			"address": "https://www.adoption-und-pflegekinderwesen.de",
-			"homepage": "https://www.adoption-und-pflegekinderwesen.de",
-			"email": "info@betriebskoordination.bremen.de",
-			"postalAddress": "Der Senator für Finanzen<br/>Am Tabakquartier 56<br/>28197 Bremen",
-			"image": "AdoptionDigital_image.png",
-			"icon": "AdoptionDigital_icon.png",
-			"category": "citizen"
-		},
-		{
-			"shortName": {
-				"": "Pflegekinderwesen Digital"
-			},
-			"longName": {
-				"": "Pflegekinderwesen Digital"
-			},
-			"longDescription": {
-				"": " Der Online Dienst 'Pflegekinderwesen Digital' ist ein digitaler Dienst mit dem Ziel den Bürger:innen, die ein Kind in Pflege nehmen möchten oder finanzielle Leistungen für ein Pflegekind beantragen möchten, eine vereinfachte Möglichkeit anzubieten diese Anträge zu stellen. Mit Hilfe des Online Dienstes können Antragstellende die nötigen Formulare bequem von zu Hause aus online ausfüllen. Neben eines Kontaktformulars zur ersten Kontaktaufnahme mit der entsprechenden Pflegestelle bietet der Online Dienst auch Formulare für die weitere Antragstellung. Interessierte Bürger:innen können das Bewerbungsformular für Pflegeeltern ebenso im Online Dienst ausfüllen. Für Eltern, die bereits ein Kind in Pflege genommen haben, gibt es weitere Formulare zur Beantragung von finanziellen Leistungen wie beispielsweise die Beitragsübernahme der Unfallversicherung, eine Bezuschussung der Altersabsicherung und Leistungen gemäß Paragraf 33 und 39 SGB VIII. Geforderte Nachweise können direkt hochgeladen und dem Formular angehängt werden oder zu einem späteren Zeitpunkt digital nachgereicht werden. Außerdem haben Antragstellende die Möglichkeit einen formlosen Antrag zu stellen. Der Online Dienst erspart nicht nur Antragstellenden, sondern auch den Pflegestellen und Behörden Zeit und Aufwand. Für Bürger:innen, die sich zunächst informieren möchten, stellt der Online Dienst erste wichtige Informationen über die Aufnahme eines Pflegekindes und dessen Prozess zur Verfügung."
-			},
-			"address": "https://www.adoption-und-pflegekinderwesen.de",
-			"homepage": "https://www.adoption-und-pflegekinderwesen.de",
-			"email": "info@betriebskoordination.bremen.de",
-			"postalAddress": "Der Senator für Finanzen<br/>Am Tabakquartier 56<br/>28197 Bremen",
-			"image": "PflegekinderwesenDigital_image.png",
-			"icon": "PflegekinderwesenDigital_icon.png",
-			"category": "citizen"
-		},
-		{
-			"shortName": {
 				"": "Akteneinsicht in Stasi-Unterlagen"
 			},
 			"longName": {
@@ -295,8 +259,8 @@
 			"longName": {
 				"": "BAföG Digital - Antragstellung"
 			},
-			"address": "https://www.bafoeg-digital.de",
-			"homepage": "https://www.bafoeg-digital.de",
+			"address": "https://bafoeg-digital.de",
+			"homepage": "https://bafoeg-digital.de",
 			"email": "pks@mwu.sachsen-anhalt.de",
 			"longDescription": {
 				"": "Mit Ihrem Online-Ausweis können Sie auf BAföG Digital Ihren BAföG-Antrag komplett online stellen. Das nachträgliche Ausdrucken des Antrags erübrigt sich. Der Onlinedienst kann von Studierenden, Schülerinnen und Schülern sowie für das Auslands-BAföG genutzt werden.<br/><br/>Notwendige Dokumente können bequem per Upload-Funktion hochgeladen werden. Um Fristen zu wahren, können Sie das auch zu einem späteren Zeitpunkt nachholen. Auf BAföG Digital können Sie zudem jederzeit den Bearbeitungsstatus Ihres Antrags im zuständigen Amt für Ausbildungsförderung einsehen.<br/><br/>Um die komplett digitale Antragstellung nutzen zu können, ist eine elektronische Authentisierung notwendig. Hierzu bietet Ihnen BAföG Digital die Anmeldeoptionen 'Nutzerkonto Bund' oder 'Servicekonto eines Bundeslandes' an. Bei beiden Anmeldeoptionen werden Sie automatisch zu dem entsprechenden Dienst weitergeleitet, über den Sie sich digital mit Ihrem Online-Ausweis ausweisen können. Sobald der Authentisierungsprozess abgeschlossen ist, gelangen Sie zurück zu BAföG Digital.<br/><br/>BAföG Digital ist ein gemeinsames Angebot von Bund und den Ländern. BAföG Digital ist mittlerweile in allen Bundesländern verfügbar."
@@ -437,7 +401,7 @@
 			"longDescription": {
 				"": "Die Stadt Münster bietet auf ihrer Webseite eine Reihe von Online-Diensten an. Dort können Sie mit der Online-Ausweisfunktion unter anderem:<br/><ul><li>eine Personenstandsurkunde bestellen,</li><li>Ihr Wunschkennzeichen beantragen,</li><li>geografische Karten bestellen,</li><li>Elektroschrott zur Abholung anmelden,</li><li>eine Erklärung zum Elterneinkommen für die Festsetzung des Elternbeitrags für die Kindertagesbetreuung abgeben,</li><li>eine Sondernutzungserlaubnis für private Baumaßnahmen an öffentlichen Straßen beantragen,</li><li>eine Großanlage mit zentraler Trinkwassererwärmung anzeigen,</li><li>einen Fahrradfund melden,</li><li>ein Reitkennzeichen beantragen,</li><li>Mietspiegel-Broschüren bestellen.</li></ul>"
 			},
-			"address": "https://www.stadt-muenster.de/service/online-services",
+			"address": "https://www.stadt-muenster.de/rathaus/online-services",
 			"homepage": "https://www.stadt-muenster.de",
 			"phone": "+49 251 4 92 0",
 			"email": "stadtverwaltung@stadt-muenster.de",
@@ -585,7 +549,7 @@
 			"longDescription": {
 				"": "In Norderstedt können Sie mit der Online-Ausweisfunktion über das Bürgerservice-Portal folgende Bürgerdienste nutzen:<br/><ul><li>Meldebestätigung</li><li>Aufenthaltsbescheinigung</li><li>Übermittlungssperren</li><li>Umzug innerhalb der Stadt</li><li>Voranzeige einer Anmeldung</li><li>Briefwahlunterlagen</li><li>Führungszeugnis</li></ul><br/>Darüber hinaus können Sie Ihr persönliches Bürgerkonto einrichten. Nach Einrichtung des Bürgerkontos werden die bei einer Nutzung des Bürgerservice-Portals notwendigen persönlichen Daten komfortabel aus Ihrem Bürgerkonto übernommen. Damit sparen Sie Zeit und erleichtern den Behörden die Bearbeitung Ihres Antrags."
 			},
-			"address": "https://norderstedt.de/digital",
+			"address": "https://norderstedt.buergerportal.sh/buergerportal",
 			"homepage": "https://www.norderstedt.de",
 			"phone": "+49 40 535 95 0 ",
 			"email": "info@norderstedt.de",
@@ -671,7 +635,7 @@
 				"": "Kundenportal der Deutschen Rentenversicherung"
 			},
 			"longDescription": {
-				"": "Im Kundenportal konsolidiert die Deutsche Rentenversicherung verschiedene Online-Services übersichtlich an einem Ort und bietet Ihnen über eine sichere Authentifizierung den Zugriff auf Ihren persönlichen Bereich. Dort können Sie ihre Daten und Dokumente jederzeit selbständig, einfach und flexibel verwalten sowie mittels dem ePostfach elektronisch mit der Deutschen Rentenversicherung kommunizieren."
+				"": "Im Kundenportal konsolidiert die Deutsche Rentenversicherung verschiedene Online-Services übersichtlich an einem Ort und bietet Ihnen über eine sichere Authentifizierung den Zugriff auf Ihren persönlichen Bereich. Dort können Sie Ihre Daten und Dokumente jederzeit selbständig, einfach und flexibel verwalten sowie mittels dem ePostfach elektronisch mit der Deutschen Rentenversicherung kommunizieren."
 			},
 			"address": "https://kundenportal.deutsche-rentenversicherung.de",
 			"homepage": "https://www.deutsche-rentenversicherung.de",
@@ -1056,6 +1020,24 @@
 			"postalAddress": "Kreis Viersen<br/>Rathausmarkt 3<br/>41747 Viersen",
 			"image": "KreisViersen_image.jpg",
 			"icon": "KreisViersen_icon.png",
+			"category": "citizen"
+		},
+		{
+			"shortName": {
+				"": "Serviceportal Kreis Lippe"
+			},
+			"longName": {
+				"": "Serviceportal Kreis Lippe"
+			},
+			"longDescription": {
+				"": "Alle Leistungen des Kreises Lippe finden Sie in unserem Serviceportal."
+			},
+			"address": "https://www.kreis-lippe.de/kreis-lippe/optigov",
+			"homepage": "https://www.kreis-lippe.de",
+			"phone": "+49 5231 62 0",
+			"email": "serviceportal@kreis-lippe.de",
+			"postalAddress": "Kreis Lippe<br/>32754 Detmold",
+			"icon": "ServiceportalLippe_icon.png",
 			"category": "citizen"
 		},
 		{
@@ -1953,6 +1935,25 @@
 		},
 		{
 			"shortName": {
+				"": "Sparkasse Holstein Girokonto-Expresseröffnung"
+			},
+			"longName": {
+				"": "Sparkasse Holstein Girokonto-Expresseröffnung"
+			},
+			"longDescription": {
+				"": "Online-Expresseröffnung eines Girokontos bei der Sparkasse Holstein mit Ihrem elektronischen Personalausweis in weniger als 3 Minuten."
+			},
+			"address": "https://www.sparkasse-holstein.de/turbogiro",
+			"homepage": "https://www.sparkasse-holstein.de",
+			"phone": "+49 4531 508 0",
+			"email": "info@sparkasse-holstein.de",
+			"postalAddress": "Sparkasse Holstein<br/>Hagenstraße 19<br/>23843 Bad Oldesloe",
+			"image": "SparkasseHolstein_image.png",
+			"icon": "SparkasseHolstein_icon.png",
+			"category": "finance"
+		},
+		{
+			"shortName": {
 				"": "Serviceportal Wuppertal"
 			},
 			"longName": {
@@ -2016,7 +2017,7 @@
 			"longDescription": {
 				"": "Online-Eröffnung einer Sparkassen-Girokontos bei der Kreissparkasse Esslingen-Nürtingen mit Ihrem elektronischen Personalausweis in weniger als 3 Minuten."
 			},
-			"address": "https://www.ksk-es.de/de/home/privatkunden/girokonto/girokonto-online/online-ausweisfunktion.html",
+			"address": "https://www.ksk-es.de/de/home/privatkunden/girokonto/girokonto-start.html",
 			"homepage": "https://www.ksk-es.de",
 			"phone": "+49 711 398 5000",
 			"email": "kundenservice@ksk-es.de",

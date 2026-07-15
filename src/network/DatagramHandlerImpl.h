@@ -37,9 +37,6 @@ class DatagramHandlerImpl
 		bool mEnableListening;
 
 		void resetSocket();
-		[[nodiscard]] bool isValidBroadcastInterface(const QNetworkInterface& pInterface) const;
-		[[nodiscard]] bool isValidAddressEntry(const QNetworkAddressEntry& pEntry) const;
-		[[nodiscard]] QHostAddress getBroadcastAddress(const QNetworkAddressEntry& pEntry) const;
 		[[nodiscard]] bool sendToAddress(const QByteArray& pData, const QHostAddress& pAddress, quint16 pPort = 0, bool pLogError = true);
 		void sendToAddressEntries(const QByteArray& pData, const QList<QNetworkAddressEntry>& pEntries, quint16 pPort);
 
@@ -53,7 +50,6 @@ class DatagramHandlerImpl
 		~DatagramHandlerImpl() override;
 
 		[[nodiscard]] bool isBound() const override;
-		[[nodiscard]] QList<QNetworkAddressEntry> getAllBroadcastEntries() const override;
 		void send(const QByteArray& pData, const QList<QNetworkAddressEntry>& pEntries) override;
 
 	private Q_SLOTS:

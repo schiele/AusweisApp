@@ -52,10 +52,10 @@ class test_StateResetRetryCounter
 			QTest::addRow("OK") << CardReturnCode::OK << StatusCode::SUCCESS << QByteArray()
 								<< std::optional<FailureCode>();
 			QTest::addRow("PUK inoperative") << CardReturnCode::OK << StatusCode::ACCESS_DENIED << QByteArray()
-											 << std::optional<FailureCode>(FailureCode::Reason::Establish_Pace_Channel_Puk_Inoperative);
+											 << std::optional<FailureCode>(FailureCode::Reason::Reset_Retry_Counter_Puk_Inoperative);
 			QTest::addRow("Unexpected statusCode") << CardReturnCode::OK << StatusCode::COMMAND_NOT_ALLOWED
 												   << QByteArray("Received an unexpected StatusCode (COMMAND_NOT_ALLOWED), cannot reset retry counter")
-												   << std::optional<FailureCode>();
+												   << std::optional<FailureCode>(FailureCode::Reason::Reset_Retry_Counter_Unexpected_StatusCode);
 			QTest::addRow("Response empty") << CardReturnCode::RESPONSE_EMPTY << StatusCode::UNKNOWN
 											<< QByteArray("An error (RESPONSE_EMPTY) occurred while communicating with the card reader")
 											<< std::optional<FailureCode>();
@@ -89,7 +89,12 @@ class test_StateResetRetryCounter
 					QTest::ignoreMessage(QtCriticalMsg, logMessage.data());
 				}
 				state.run();
-				if (returnCode == CardReturnCode::OK && (statusCode == StatusCode::SUCCESS || statusCode == StatusCode::ACCESS_DENIED))
+				if (returnCode == CardReturnCode::OK &&
+						(
+							statusCode == StatusCode::SUCCESS ||
+							statusCode == StatusCode::ACCESS_DENIED ||
+							statusCode == StatusCode::COMMAND_NOT_ALLOWED)
+						)
 				{
 					if (failureCode.has_value())
 					{

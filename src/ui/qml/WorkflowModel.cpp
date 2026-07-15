@@ -9,6 +9,7 @@
 #include "Env.h"
 #include "FuncUtils.h"
 #include "Initializer.h"
+#include "LanguageLoader.h"
 #include "ReaderManager.h"
 #include "context/AuthContext.h"
 
@@ -85,6 +86,16 @@ QString WorkflowModel::getCurrentState() const
 QString WorkflowModel::getResultString() const
 {
 	return mContext ? mContext->getStatus().toErrorDescription(true) : QString();
+}
+
+
+QString WorkflowModel::getStatusHelpLink() const
+{
+	if (mContext && mContext->getStatus().isMessageMasked())
+	{
+		return QStringLiteral("https://www.ausweisapp.bund.de/%1/aa2/support").arg(LanguageLoader::getLocaleCode());
+	}
+	return QString();
 }
 
 
@@ -314,11 +325,15 @@ GAnimation WorkflowModel::getStatusCodeAnimation() const
 
 QString WorkflowModel::getStatusHintText() const
 {
+	if (mContext && mContext->getStatus().isMessageMasked())
+	{
+		//: ALL_PLATFORMS
+		return tr("If this doesn't help, contact our support.");
+	}
 	if (getStatusCode() == GlobalStatus::Code::Card_ValidityVerificationFailed)
 	{
 		return tr("Contact your local citizens' office (B\u00FCrgeramt) to apply for a new ID card or to unblock the ID card.");
 	}
-
 	return QString();
 }
 

@@ -100,13 +100,20 @@ if(NOT ${CMAKE_BUILD_TYPE} STREQUAL "DEBUG" AND NOT ${CMAKE_BUILD_TYPE} STREQUAL
 	message(FATAL_ERROR "CMAKE_BUILD_TYPE is invalid! Available options: RELEASE, RELWITHDEBINFO, DEBUG")
 endif()
 
+if(NOT CMAKE_OSX_DEPLOYMENT_TARGET)
+	if(IOS)
+		set(CMAKE_OSX_DEPLOYMENT_TARGET 17.0)
+	elseif(APPLE)
+		set(CMAKE_OSX_DEPLOYMENT_TARGET 14.0)
+	endif()
+endif()
+
+
 if(MSVC)
 	find_package(Perl REQUIRED)
 else()
 	set(PERL_EXECUTABLE perl)
 endif()
-
-set(PATCH_CMAKE ${PROJECT_SOURCE_DIR}/patch.cmake)
 
 if(NOT DESTINATION_DIR)
 	set(DESTINATION_DIR ${PROJECT_BINARY_DIR}/dist)
@@ -124,6 +131,21 @@ endif()
 string(REPLACE "\\" "/" PACKAGES_DIR ${PACKAGES_DIR})
 set_directory_properties(PROPERTIES EP_PREFIX ${CMAKE_CURRENT_BINARY_DIR}/b)
 use_project_include(Messages)
+
+function(SET_PATCHER _component _use_parent_dir)
+	if(${_component}_PATCHES)
+		string(TOLOWER ${_component} component_lowered)
+		if(_use_parent_dir)
+			set(dir "/..")
+		endif()
+
+		if(${_component}_PATCHES_GIT OR PATCHES_GIT)
+			set(${_component}_PATCHES_CMD ${CMAKE_COMMAND} -DREPOSITORY_DIR=<SOURCE_DIR>${dir} -P ${PROJECT_SOURCE_DIR}/patches.cmake apply ${component_lowered} PARENT_SCOPE)
+		else()
+			set(${_component}_PATCHES_CMD ${CMAKE_COMMAND} -DCOMPONENT=${component_lowered} -P ${PROJECT_SOURCE_DIR}/patch.cmake PARENT_SCOPE)
+		endif()
+	endif()
+endfunction()
 
 if(NOT CMAKE_HOST_SYSTEM_NAME STREQUAL CMAKE_SYSTEM_NAME)
 	get_filename_component(compiler "${CMAKE_CXX_COMPILER}" NAME)
@@ -192,7 +214,7 @@ else()
 	set(LLHTTP_CONFIGURE_FLAGS -GNinja)
 endif()
 
-if(ANDROID OR IOS OR MAC)
+if(ANDROID OR IOS)
 	set(LLHTTP_CONFIGURE_FLAGS ${LLHTTP_CONFIGURE_FLAGS} -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE})
 endif()
 
@@ -200,9 +222,11 @@ if(ANDROID)
 	set(LLHTTP_CONFIGURE_FLAGS ${LLHTTP_CONFIGURE_FLAGS} -DCMAKE_ANDROID_ARCH_ABI=${CMAKE_ANDROID_ARCH_ABI})
 endif()
 
-if(LLHTTP_PATCHES)
-	set(LLHTTP_PATCHES_CMD ${CMAKE_COMMAND} -DCOMPONENT=llhttp -P ${PATCH_CMAKE})
+if(MAC)
+	set(LLHTTP_CONFIGURE_FLAGS ${LLHTTP_CONFIGURE_FLAGS} -DCMAKE_OSX_DEPLOYMENT_TARGET=${CMAKE_OSX_DEPLOYMENT_TARGET})
 endif()
+
+SET_PATCHER(LLHTTP ON)
 
 ExternalProject_Add(llhttp
 	URL ${LLHTTP_URLS}
@@ -230,8 +254,17 @@ list(APPEND ENABLED_TARGETS openssl)
 
 set(OPENSSL_CONFIGURE_FLAGS no-camellia no-bf no-aria no-seed no-poly1305 no-srp no-gost no-idea no-mdc2 no-rc2 no-rc4 no-rc5 no-srtp no-sm2 no-sm3 no-sm4)
 set(OPENSSL_CONFIGURE_FLAGS ${OPENSSL_CONFIGURE_FLAGS} no-ct no-dgram no-cast no-chacha no-blake2 no-rmd160 no-scrypt no-siphash no-whirlpool no-md4 no-des no-ec2m)
-set(OPENSSL_CONFIGURE_FLAGS ${OPENSSL_CONFIGURE_FLAGS} no-tls1 no-tls1-method no-tls1_1 no-tls1_1-method no-tls1_3 no-ssl3 no-ssl3-method no-dtls no-dtls1-method no-dtls1_2-method)
-set(OPENSSL_CONFIGURE_FLAGS ${OPENSSL_CONFIGURE_FLAGS} no-engine no-async no-dso no-comp no-ts no-makedepend no-tests)
+set(OPENSSL_CONFIGURE_FLAGS ${OPENSSL_CONFIGURE_FLAGS} no-tls1 no-tls1-method no-tls1_1 no-tls1_1-method no-tls1_3 no-dtls no-dtls1-method no-dtls1_2-method)
+set(OPENSSL_CONFIGURE_FLAGS ${OPENSSL_CONFIGURE_FLAGS} no-async no-dso no-comp no-ts no-makedepend no-tests)
+
+if(OPENSSL VERSION_GREATER_EQUAL "4.0")
+	set(OPENSSL_CONFIGURE_FLAGS ${OPENSSL_CONFIGURE_FLAGS} enable-ec_explicit_curves)
+endif()
+
+if(OPENSSL VERSION_LESS "4.0")
+	set(OPENSSL_CONFIGURE_FLAGS ${OPENSSL_CONFIGURE_FLAGS} no-ssl3 no-ssl3-method no-engine)
+endif()
+
 if(NOT USE_LEGACY_OPENSSL_API)
 	set(OPENSSL_CONFIGURE_FLAGS ${OPENSSL_CONFIGURE_FLAGS} no-deprecated)
 
@@ -375,9 +408,7 @@ if(OPENSSL_ENV)
 	set(OPENSSL_ENV ${CMAKE_COMMAND} -E env ${OPENSSL_ENV})
 endif()
 
-if(OPENSSL_PATCHES)
-	set(OPENSSL_PATCHES_CMD ${CMAKE_COMMAND} -DCOMPONENT=openssl -P ${PATCH_CMAKE})
-endif()
+SET_PATCHER(OPENSSL ON)
 
 ExternalProject_Add(openssl
 	URL ${OPENSSL_URLS}
@@ -398,7 +429,7 @@ ExternalProject_Add_Step(openssl configdata
 
 
 if(MAC)
-	set(OPENSSL_FILE_VERSION 3)
+	string(REGEX MATCH "^[0-9]+" OPENSSL_FILE_VERSION ${OPENSSL})
 	add_custom_command(TARGET openssl POST_BUILD
 		COMMAND install_name_tool -id @rpath/libcrypto.${OPENSSL_FILE_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX} ${DESTINATION_DIR}/lib/libcrypto.${OPENSSL_FILE_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}
 		COMMAND install_name_tool -id @rpath/libssl.${OPENSSL_FILE_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX} ${DESTINATION_DIR}/lib/libssl.${OPENSSL_FILE_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}
@@ -433,7 +464,12 @@ else()
 	if(NOT WIN32)
 		list(APPEND QT_CONFIGURE_FLAGS -optimize-size)
 	endif()
-	set(QT_CONFIGURE_FLAGS ${QT_CONFIGURE_FLAGS} $<$<CONFIG:RelWithDebInfo>:-force-debug-info>)
+	if(APPLE OR ${CMAKE_BUILD_TYPE} STREQUAL "RELWITHDEBINFO")
+		set(QT_CONFIGURE_FLAGS ${QT_CONFIGURE_FLAGS} -force-debug-info)
+		if(MAC)
+			set(QT_CONFIGURE_FLAGS ${QT_CONFIGURE_FLAGS} -separate-debug-info)
+		endif()
+	endif()
 	if(NOT INTEGRATED_SDK)
 		set(QT_CONFIGURE_FLAGS_SHARED -no-qml-debug)
 	endif()
@@ -663,9 +699,7 @@ if(IOS OR ANDROID)
 	endif()
 endif()
 
-if(QT_PATCHES)
-	set(QT_PATCHES_CMD ${CMAKE_COMMAND} -DCOMPONENT=qt -P ${PATCH_CMAKE})
-endif()
+SET_PATCHER(QT OFF)
 
 # Build minimal qt for host tools until a dedicated target exists, see https://bugreports.qt.io/browse/QTQAINFRA-4203
 if (BUILD_HOST_QT AND (IOS OR ANDROID))

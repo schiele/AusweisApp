@@ -33,6 +33,7 @@ class ReaderModel
 	friend class ::test_ReaderModel;
 
 	Q_PROPERTY(QString lastUpdatedInformation READ getLastUpdatedInformation NOTIFY fireModelChanged)
+	Q_PROPERTY(bool hasConnectedReader READ hasConnectedReader NOTIFY fireModelChanged)
 	Q_PROPERTY(governikus::SortedReaderModel * sortedModel READ getSortedModel CONSTANT)
 
 	private:
@@ -46,13 +47,15 @@ class ReaderModel
 		[[nodiscard]] QString getLastUpdatedInformation() const;
 		[[nodiscard]] SortedReaderModel* getSortedModel();
 
-		void collectReaderData();
+		QList<ReaderConfigurationInfo> collectReaderData();
 		[[nodiscard]] bool indexIsValid(const QModelIndex& pIndex) const;
 		[[nodiscard]] QUrl getReaderImageUrl(const QModelIndex& pIndex) const;
 		[[nodiscard]] QString getHTMLDescription(const QModelIndex& pIndex) const;
 		[[nodiscard]] bool isSupportedReader(const QModelIndex& pIndex) const;
 		[[nodiscard]] bool isInstalledReader(const QModelIndex& pIndex) const;
 		[[nodiscard]] bool isPcscScanRunning() const;
+		[[nodiscard]] bool hasConnectedReader() const;
+		[[nodiscard]] QVariant handleDummyReaderInfo(int pRole) const;
 
 	private Q_SLOTS:
 		void onUpdateContent();
@@ -61,15 +64,15 @@ class ReaderModel
 		enum UserRoles
 		{
 			READER_NAME = Qt::UserRole + 1,
-			READER_STATUS,
 			READER_IMAGE_PATH,
 			READER_HTML_DESCRIPTION,
 			READER_DRIVER_URL,
 			READER_INSTALLED,
-			READER_SUPPORTED
+			READER_SUPPORTED,
+			SHOW_STATUS_ICON
 		};
 
-		[[nodiscard]] int rowCount(const QModelIndex& pParent) const override;
+		[[nodiscard]] int rowCount(const QModelIndex& pParent = QModelIndex()) const override;
 		[[nodiscard]] QVariant data(const QModelIndex& pIndex, int pRole = Qt::DisplayRole) const override;
 		[[nodiscard]] QHash<int, QByteArray> roleNames() const override;
 

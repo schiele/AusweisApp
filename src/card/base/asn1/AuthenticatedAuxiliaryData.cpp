@@ -19,17 +19,6 @@ Q_DECLARE_LOGGING_CATEGORY(card)
 namespace governikus
 {
 
-using CommunityID = ASN1_OCTET_STRING;
-DECLARE_ASN1_FUNCTIONS(CommunityID)
-
-using ValidityDate = ASN1_OCTET_STRING;
-DECLARE_ASN1_FUNCTIONS(ValidityDate)
-
-using AgeVerificationDate = ASN1_STRING;
-DECLARE_ASN1_FUNCTIONS(AgeVerificationDate)
-
-DECLARE_ASN1_OBJECT(ValidityDate)
-
 /*!
  * This defines the AuxDataTemplate object as SEQUENCE without the special tag.
  */
@@ -65,17 +54,22 @@ IMPLEMENT_ASN1_OBJECT(AuthenticatedAuxiliaryDataInternal)
 /*!
  * This defines the CommunityID with special tag 0x13
  */
+struct CommunityID
+	: public Asn1OctetStringUtil {};
 ASN1_ITEM_TEMPLATE(CommunityID) =
 			ASN1_EX_TEMPLATE_TYPE(ASN1_TFLG_IMPTAG | ASN1_TFLG_APPLICATION, 0x13, CommunityID, ASN1_OCTET_STRING)
 ASN1_ITEM_TEMPLATE_END(CommunityID)
 
 
 IMPLEMENT_ASN1_FUNCTIONS(CommunityID)
+IMPLEMENT_ASN1_OBJECT(CommunityID)
 
 
 /*!
  * This defines the ValidityDate with special tag 0x13
  */
+struct ValidityDate
+	: public Asn1OctetStringUtil {};
 ASN1_ITEM_TEMPLATE(ValidityDate) =
 			ASN1_EX_TEMPLATE_TYPE(ASN1_TFLG_IMPTAG | ASN1_TFLG_APPLICATION, 0x13, ValidityDate, ASN1_OCTET_STRING)
 ASN1_ITEM_TEMPLATE_END(ValidityDate)
@@ -88,14 +82,17 @@ IMPLEMENT_ASN1_OBJECT(ValidityDate)
 /*!
  * This defines the AgeVerificationDate with special tag 0x13
  */
+struct AgeVerificationDate
+	: public Asn1OctetStringUtil {};
 ASN1_ITEM_TEMPLATE(AgeVerificationDate) =
 			ASN1_EX_TEMPLATE_TYPE(ASN1_TFLG_IMPTAG | ASN1_TFLG_APPLICATION, 0x13, AgeVerificationDate, ASN1_OCTET_STRING)
 ASN1_ITEM_TEMPLATE_END(AgeVerificationDate)
 
-IMPLEMENT_ASN1_FUNCTIONS(AgeVerificationDate)
 
-DECLARE_ASN1_FUNCTIONS(AuthenticatedAuxiliaryDataInternal)
-DECLARE_ASN1_OBJECT(AuthenticatedAuxiliaryDataInternal)
+IMPLEMENT_ASN1_FUNCTIONS(AgeVerificationDate)
+IMPLEMENT_ASN1_OBJECT(AgeVerificationDate)
+
+
 } // namespace governikus
 
 
@@ -162,7 +159,7 @@ QDate AuthenticatedAuxiliaryData::getValidityDate() const
 		auto validityDate = decodeObject<ValidityDate>(extBytes);
 		if (validityDate != nullptr)
 		{
-			auto dateString = QString::fromLatin1(reinterpret_cast<char*>(validityDate->data), validityDate->length);
+			const auto dateString = QString::fromLatin1(Asn1OctetStringUtil::getValue(validityDate.data()));
 			return QDate::fromString(dateString, QStringLiteral("yyyyMMdd"));
 		}
 	}
@@ -185,7 +182,7 @@ QDate AuthenticatedAuxiliaryData::getAgeVerificationDate() const
 		auto ageVerificationDate = decodeObject<AgeVerificationDate>(extBytes);
 		if (ageVerificationDate != nullptr)
 		{
-			auto dateString = QString::fromLatin1(reinterpret_cast<char*>(ageVerificationDate->data), ageVerificationDate->length);
+			const auto dateString = QString::fromLatin1(Asn1OctetStringUtil::getValue(ageVerificationDate.data()));
 			return QDate::fromString(dateString, QStringLiteral("yyyyMMdd"));
 		}
 	}
@@ -232,7 +229,7 @@ QByteArray AuthenticatedAuxiliaryData::getCommunityID() const
 		auto communityId = decodeObject<CommunityID>(extBytes);
 		if (communityId != nullptr)
 		{
-			return QByteArray(reinterpret_cast<char*>(communityId->data), communityId->length).toHex();
+			return Asn1OctetStringUtil::getValue(communityId.data()).toHex();
 		}
 	}
 	return QByteArray();

@@ -37,7 +37,8 @@ ResultView {
 	animationSymbol: Symbol.Type.CHECK
 	animationType: AnimationLoader.Type.STATUS
 	buttonIcon: "qrc:///images/open_website.svg"
-	buttonText: AuthModel.resultViewButtonText
+	//: ALL_PLATFORMS
+	buttonText: qsTr("Back to provider")
 	//: ALL_PLATFORMS
 	header: qsTr("Authentication successful")
 	linkToOpen: AuthModel.refreshUrl

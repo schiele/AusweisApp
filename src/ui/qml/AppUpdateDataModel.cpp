@@ -54,10 +54,8 @@ QString AppUpdateDataModel::errorFromStatusCode(GlobalStatus::Code pCode) const
 
 		case GlobalStatus::Code::Update_Execution_Failed:
 		{
-			const auto& a_start = QStringLiteral("<a href=\"%1\">").arg(getDownloadFolder());
-			const auto& a_end = QStringLiteral("</a>");
 			//: DESKTOP Text of the popup that is shown when the execution of the update failed (1/2).
-			return tr("The update could not be started automatically after a successful download. Please try to do a manual update. You can find the downloaded file %1here%2.").arg(a_start, a_end);
+			return tr("The update could not be started automatically after a successful download. Please try again.");
 		}
 
 		default:
@@ -65,20 +63,6 @@ QString AppUpdateDataModel::errorFromStatusCode(GlobalStatus::Code pCode) const
 			return tr("An unknown network error occurred. Check your network connection and try to restart the update.");
 
 	}
-}
-
-
-QString AppUpdateDataModel::supportInfoFromStatusCode(GlobalStatus::Code pCode) const
-{
-	if (pCode == GlobalStatus::Code::Update_Execution_Failed)
-	{
-		const auto& language = Env::getSingleton<SettingsModel>()->getLanguage();
-		const auto& a_start = QStringLiteral("<a href=\"https://www.ausweisapp.bund.de/%1/aa2/support\">").arg(language);
-		const auto& a_end = QStringLiteral("</a>");
-		//: DESKTOP Text of the popup that is shown when the execution of the update failed (2/2).
-		return tr("If this does not help, contact our %1support%2.").arg(a_start, a_end);
-	}
-	return QString();
 }
 
 
@@ -129,13 +113,7 @@ void AppUpdateDataModel::onAppDownloadFinished(const GlobalStatus& pError)
 
 		const auto& statusCode = pError.getStatusCode();
 
-		if (statusCode == GlobalStatus::Code::Downloader_Aborted)
-		{
-			Q_EMIT fireAppUpdateAborted();
-			return;
-		}
-
-		Q_EMIT fireAppUpdateFailed(errorFromStatusCode(statusCode), supportInfoFromStatusCode(statusCode));
+		Q_EMIT fireAppUpdateFailed(errorFromStatusCode(statusCode));
 		return;
 	}
 
@@ -161,7 +139,7 @@ void AppUpdateDataModel::onAppDownloadFinished(const GlobalStatus& pError)
 	qCCritical(update) << "Could not launch new process.";
 #endif
 
-	Q_EMIT fireAppUpdateFailed(errorFromStatusCode(GlobalStatus::Code::Update_Execution_Failed), supportInfoFromStatusCode(GlobalStatus::Code::Update_Execution_Failed));
+	Q_EMIT fireAppUpdateFailed(errorFromStatusCode(GlobalStatus::Code::Update_Execution_Failed));
 }
 
 
@@ -286,14 +264,6 @@ int AppUpdateDataModel::getDownloadTotal() const
 }
 
 
-QString AppUpdateDataModel::getDownloadFolder() const
-{
-	const QString updateFile = Env::getSingleton<AppUpdater>()->getUpdateData().getUpdatePackagePath();
-	QUrl updateFolderUrl = QUrl::fromLocalFile(updateFile);
-	return QDir::toNativeSeparators(updateFolderUrl.adjusted(QUrl::RemoveFilename).toString());
-}
-
-
 const QDateTime& AppUpdateDataModel::getDate() const
 {
 	return Env::getSingleton<AppUpdater>()->getUpdateData().getDate();
@@ -320,12 +290,6 @@ const QUrl& AppUpdateDataModel::getUrl() const
 int AppUpdateDataModel::getSize() const
 {
 	return Env::getSingleton<AppUpdater>()->getUpdateData().getSize();
-}
-
-
-const QUrl& AppUpdateDataModel::getChecksumUrl() const
-{
-	return Env::getSingleton<AppUpdater>()->getUpdateData().getChecksumUrl();
 }
 
 

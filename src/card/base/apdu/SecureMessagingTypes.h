@@ -4,8 +4,8 @@
 
 #pragma once
 
-
 #include "asn1/ASN1TemplateUtil.h"
+#include "asn1/ASN1Util.h"
 
 
 namespace governikus
@@ -16,7 +16,7 @@ namespace governikus
  * containing the encrypted data.
  */
 struct SM_ENCRYPTED_DATA
-	: public ASN1_OCTET_STRING {};
+	: public Asn1OctetStringUtil {};
 DECLARE_ASN1_OBJECT(SM_ENCRYPTED_DATA)
 
 
@@ -25,7 +25,7 @@ DECLARE_ASN1_OBJECT(SM_ENCRYPTED_DATA)
  * the expected length.
  */
 struct SM_PROTECTED_LE
-	: public ASN1_OCTET_STRING {};
+	: public Asn1OctetStringUtil {};
 DECLARE_ASN1_OBJECT(SM_PROTECTED_LE)
 
 
@@ -34,7 +34,7 @@ DECLARE_ASN1_OBJECT(SM_PROTECTED_LE)
  * the processing status.
  */
 struct SM_PROCESSING_STATUS
-	: public ASN1_OCTET_STRING {};
+	: public Asn1OctetStringUtil {};
 DECLARE_ASN1_OBJECT(SM_PROCESSING_STATUS)
 
 
@@ -43,7 +43,7 @@ DECLARE_ASN1_OBJECT(SM_PROCESSING_STATUS)
  * containing the cryptographic checksum.
  */
 struct SM_CHECKSUM
-	: public ASN1_OCTET_STRING {};
+	: public Asn1OctetStringUtil {};
 DECLARE_ASN1_OBJECT(SM_CHECKSUM)
 
 

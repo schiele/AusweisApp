@@ -160,6 +160,11 @@ void StateCheckRefreshAddress::sendGetRequest()
 {
 	qDebug() << "Send GET request to URL:" << mUrl.toString();
 	QNetworkRequest request(mUrl);
+	const auto& customHeader = getContext()->getCustomHeader();
+	for (auto [key, value] : customHeader.asKeyValueRange())
+	{
+		request.setRawHeader(key, value);
+	}
 	mReply = Env::getSingleton<NetworkManager>()->get(request);
 
 	*this << connect(mReply.data(), &QNetworkReply::sslErrors, this, &StateCheckRefreshAddress::onSslErrors);

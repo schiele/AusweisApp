@@ -26,11 +26,11 @@ response or by an additional query to get the :ref:`client_status`.
 
 If the WebSocket handshake was successful your application can send :doc:`commands`
 and receive :doc:`messages`.
-The |AppName| will send an HTTP error 503 "Service Unavailable" if the WebSocket
+The |AppName| will send an HTTP error ``503 Service Unavailable`` if the WebSocket
 is disabled.
 
 By default access to the WebSocket is not permitted using a web browser.
-The |AppName| will send an HTTP error 403 "Forbidden" in this case.
+The |AppName| will send an HTTP error ``403 Forbidden`` in this case.
 You can allow access from specific origins by setting the ``AUSWEISAPP_WEBSOCKET_ORIGIN``
 environment variable. This supports regular expressions for pattern-based matching.
 

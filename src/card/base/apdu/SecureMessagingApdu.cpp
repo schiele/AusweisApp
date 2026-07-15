@@ -5,7 +5,6 @@
 #include "SecureMessagingApdu.h"
 
 #include "asn1/ASN1TemplateUtil.h"
-#include "asn1/ASN1Util.h"
 
 #include <QLoggingCategory>
 

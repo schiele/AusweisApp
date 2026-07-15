@@ -27,6 +27,11 @@ Item {
 	implicitWidth: size
 
 	RemoteIcon {
+		source: "qrc:///animations/icon_remote_0.svg"
+		threshold: 0
+		visible: true
+	}
+	RemoteIcon {
 		source: "qrc:///animations/icon_remote_1.svg"
 		threshold: 25
 	}
@@ -47,6 +52,7 @@ Item {
 		required property int threshold
 
 		sourceSize.height: root.size
-		tintColor: root.inactive || root.percent < (SettingsModel.useAnimations ? threshold : 20) ? Style.color.remoteIndicator.disabled_unchecked : Style.color.remoteIndicator.basic_unchecked
+		tintColor: Style.color.remoteIndicator.basic_unchecked
+		visible: !root.inactive && root.percent >= (SettingsModel.useAnimations ? threshold : 20)
 	}
 }

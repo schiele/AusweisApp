@@ -31,13 +31,19 @@ class test_UiPluginProxy
 		void initialize()
 		{
 			UiPluginProxy proxy;
-			QSignalSpy logSpy(&proxy, &UiPluginProxy::fireUiDominationRequest);
+			QSignalSpy spy(&proxy, &UiPluginProxy::fireUiDominationRequest);
 
 			QVERIFY(proxy.initialize());
-			QTRY_COMPARE(logSpy.count(), 1);
+			QCOMPARE(spy.count(), 0);
+			proxy.onApplicationStarted();
+			QTRY_COMPARE(spy.count(), 1);
+
+			spy.clear();
 
 			QVERIFY(proxy.initialize());
-			QTRY_COMPARE(logSpy.count(), 1);
+			QCOMPARE(spy.count(), 0);
+			proxy.onApplicationStarted();
+			QTRY_COMPARE(spy.count(), 1);
 		}
 
 

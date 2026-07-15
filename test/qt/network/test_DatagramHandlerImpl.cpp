@@ -44,7 +44,7 @@ class test_DatagramHandlerImpl
 		void cleanup()
 		{
 			Env::getSingleton<LogHandler>()->resetBacklog();
-			qApp->processEvents();
+			QCoreApplication::instance()->processEvents();
 		}
 
 
@@ -108,21 +108,35 @@ class test_DatagramHandlerImpl
 
 		void getJsonDatagram_data()
 		{
-			QTest::addColumn<bool>("broadcast");
+			QTest::addColumn<QHostAddress>("address");
 
-			QTest::newRow("WithBroadcast") << true;
-			QTest::newRow("WithoutBroadcast") << false;
+			QTest::newRow("LocalHost") << QHostAddress(QHostAddress::LocalHost);
+
+			QSet<QString> dataRows;
+			const auto entries = DatagramHandler::getAllBroadcastEntries();
+			for (const auto& entry : entries)
+			{
+				const auto& addr = DatagramHandler::getBroadcastAddress(entry);
+				if (addr.isNull() || dataRows.contains(addr.toString()))
+				{
+					continue;
+				}
+
+				const auto& dataTag = addr.toString();
+				dataRows << dataTag;
+				QTest::newRow(qPrintable(dataTag)) << addr;
+			}
 		}
 
 
 		void getJsonDatagram()
 		{
-			QFETCH(bool, broadcast);
+			QFETCH(QHostAddress, address);
 
-#ifdef Q_OS_FREEBSD
-			if (broadcast)
+#ifdef Q_OS_MACOS
+			if (address.protocol() == QAbstractSocket::IPv6Protocol)
 			{
-				QSKIP("FreeBSD does not like that");
+				QSKIP("macOS does not allow to send multicasts without a signed app bundle containing networking.multicast entitlement");
 			}
 #endif
 
@@ -133,38 +147,17 @@ class test_DatagramHandlerImpl
 			QUdpSocket clientSocket;
 			clientSocket.setProxy(QNetworkProxy::NoProxy);
 
-			QList<QHostAddress> addresses;
-			if (broadcast)
+			QByteArray data(R"({"key":"value"})");
+			const auto written = clientSocket.writeDatagram(data, address, socket.mSocket->localPort());
+			if (written == -1)
 			{
-				const auto entries = socket.getAllBroadcastEntries();
-				for (const auto& entry : entries)
-				{
-					const auto& addr = socket.getBroadcastAddress(entry);
-					if (!addr.isNull())
-					{
-						addresses << addr;
-					}
-				}
+				qCritical() << address << clientSocket.error() << clientSocket.errorString();
 			}
-			else
-			{
-				addresses << QHostAddress::LocalHost;
-			}
-
-			for (const auto& address : std::as_const(addresses))
-			{
-				QByteArray data(R"({"key":"value"})");
-				const auto written = clientSocket.writeDatagram(data, address, socket.mSocket->localPort());
-				if (written == -1)
-				{
-					qCritical() << address << clientSocket.error() << clientSocket.errorString();
-				}
-				QTRY_COMPARE(spySocket.count(), 1); // clazy:exclude=qstring-allocations
-				QCOMPARE(written, data.size());
-				const auto& msg = spySocket.takeFirst();
-				QCOMPARE(msg.size(), 2);
-				QCOMPARE(msg.at(0).toByteArray(), data);
-			}
+			QTRY_COMPARE(spySocket.count(), 1); // clazy:exclude=qstring-allocations
+			QCOMPARE(written, data.size());
+			const auto& msg = spySocket.takeFirst();
+			QCOMPARE(msg.size(), 2);
+			QCOMPARE(msg.at(0).toByteArray(), data);
 		}
 
 

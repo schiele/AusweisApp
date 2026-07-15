@@ -45,7 +45,7 @@ class test_LogFilterModel
 			QCOMPARE(model.getSelectedCategories(), QStringList());
 			QCOMPARE(model.rowCount(), 2);
 
-			qApp->processEvents();
+			QCoreApplication::instance()->processEvents();
 			QSignalSpy spyLevel(&model, &LogFilterModel::fireLevelsChanged);
 			QSignalSpy spyCategories(&model, &LogFilterModel::fireCategoriesChanged);
 

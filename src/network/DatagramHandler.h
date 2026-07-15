@@ -19,11 +19,21 @@ class DatagramHandler
 {
 	Q_OBJECT
 
+	private:
+		[[nodiscard]] static bool isValidBroadcastInterface(const QNetworkInterface& pInterface);
+		[[nodiscard]] static bool isValidAddressEntry(const QNetworkAddressEntry& pEntry);
+
+	protected:
+		static constexpr QLatin1StringView ipv6MulticastAddress {"ff02::178"};
+
 	public:
+		[[nodiscard]] static QList<QNetworkAddressEntry> getAllBroadcastEntries();
+		[[nodiscard]] static QHostAddress getBroadcastAddress(const QNetworkAddressEntry& pEntry);
+
 		explicit DatagramHandler(bool pEnableListening = true);
 		~DatagramHandler() override = default;
+
 		[[nodiscard]] virtual bool isBound() const = 0;
-		[[nodiscard]] virtual QList<QNetworkAddressEntry> getAllBroadcastEntries() const = 0;
 		virtual void send(const QByteArray& pData, const QList<QNetworkAddressEntry>& pEntries) = 0;
 
 	Q_SIGNALS:

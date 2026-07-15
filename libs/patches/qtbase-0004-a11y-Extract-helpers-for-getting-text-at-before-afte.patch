@@ -1,4 +1,4 @@
-From 13177246e5aa0cdfa35eac75c4ce4b4c895c776d Mon Sep 17 00:00:00 2001
+From 6560bc05e73b29961124ff819e2ad6d9a7fb26ca Mon Sep 17 00:00:00 2001
 From: Michael Weghorn <m.weghorn@posteo.de>
 Date: Tue, 23 Sep 2025 11:37:35 +0200
 Subject: a11y: Extract helpers for getting text at/before/after offset

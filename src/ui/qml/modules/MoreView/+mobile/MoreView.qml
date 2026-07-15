@@ -109,19 +109,21 @@ FlickableSectionPage {
 				//: MOBILE
 				title: qsTr("Show Logs")
 
-				onClicked: LogFilesModel.count > 1 ? root.push(logFilesView) : root.push(logView, {
+				onClicked: LogFilesModel.count > 1 ? root.push(logFilesViewComponent) : root.push(logViewComponent, {
 					logFileName: LogFilesModel.getLogFileName(0),
 					logFilePath: LogFilesModel.getLogFilePath(0)
 				})
 
 				Component {
-					id: logFilesView
+					id: logFilesViewComponent
 
 					LogFilesView {
+						id: logFilesView
+
 						enableTileStyle: root.enableTileStyle
 
 						onLogFilesListItemClicked: index => {
-							root.push(logView, {
+							logFilesView.push(logViewComponent, {
 								logFileName: LogFilesModel.getLogFileName(index),
 								logFilePath: LogFilesModel.getLogFilePath(index)
 							});
@@ -129,7 +131,7 @@ FlickableSectionPage {
 					}
 				}
 				Component {
-					id: logView
+					id: logViewComponent
 
 					LogView {
 						enableTileStyle: root.enableTileStyle

@@ -34,15 +34,18 @@ class Asn1Util
 /*!
  * Utility for OpenSSL type ASN1_OCTET_STRING, i.e. ASN.1 type OCTET STRING
  */
-class Asn1OctetStringUtil
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
+struct alignas(alignof(ASN1_OCTET_STRING)) Asn1OctetStringUtil
+#else
+struct Asn1OctetStringUtil
+#endif
 {
-	private:
-		Asn1OctetStringUtil() = delete;
-		~Asn1OctetStringUtil() = delete;
+	static bool setValue(const QByteArray& pValue, ASN1_OCTET_STRING* pAsn1OctetString);
+	[[nodiscard]] static QByteArray getValue(const ASN1_OCTET_STRING* pAsn1OctetString);
+	[[nodiscard]] static QByteArray getValue(const Asn1OctetStringUtil* pString);
 
-	public:
-		static void setValue(const QByteArray& pValue, ASN1_OCTET_STRING* pAsn1OctetString);
-		static QByteArray getValue(ASN1_OCTET_STRING* pAsn1OctetString);
+	bool setValue(const QByteArray& pValue);
+	[[nodiscard]] int getLength() const;
 };
 
 

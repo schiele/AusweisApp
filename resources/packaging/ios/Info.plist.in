@@ -73,6 +73,10 @@
 			<string>com.governikus.url-scheme.eid</string>
 		</dict>
 	</array>
+	<key>UIAppFonts</key>
+	<array>
+		@XML_FONTS@
+	</array>
 	<key>CSResourcesFileMapped</key>
 	<true/>
 	<key>ITSAppUsesNonExemptEncryption</key>

@@ -18,6 +18,12 @@ QtObject {
 		}
 		return findGFlickable(pItem.parent);
 	}
+	function isAccessibleIgnored(pItem) {
+		if (typeof pItem.hasAccessibleAttached !== "function")
+			return !pItem.Accessible || pItem.Accessible.ignored;
+
+		return !pItem.hasAccessibleAttached() || pItem.Accessible.ignored;
+	}
 	function platformAgnosticLinkOpenText(pLink, pName) {
 		if (Qt.platform.os === "ios" || Qt.platform.os === "android") {
 			//: MOBILE Hint that a link is present, which will open in the browser
@@ -30,16 +36,11 @@ QtObject {
 		}
 		return desktopDescription;
 	}
-	function positionFlickableAtItem(pFlickable, pItem, pPositionItemAtMiddle = false) {
+	function positionFlickableAtItem(pFlickable, pItem) {
 		let castItem = (pItem as Item);
 		let referenceItem = castItem.parent ? (castItem.parent as Item) : castItem;
 		let mappedPosition = pFlickable.mapFromItem(referenceItem, castItem.x, castItem.y);
 
-		if (pPositionItemAtMiddle) {
-			const absY = castItem.mapToItem(pFlickable.contentItem, 0, 0).y;
-			pFlickable.contentY = absY - Math.floor(pFlickable.height * 0.5);
-			return;
-		}
 		if (Qt.platform.os === "ios") {
 			UtilsIOS.handleFlickable(pFlickable, castItem);
 			return;

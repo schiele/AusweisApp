@@ -4,9 +4,11 @@
 
 import QtQuick
 import QtQuick.Controls
+
 import Governikus.Init
-import Governikus.Workflow
 import Governikus.Navigation
+import Governikus.Type
+import Governikus.Workflow
 
 BaseController {
 	readonly property Navigation navigation: {
@@ -62,6 +64,9 @@ BaseController {
 		if (stackView) {
 			if (pSectionPage === stackView.currentItem) {
 				return;
+			}
+			if (ApplicationModel.screenReaderRunning) {
+				lastA11yFocusedItem = Window.activeFocusItem;
 			}
 			stackView.push(pSectionPage, pProperties);
 		} else {

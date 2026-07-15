@@ -21,7 +21,7 @@ prepare_gpg(GPG_CMD SH)
 
 step(git -C target config gpg.program ${GPG_CMD})
 step(git -C target config user.name "Governikus")
-step(git -C target config user.email "ausweisapp2@governikus.de")
+step(git -C target config user.email "ausweisapp@governikus.de")
 step(git -C target config user.signingkey "2D7479A531451088")
 
 step(git -C target add .)

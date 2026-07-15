@@ -37,9 +37,14 @@ class test_StateProcessIfdMessages
 		{
 			const QSharedPointer<IfdServiceContext> context(new IfdServiceContext(mIfdServer));
 			StateProcessIfdMessages state(context);
+			state.setObjectName("StateProcessIfdMessages");
 			state.run();
 			QCOMPARE(state.mConnections.size(), 3);
 			QCOMPARE(state.mMessageConnections.size(), 7);
+
+			state.onExit(nullptr);
+			QCOMPARE(state.mConnections.size(), 0);
+			QCOMPARE(state.mMessageConnections.size(), 0);
 		}
 
 
@@ -72,7 +77,11 @@ class test_StateProcessIfdMessages
 			const QSharedPointer<IfdServiceContext> context(new IfdServiceContext(mIfdServer));
 			StateProcessIfdMessages state(context);
 			context->setCardInitiallyAppeared();
+			state.run();
+			QCOMPARE(state.mMessageConnections.size(), 7);
+
 			state.onClosed();
+			QCOMPARE(state.mMessageConnections.size(), 0);
 			QVERIFY(!context->getCardInitiallyAppeared());
 		}
 

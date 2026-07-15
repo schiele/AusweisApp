@@ -85,7 +85,7 @@ Beispiel: Innerhalb von /Users/governikus/AusweisApp befindet sich der Quellcode
    $ cd /Users/governikus
    $ mkdir build
    $ cd build
-   $ cmake -DCMAKE_BUILD_TYPE=release -DCMAKE_TOOLCHAIN_FILE=../AusweisApp/cmake/macOS.toolchain.cmake ../AusweisApp/libs
+   $ cmake -DCMAKE_BUILD_TYPE=release ../AusweisApp/libs
    $ make
 
 

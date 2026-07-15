@@ -8,6 +8,10 @@
 #include "Reader.h"
 
 #include <QNearFieldManager>
+#include <QQueue>
+
+
+class test_NfcReader;
 
 
 namespace governikus
@@ -17,9 +21,11 @@ class NfcReader
 	: public ConnectableReader
 {
 	Q_OBJECT
+	friend class ::test_NfcReader;
 
 	private:
 		QNearFieldManager mNfManager;
+		QQueue<QNearFieldTarget*> mTargetQueue;
 		QScopedPointer<NfcCard, QScopedPointerDeleteLater> mCard;
 
 	Q_SIGNALS:

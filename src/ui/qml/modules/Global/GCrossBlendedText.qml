@@ -29,14 +29,6 @@ Item {
 	implicitHeight: Math.max(mainText.implicitHeight, tempText.implicitHeight)
 	implicitWidth: Math.max(mainText.implicitWidth, tempText.implicitWidth)
 
-	Behavior on implicitHeight {
-		enabled: SettingsModel.useAnimations && !Style.is_layout_desktop
-
-		NumberAnimation {
-			duration: mainText.text === "" ? 0 : Style.animation_duration
-		}
-	}
-
 	GText {
 		id: mainText
 

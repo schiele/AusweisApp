@@ -4,9 +4,11 @@ variables:
   GIT_STRATEGY: empty
   BINARY_DIR: $CI_PROJECT_DIR/bin
   VIRTUAL_ENV: $CI_PROJECT_DIR/venv
+  UV_CACHE_DIR: $CI_PROJECT_DIR/uv
   CCACHE_BASEDIR: "$CI_PROJECT_DIR"
   CCACHE_REMOTE_ONLY: true
   CCACHE_RESHARE: true
+  CCACHE_CPP2: true
   MIRROR_GITHUB: https://github.com
   MIRROR_QT: https://download.qt.io
 
@@ -44,7 +46,7 @@ workflow:
 
         apt-get update
         apt-get install -y mercurial cmake ninja-build make gdb lldb python3 curl ca-certificates
-        curl --proto '=https' --tlsv1.2 -LsSf $MIRROR_GITHUB/astral-sh/uv/releases/download/0.11.0/uv-installer.sh | sh
+        curl --proto '=https' --tlsv1.2 -LsSf $MIRROR_GITHUB/astral-sh/uv/releases/download/0.11.7/uv-installer.sh | sh
         source $HOME/.local/bin/env
       elif command -v dnf >/dev/null 2>&1; then
         rm -rf /etc/yum.repos.d/fedora-cisco-openh264.repo /etc/yum.repos.d/fedora-updates-testing.repo
@@ -58,8 +60,8 @@ workflow:
       elif command -v sw_vers >/dev/null 2>&1; then
         export UV_NO_MODIFY_PATH=1
         export UV_INSTALL_DIR=$BINARY_DIR
-        curl --proto '=https' --tlsv1.2 -LsSf $MIRROR_GITHUB/astral-sh/uv/releases/download/0.11.0/uv-installer.sh | sh
-        curl --proto '=https' --tlsv1.2 -LsSf $MIRROR_GITHUB/ccache/ccache/releases/download/v4.13.2/ccache-4.13.2-darwin.tar.gz \
+        curl --proto '=https' --tlsv1.2 -LsSf $MIRROR_GITHUB/astral-sh/uv/releases/download/0.11.7/uv-installer.sh | sh
+        curl --proto '=https' --tlsv1.2 -LsSf $MIRROR_GITHUB/ccache/ccache/releases/download/v4.13.6/ccache-4.13.6-darwin.tar.gz \
              | tar -C $BINARY_DIR --strip-components=1 -xz "*/ccache"
         export PATH="$BINARY_DIR/:$PATH"
       fi
@@ -68,7 +70,7 @@ workflow:
     - source $VIRTUAL_ENV/bin/activate
     - |
       if command -v sw_vers >/dev/null 2>&1; then
-        uv pip install mercurial==7.1.2 cmake==4.3.0 ninja==1.13.0
+        uv pip install mercurial==7.1.2 cmake==4.3.2 ninja==1.13.0
       fi
 
 .Base:
@@ -178,8 +180,6 @@ Linux_Alpine:
     - uv pip install sphinx-lint
     - cmake -P source/ci.cmake -- -DCMAKE_CXX_COMPILER=${compiler} -DCMAKE_CXX_STANDARD=${cxx_standard}
   artifacts:
-    paths:
-      - build/sbom/*.spdx
     expire_in: 1 week
     reports:
       junit: build/**/results.*.junit.xml
@@ -228,11 +228,11 @@ Linux_OpenSSL:
     matrix:
       - openssl:
           - "1.1.1w"
-          - "3.0.20"
-          - "3.5.6"
+          - "3.0.21"
+          - "3.5.7"
         legacy: 'OFF'
       - openssl:
-          - "3.6.3"
+          - "4.0.1"
         legacy: 'ON'
   script:
     - apk add gcovr
@@ -264,7 +264,7 @@ SonarQube:
   extends: .Base
   tags:
     - $HIGH_RUNNER
-  image: ${DOCKER_REGISTRY_MIRROR}/ubuntu:25.10
+  image: ${DOCKER_REGISTRY_MIRROR}/ubuntu:26.04
   variables:
     LANG: "C.UTF-8"
     LC_ALL: "C.UTF-8"
@@ -275,7 +275,7 @@ SonarQube:
       when: always
   script:
     - |
-      apt-get install -y openjdk-21-jdk-headless g++ pkgconf ccache mold \
+      apt-get install -y openjdk-25-jdk-headless g++ pkgconf ccache mold \
                      libpcsclite-dev perl libgl1-mesa-dev libglu1-mesa-dev libegl1-mesa-dev
     - uv pip install gcovr
     - cmake -DSPLIT=OFF -P source/ci.cmake
@@ -313,6 +313,7 @@ Linux_Debian_Qt:
           - 6.9.0
           - 6.10.0
           - 6.11.0
+          - 6.12.0
   image: ${DOCKER_REGISTRY_MIRROR}/debian:stable-slim
   variables:
     LANG: "C.UTF-8"
@@ -321,7 +322,7 @@ Linux_Debian_Qt:
     - |
       apt-get install -y g++ pkgconf ccache libpcsclite-dev libssl-dev libllhttp-dev libudev-dev \
                          libglib2.0-0 libvulkan-dev libegl1-mesa-dev libxkbcommon0 libdbus-1-3 \
-                         libfontconfig1
+                         libfontconfig1 libwayland-dev
     - uv pip install aqtinstall
     - cmake -DQT=$QT -P source/ci.cmake
   artifacts:
@@ -334,10 +335,11 @@ Linux_Debian_Qt:
   variables:
     ANDROID_CMDLINE_TOOLS: 13114758
     ANDROID_NDK_VERSION: 29.0.14206865
-    ANDROID_COMPONENTS: '"cmdline-tools;19.0" "build-tools;36.1.0" "platforms;android-36" "ndk;${ANDROID_NDK_VERSION}"'
+    ANDROID_COMPONENTS: '"cmdline-tools;21.0" "build-tools;37.0.0" "platforms;android-36" "ndk;${ANDROID_NDK_VERSION}"'
     ANDROID_SDK_ROOT: $CI_PROJECT_DIR/android-sdk
     ANDROID_NDK_ROOT: $ANDROID_SDK_ROOT/ndk/$ANDROID_NDK_VERSION
     ANDROID_CMDLINE_TOOLS_ZIP: commandlinetools-linux-${ANDROID_CMDLINE_TOOLS}_latest.zip
+    GRADLE_VERSION: 8.14.3
     GRADLE_USER_HOME: $CI_PROJECT_DIR/.gradle
     SDK_TEST_BASE_URL: https://dl.google.com/android/repository/
   cache:
@@ -347,7 +349,14 @@ Linux_Debian_Qt:
   before_script:
     - !reference [.prepare, setup]
     - apk add gcompat maven gradle ccache unzip perl bash g++ linux-headers libxslt
+    - uv pip install numpy
     - |
+      GRADLE_FILE="gradle-$GRADLE_VERSION-bin"
+      GRADLE_URL="https://services.gradle.org/distributions/$GRADLE_FILE.zip"
+      GRADLE_HASH=$(python -c 'import hashlib,numpy;print(numpy.base_repr(int.from_bytes(hashlib.md5(b"'"$GRADLE_URL"'").digest(),"big"),36).lower())')
+      GRADLE_PATH="$GRADLE_USER_HOME/wrapper/dists/$GRADLE_FILE/$GRADLE_HASH"
+      mkdir -p "$GRADLE_PATH"
+      wget -O $GRADLE_PATH/$GRADLE_FILE.zip "$MIRROR_GITHUB/gradle/gradle-distributions/releases/download/v$GRADLE_VERSION/$GRADLE_FILE.zip"
       wget -O /tmp/$ANDROID_CMDLINE_TOOLS_ZIP "$MIRROR_GOOGLE/android/repository/$ANDROID_CMDLINE_TOOLS_ZIP"
       unzip -d /tmp/cmd /tmp/$ANDROID_CMDLINE_TOOLS_ZIP
       set +o pipefail
@@ -608,12 +617,12 @@ MacOS:
 .Windows:
   extends: .Base
   variables:
-    UV_VERSION: 0.11.0
+    UV_VERSION: 0.11.7
     NINJA_VERSION: 1.13.2
-    CCACHE_VERSION: 4.13.1
-    JOM_VERSION: "1_1_5"
-    PERL_VERSION: 5.42.0.1
-    MSYS2_VERSION: 20251213
+    CCACHE_VERSION: 4.13.6
+    JOM_VERSION: "1_1_7"
+    PERL_VERSION: 5.42.2.1
+    MSYS2_VERSION: "2025-12-13"
   before_script:
     - "ls env:"
     - mkdir $env:BINARY_DIR -ErrorAction Stop | Out-Null
@@ -637,15 +646,17 @@ MacOS:
     - |
       if ($env:CI_RUNNER_TAGS -match 'MSVC') {
             $baseUrl = "$MIRROR_GITHUB/StrawberryPerl/Perl-Dist-Strawberry/releases/download"
+            $PERL_VERSION_STRIPPED = ${PERL_VERSION} -replace '\.', ''
             curl --proto '=https' --tlsv1.2 -LsSf -o perl.zip -w "Finished: %{url}\n" `
-                 ${baseUrl}/SP_54201_64bit/strawberry-perl-${PERL_VERSION}-64bit-portable.zip
+                 ${baseUrl}/SP_${PERL_VERSION_STRIPPED}_64bit/strawberry-perl-${PERL_VERSION}-64bit-portable.zip
             mkdir $env:BINARY_DIR/perl -ErrorAction Stop | Out-Null
             tar -xf perl.zip -C $env:BINARY_DIR/perl
       }
       if ($env:CI_RUNNER_TAGS -match 'GNU') {
             $baseUrl = "$MIRROR_GITHUB/msys2/msys2-installer/releases/download"
+            $MSYS2_VERSION_STRIPPED = ${MSYS2_VERSION} -replace '-', ''
             curl --proto '=https' --tlsv1.2 -LsSf -o msys2.tar.xz -w "Finished: %{url}\n" `
-                 ${baseUrl}/2025-12-13/msys2-base-x86_64-${MSYS2_VERSION}.tar.xz
+                 ${baseUrl}/${MSYS2_VERSION}/msys2-base-x86_64-${MSYS2_VERSION_STRIPPED}.tar.xz
             tar -xf msys2.tar.xz -C $env:BINARY_DIR
       }
     - |
@@ -658,7 +669,7 @@ MacOS:
       }
     - uv venv $env:VIRTUAL_ENV --python 3.12
     - '& "$env:VIRTUAL_ENV/Scripts/activate.ps1"'
-    - uv pip install mercurial==7.1.2 cmake==4.3.0
+    - uv pip install mercurial==7.1.2 cmake==4.3.2
     # https://foss.heptapod.net/mercurial/mercurial-devel/-/issues/6635
     - $env:PATH = "$env:PATH;$env:VIRTUAL_ENV/Lib/site-packages"
     - hg clone --stream ${REPOSITORY} -u $REVISION source
@@ -669,6 +680,7 @@ MacOS:
     paths:
       - build/*.msi*
       - build/Appcast*
+      - build/sbom/*.spdx
     reports:
       junit: build/**/results.*.junit.xml
 
@@ -769,12 +781,6 @@ Deploy_Android_AAR:
 Deploy_Archive:
   extends: .Deploy
   needs:
-    - job: Linux_Alpine
-      parallel:
-        matrix:
-          - variant: [App]
-            compiler: [g++]
-            cxx_standard: [20]
     - job: Android_APK
     - job: Android_Merged-AAR
     - job: iOS_SwiftPackage

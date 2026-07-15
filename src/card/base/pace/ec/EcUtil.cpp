@@ -11,6 +11,8 @@
 	#include <openssl/param_build.h>
 #endif
 
+#include <openssl/err.h>
+
 Q_DECLARE_LOGGING_CATEGORY(card)
 
 using namespace governikus;
@@ -178,6 +180,10 @@ QSharedPointer<EVP_PKEY> EcUtil::generateKey(const QSharedPointer<const EC_GROUP
 		return nullptr;
 	}
 
+	auto errorLogGuard = qScopeGuard([] {
+				qCCritical(card) << ERR_error_string(ERR_get_error(), nullptr);
+			});
+
 	auto generator = EcUtil::point2oct(pCurve, EC_GROUP_get0_generator(pCurve.data()));
 
 	auto order = EcUtil::create(BN_new());
@@ -240,6 +246,7 @@ QSharedPointer<EVP_PKEY> EcUtil::generateKey(const QSharedPointer<const EC_GROUP
 		return nullptr;
 	}
 
+	errorLogGuard.dismiss();
 	return EcUtil::create(key);
 }
 

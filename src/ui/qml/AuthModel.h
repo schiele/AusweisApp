@@ -44,6 +44,7 @@ class AuthModel
 	Q_PROPERTY(QString resultViewButtonText READ getResultViewButtonText NOTIFY fireResultChanged)
 	Q_PROPERTY(QUrl resultViewButtonLink READ getResultViewButtonLink NOTIFY fireResultChanged)
 	Q_PROPERTY(QUrl refreshUrl READ getRefreshUrl NOTIFY fireRefreshUrlChanged)
+	Q_PROPERTY(bool autoFinishBeforeQuit READ getAutoFinishBeforeQuit NOTIFY fireAutoFinishBeforeQuitChanged)
 
 	private:
 		QSharedPointer<AuthContext> mContext;
@@ -67,7 +68,9 @@ class AuthModel
 		[[nodiscard]] QString getResultViewButtonText() const;
 		[[nodiscard]] QUrl getResultViewButtonLink() const;
 		[[nodiscard]] QUrl getRefreshUrl() const;
+		[[nodiscard]] bool getAutoFinishBeforeQuit() const;
 
+		Q_INVOKABLE void cancelWorkflowToQuit();
 		Q_INVOKABLE void cancelWorkflowToChangeTransportPin();
 
 	private Q_SLOTS:
@@ -78,6 +81,7 @@ class AuthModel
 		void fireTransactionInfoChanged();
 		void fireProgressChanged();
 		void fireRefreshUrlChanged();
+		void fireAutoFinishBeforeQuitChanged();
 };
 
 

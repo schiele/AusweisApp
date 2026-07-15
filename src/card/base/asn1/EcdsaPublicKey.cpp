@@ -141,28 +141,28 @@ QByteArray EcdsaPublicKey::getUncompressedPublicPoint() const
 	CurveData result;
 
 	result.p = EcUtil::create(BN_new());
-	if (!BN_bin2bn(mPrimeModulus->data, mPrimeModulus->length, result.p.data()))
+	if (!BN_bin2bn(ASN1_STRING_get0_data(mPrimeModulus), ASN1_STRING_length(mPrimeModulus), result.p.data()))
 	{
 		qCCritical(card) << "Cannot convert prime modulus";
 		return {};
 	}
 
 	result.a = EcUtil::create(BN_new());
-	if (!BN_bin2bn(mFirstCoefficient->data, mFirstCoefficient->length, result.a.data()))
+	if (!BN_bin2bn(ASN1_STRING_get0_data(mFirstCoefficient), ASN1_STRING_length(mFirstCoefficient), result.a.data()))
 	{
 		qCCritical(card) << "Cannot convert first coefficient";
 		return {};
 	}
 
 	result.b = EcUtil::create(BN_new());
-	if (!BN_bin2bn(mSecondCoefficient->data, mSecondCoefficient->length, result.b.data()))
+	if (!BN_bin2bn(ASN1_STRING_get0_data(mSecondCoefficient), ASN1_STRING_length(mSecondCoefficient), result.b.data()))
 	{
 		qCCritical(card) << "Cannot convert second coefficient";
 		return {};
 	}
 
 	result.order = EcUtil::create(BN_new());
-	if (!BN_bin2bn(mOrderOfTheBasePoint->data, mOrderOfTheBasePoint->length, result.order.data()))
+	if (!BN_bin2bn(ASN1_STRING_get0_data(mOrderOfTheBasePoint), ASN1_STRING_length(mOrderOfTheBasePoint), result.order.data()))
 	{
 		qCCritical(card) << "Cannot convert order of the generator";
 		return {};
@@ -171,7 +171,7 @@ QByteArray EcdsaPublicKey::getUncompressedPublicPoint() const
 	if (mCofactor)
 	{
 		result.cofactor = EcUtil::create(BN_new());
-		if (!BN_bin2bn(mCofactor->data, mCofactor->length, result.cofactor.data()))
+		if (!BN_bin2bn(ASN1_STRING_get0_data(mCofactor), ASN1_STRING_length(mCofactor), result.cofactor.data()))
 		{
 			qCCritical(card) << "Cannot convert cofactor";
 			return {};
@@ -193,7 +193,7 @@ QSharedPointer<EC_GROUP> EcdsaPublicKey::createGroup(const CurveData& pData) con
 	}
 
 	QSharedPointer<EC_POINT> generator = EcUtil::create(EC_POINT_new(group.data()));
-	if (!EC_POINT_oct2point(group.data(), generator.data(), mBasePoint->data, static_cast<size_t>(mBasePoint->length), nullptr))
+	if (!EC_POINT_oct2point(group.data(), generator.data(), ASN1_STRING_get0_data(mBasePoint), static_cast<size_t>(ASN1_STRING_length(mBasePoint)), nullptr))
 	{
 		qCCritical(card) << "Cannot convert generator";
 		return nullptr;
@@ -220,7 +220,7 @@ QSharedPointer<EVP_PKEY> EcdsaPublicKey::createKey(const QByteArray& pPublicPoin
 #ifndef QT_NO_DEBUG
 QSharedPointer<EVP_PKEY> EcdsaPublicKey::createKey() const
 {
-	return createKey(reinterpret_cast<const uchar*>(mPublicPoint->data), mPublicPoint->length);
+	return createKey(ASN1_STRING_get0_data(mPublicPoint), ASN1_STRING_length(mPublicPoint));
 }
 
 
@@ -283,7 +283,7 @@ QSharedPointer<EVP_PKEY> EcdsaPublicKey::createKey(const uchar* pPublicPoint, in
 					   && OSSL_PARAM_BLD_push_BN(pBuilder, "order", curveData.order.data())
 					   && OSSL_PARAM_BLD_push_BN(pBuilder, "cofactor", curveData.cofactor.data())
 					   && OSSL_PARAM_BLD_push_octet_string(pBuilder, "pub", pPublicPoint, static_cast<size_t>(pPublicPointLength))
-					   && OSSL_PARAM_BLD_push_octet_string(pBuilder, "generator", mBasePoint->data, static_cast<size_t>(mBasePoint->length))
+					   && OSSL_PARAM_BLD_push_octet_string(pBuilder, "generator", ASN1_STRING_get0_data(mBasePoint), static_cast<size_t>(ASN1_STRING_length(mBasePoint)))
 					   && OSSL_PARAM_BLD_push_utf8_string(pBuilder, "field-type", "prime-field", 12);
 			});
 

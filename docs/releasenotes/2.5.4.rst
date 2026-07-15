@@ -1,0 +1,22 @@
+AusweisApp 2.5.4
+^^^^^^^^^^^^^^^^
+
+**Releasedatum:** 15. Juli 2026
+
+
+Anwender
+""""""""
+- Visuelle Anpassungen und Optimierungen der grafischen Oberfläche.
+
+- Ein möglicher Absturz bei der Verwendung der Barrierefreiheitsfunktionen behoben.
+
+- Optimierung einzelner Barrierefreiheitsfunktionen.
+
+
+Entwickler
+""""""""""
+- Kompatibilität für OpenSSL 4.0.0 mittels -DUSE_LEGACY_OPENSSL_API=ON hergestellt.
+
+- Möglicher Deadlock im WebSocket-SDK behoben.
+
+- Funktionserweiterung des SDKs (siehe Changelog).

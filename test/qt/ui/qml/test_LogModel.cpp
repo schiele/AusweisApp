@@ -47,7 +47,7 @@ class test_LogModel
 		{
 			resetModel();
 			Env::getSingleton<LogHandler>()->resetBacklog();
-			qApp->processEvents();
+			QCoreApplication::instance()->processEvents();
 		}
 
 

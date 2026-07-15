@@ -22,7 +22,6 @@ Q_DECLARE_LOGGING_CATEGORY(network)
 namespace governikus
 {
 
-constexpr QLatin1StringView ipv6MulticastAddress("ff02::178");
 
 template<> DatagramHandler* createNewObject<DatagramHandler*>()
 {
@@ -120,104 +119,9 @@ bool DatagramHandlerImpl::isBound() const
 }
 
 
-QList<QNetworkAddressEntry> DatagramHandlerImpl::getAllBroadcastEntries() const
-{
-	QList<QNetworkAddressEntry> broadcastEntries;
-
-	const auto& allInterfaces = QNetworkInterface::allInterfaces();
-	for (const QNetworkInterface& interface : allInterfaces)
-	{
-		if (!isValidBroadcastInterface(interface))
-		{
-			continue;
-		}
-
-		const auto& entries = interface.addressEntries();
-		for (const QNetworkAddressEntry& addressEntry : entries)
-		{
-			if (isValidAddressEntry(addressEntry))
-			{
-				broadcastEntries << addressEntry;
-			}
-		}
-	}
-
-	return broadcastEntries;
-}
-
-
 void DatagramHandlerImpl::send(const QByteArray& pData, const QList<QNetworkAddressEntry>& pEntries)
 {
 	sendToAddressEntries(pData, pEntries, 0);
-}
-
-
-bool DatagramHandlerImpl::isValidBroadcastInterface(const QNetworkInterface& pInterface) const
-{
-	if (!pInterface.isValid())
-	{
-		return false;
-	}
-
-	const auto& flags = pInterface.flags();
-	if (!flags.testFlag(QNetworkInterface::IsUp) || !flags.testFlag(QNetworkInterface::IsRunning))
-	{
-		return false;
-	}
-
-#ifdef Q_OS_MACOS
-	// Excluding not documented interface of the T2 Coprocessor on macOS,  which does not accept broadcasts.
-	// https://duo.com/labs/research/apple-t2-xpc
-	if (pInterface.hardwareAddress().toLower() == QLatin1String("ac:de:48:00:11:22"))
-	{
-		return false;
-	}
-#endif
-
-	return true;
-}
-
-
-bool DatagramHandlerImpl::isValidAddressEntry(const QNetworkAddressEntry& pEntry) const
-{
-	const auto ipAddr = pEntry.ip();
-	switch (ipAddr.protocol())
-	{
-		case QAbstractSocket::NetworkLayerProtocol::IPv4Protocol:
-			return ipAddr.isGlobal() && !pEntry.broadcast().isNull();
-
-		case QAbstractSocket::NetworkLayerProtocol::IPv6Protocol:
-			return ipAddr.isGlobal();
-
-		default:
-			qCDebug(network) << "Skipping unknown protocol type:" << ipAddr.protocol();
-			return false;
-
-	}
-}
-
-
-QHostAddress DatagramHandlerImpl::getBroadcastAddress(const QNetworkAddressEntry& pEntry) const
-{
-	const auto& ipAddr = pEntry.ip();
-	switch (ipAddr.protocol())
-	{
-		case QAbstractSocket::NetworkLayerProtocol::IPv4Protocol:
-		{
-			return pEntry.broadcast();
-		}
-
-		case QAbstractSocket::NetworkLayerProtocol::IPv6Protocol:
-		{
-			return QHostAddress(ipv6MulticastAddress);
-		}
-
-		default:
-		{
-			qCDebug(network) << "Skipping unknown protocol type:" << ipAddr.protocol();
-			return QHostAddress();
-		}
-	}
 }
 
 

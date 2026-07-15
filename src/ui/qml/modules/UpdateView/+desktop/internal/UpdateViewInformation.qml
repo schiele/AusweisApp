@@ -12,10 +12,7 @@ import Governikus.Style
 ColumnLayout {
 	id: root
 
-	property string checksumUrl
 	property int downloadSize: -1
-	property string downloadUrl
-	property string notesUrl
 	property date releaseDate
 	property alias version: textVersion.text
 
@@ -48,27 +45,6 @@ ColumnLayout {
 		}
 		GText {
 			text: "%1 MB".arg((root.downloadSize / 1000000).toLocaleString(Qt.locale(SettingsModel.language), "f", 1))
-		}
-		GText {
-			font.weight: Style.font.bold
-
-			//: DESKTOP Plaintext link to the update download.
-			text: qsTr("Download link")
-			visible: root.downloadUrl !== ""
-		}
-		GText {
-			text: "<a href=\"%1\">%1</a>".arg(root.downloadUrl)
-			visible: root.downloadUrl !== ""
-		}
-		GText {
-			font.weight: Style.font.bold
-			//: DESKTOP Link to download checksum to verify the downloaded update file.
-			text: qsTr("Checksum link")
-			visible: root.checksumUrl !== ""
-		}
-		GText {
-			text: "<a href=\"%1\">%1</a>".arg(root.checksumUrl)
-			visible: root.checksumUrl !== ""
 		}
 	}
 }

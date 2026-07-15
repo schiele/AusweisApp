@@ -3,7 +3,6 @@
 set(MIN_QT_VERSION_DESKTOP 6.8)
 set(MIN_QT_VERSION_MOBILE 6.10)
 
-find_package(Governikus QUIET)
 if(LIBS_GOVERNIKUS)
 	message(STATUS "Library revision: ${LIBS_REVISION}")
 	string(REGEX REPLACE "-.*" "" MIN_QT_VERSION "${LIBS_QT}")
@@ -95,7 +94,10 @@ if(tmp_crosscompile_enabled)
 	set(CMAKE_CROSSCOMPILING OFF)
 endif()
 
-find_package(llhttp REQUIRED)
+if(LIBS_GOVERNIKUS)
+	set(MIN_LLHTTP_VERSION ${LIBS_LLHTTP})
+endif()
+find_package(llhttp ${MIN_LLHTTP_VERSION} REQUIRED)
 
 
 if(MINGW)

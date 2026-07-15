@@ -14,6 +14,8 @@ QtObject {
 	property string continueButtonText: qsTr("Continue")
 	property string header
 	property string hintBoxesTitle
+	property string hintButtonLink
+	property string hintButtonText
 	property string hintText
 	property string linkToOpen
 	property string text

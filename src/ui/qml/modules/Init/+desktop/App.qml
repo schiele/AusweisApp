@@ -56,6 +56,10 @@ ApplicationWindow {
 	}
 	onWidthChanged: d.setScaleFactor()
 
+	palette {
+		toolTipBase: Style.color.background
+		toolTipText: Style.color.textNormal.basic_unchecked
+	}
 	Shortcut {
 		enabled: Qt.platform.os === "osx"
 		sequence: "Ctrl+W"
@@ -95,7 +99,7 @@ ApplicationWindow {
 
 		function abortCurrentWorkflow() {
 			if (ApplicationModel.currentWorkflow === ApplicationModel.Workflow.AUTHENTICATION) {
-				AuthModel.cancelWorkflow();
+				AuthModel.cancelWorkflowToQuit();
 			} else if (ApplicationModel.currentWorkflow === ApplicationModel.Workflow.SELF_AUTHENTICATION) {
 				SelfAuthModel.cancelWorkflow();
 			} else if (ApplicationModel.currentWorkflow === ApplicationModel.Workflow.CHANGE_PIN) {

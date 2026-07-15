@@ -39,9 +39,9 @@ SortedReaderModel* ReaderModel::getSortedModel()
 }
 
 
-void ReaderModel::collectReaderData()
+QList<ReaderConfigurationInfo> ReaderModel::collectReaderData()
 {
-	mConnectedReaders.clear();
+	QList<ReaderConfigurationInfo> connectedReaders;
 
 	const QList<ReaderInfo> installedReaders = Env::getSingleton<ReaderManager>()->getReaderInfos(ReaderFilter({
 				ReaderManagerPluginType::PCSC, ReaderManagerPluginType::NFC
@@ -51,7 +51,7 @@ void ReaderModel::collectReaderData()
 	{
 		const auto& readerSettingsInfo = installedReader.getReaderConfigurationInfo();
 		mKnownDrivers += readerSettingsInfo;
-		mConnectedReaders += readerSettingsInfo;
+		connectedReaders += readerSettingsInfo;
 	}
 
 #if !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS)
@@ -59,13 +59,15 @@ void ReaderModel::collectReaderData()
 	const auto& attachedSupportedDevices = Env::getSingleton<ReaderDetector>()->getAttachedSupportedDevices();
 	for (const auto& info : attachedSupportedDevices)
 	{
-		if (!mConnectedReaders.contains(info))
+		if (!connectedReaders.contains(info))
 		{
 			readersWithoutDriver.append(info);
 		}
 	}
-	mConnectedReaders += readersWithoutDriver;
+	connectedReaders += readersWithoutDriver;
 #endif
+
+	return connectedReaders;
 }
 
 
@@ -118,14 +120,10 @@ QString ReaderModel::getHTMLDescription(const QModelIndex& pIndex) const
 			//: ALL_PLATFORMS
 			return tr("Driver installed");
 		}
-
 		//: ALL_PLATFORMS
-		const auto& driverInfo = tr("No driver installed");
-		//: ALL_PLATFORMS The driver for card reader needs to be installed, the download link is provided in the message.
-		const auto& driverDownloadInfo = tr("Please download and install the driver you can find at: %1").
-				arg(QStringLiteral("<a href=\"%1\">%1</a>").arg(mConnectedReaders.at(pIndex.row()).getUrl()));
-
-		return driverInfo + QStringLiteral("<br>") + driverDownloadInfo;
+		return tr("No driver installed") + QStringLiteral("<br>") +
+		       //: ALL_PLATFORMS
+			   tr("Please download and install the driver you can find at:");
 	}
 
 	//: ALL_PLATFORMS
@@ -165,13 +163,30 @@ bool ReaderModel::isPcscScanRunning() const
 
 void ReaderModel::onUpdateContent()
 {
-	beginResetModel();
+	const int oldCount = ReaderModel::rowCount();
+	const auto connectedReaders = collectReaderData();
+	const int newCount = std::max(static_cast<int>(connectedReaders.size()), 1);
 
-	collectReaderData();
 	mConnectedReadersUpdateTime = QTime::currentTime();
 
-	endResetModel();
+	if (oldCount == newCount)
+	{
+		mConnectedReaders = connectedReaders;
+	}
+	else if (newCount > oldCount)
+	{
+		beginInsertRows(QModelIndex(), oldCount, newCount - 1);
+		mConnectedReaders = connectedReaders;
+		endInsertRows();
+	}
+	else
+	{
+		beginRemoveRows(QModelIndex(), newCount, oldCount - 1);
+		mConnectedReaders = connectedReaders;
+		endRemoveRows();
+	}
 
+	Q_EMIT dataChanged(ReaderModel::index(0, 0), ReaderModel::index(ReaderModel::rowCount() - 1, 0));
 	Q_EMIT fireModelChanged();
 }
 
@@ -202,7 +217,29 @@ ReaderModel::ReaderModel()
 
 int ReaderModel::rowCount(const QModelIndex&) const
 {
-	return static_cast<int>(mConnectedReaders.size());
+	return std::max(static_cast<int>(mConnectedReaders.size()), 1);
+}
+
+
+QVariant ReaderModel::handleDummyReaderInfo(int pRole) const
+{
+	switch (pRole)
+	{
+		case ReaderModel::READER_NAME:
+			//: DESKTOP
+			return tr("No card reader connected");
+
+		case ReaderModel::READER_IMAGE_PATH:
+			return QStringLiteral("qrc:///images/desktop/default_reader.png");
+
+		case ReaderModel::READER_INSTALLED:
+		case ReaderModel::SHOW_STATUS_ICON:
+		case ReaderModel::READER_SUPPORTED:
+			return false;
+
+		default:
+			return QString();
+	}
 }
 
 
@@ -211,6 +248,11 @@ QVariant ReaderModel::data(const QModelIndex& pIndex, int pRole) const
 	if (!indexIsValid(pIndex))
 	{
 		return QVariant();
+	}
+
+	if (mConnectedReaders.isEmpty())
+	{
+		return handleDummyReaderInfo(pRole);
 	}
 
 	const auto& reader = mConnectedReaders.at(pIndex.row());
@@ -226,13 +268,22 @@ QVariant ReaderModel::data(const QModelIndex& pIndex, int pRole) const
 			return getHTMLDescription(pIndex);
 
 		case READER_DRIVER_URL:
-			return mConnectedReaders.at(pIndex.row()).getUrl();
+		{
+			if (isSupportedReader(pIndex) && !isInstalledReader(pIndex))
+			{
+				return mConnectedReaders.at(pIndex.row()).getUrl();
+			}
+			return QString();
+		}
 
 		case READER_SUPPORTED:
 			return isSupportedReader(pIndex);
 
 		case READER_INSTALLED:
 			return isInstalledReader(pIndex);
+
+		case SHOW_STATUS_ICON:
+			return true;
 
 		default:
 			return QVariant();
@@ -246,8 +297,10 @@ QHash<int, QByteArray> ReaderModel::roleNames() const
 	roles.insert(READER_NAME, "readerName");
 	roles.insert(READER_IMAGE_PATH, "readerImagePath");
 	roles.insert(READER_HTML_DESCRIPTION, "readerHTMLDescription");
+	roles.insert(READER_DRIVER_URL, "readerDriverUrl");
 	roles.insert(READER_SUPPORTED, "readerSupported");
 	roles.insert(READER_INSTALLED, "readerInstalled");
+	roles.insert(SHOW_STATUS_ICON, "showStatusIcon");
 	return roles;
 }
 
@@ -255,4 +308,10 @@ QHash<int, QByteArray> ReaderModel::roleNames() const
 void ReaderModel::onTranslationChanged()
 {
 	onUpdateContent();
+}
+
+
+bool ReaderModel::hasConnectedReader() const
+{
+	return !mConnectedReaders.isEmpty();
 }

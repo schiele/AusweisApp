@@ -228,8 +228,8 @@ FlickableSectionPage {
 		function onFireAppDownloadFinished() {
 			UiPluginModel.fireQuitApplicationRequest();
 		}
-		function onFireAppUpdateFailed(pError, pSupportInfo) {
-			warning.exec(pError, pSupportInfo);
+		function onFireAppUpdateFailed(pError) {
+			warning.exec(pError);
 		}
 
 		target: root.updateData
@@ -284,9 +284,11 @@ FlickableSectionPage {
 	ConfirmationPopup {
 		id: warning
 
-		function exec(pError, pSupportInfo) {
+		function exec(pError) {
+			if (pError === "")
+				return;
+
 			text = pError;
-			supportInfoText.text = pSupportInfo;
 			open();
 		}
 
@@ -294,10 +296,12 @@ FlickableSectionPage {
 		//: DESKTOP Header of the popup that is shown when the app download failed.
 		title: qsTr("Warning - Update failed")
 
-		GText {
-			id: supportInfoText
-
-			visible: text !== ""
+		Hint {
+			//: DESKTOP
+			buttonText: qsTr("Open website")
+			linkToOpen: "https://www.ausweisapp.bund.de/%1/aa2/support".arg(SettingsModel.language)
+			//: DESKTOP
+			text: qsTr("If this does not help, contact our support.")
 			width: parent.width
 		}
 	}

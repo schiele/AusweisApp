@@ -48,6 +48,12 @@ void StateConnectCard::onCardInserted()
 
 void StateConnectCard::onCommandDone(QSharedPointer<CreateCardConnectionCommand> pCommand)
 {
+	if (!isActive())
+	{
+		qCDebug(statemachine) << "State not active anymore, ignore CardConnectionCommand result.";
+		return;
+	}
+
 	const auto& cardConnection = pCommand->getCardConnection();
 
 	qCDebug(statemachine) << "Card connection command completed";

@@ -17,16 +17,16 @@ GAbstractButton {
 	property alias iconTintColor: linkIcon.tintColor
 	property alias layoutDirection: contentLayout.layoutDirection
 	property alias maximumLineCount: linkText.maximumLineCount
-	property alias textStyle: linkText.textStyle
+	property TextStyle textStyle: Style.text.link
 	property alias tintIcon: linkIcon.tintEnabled
 
 	Accessible.name: text
 	Layout.maximumWidth: Math.ceil(implicitWidth)
 	background: null
 	baselineOffset: linkText.baselineOffset + verticalPadding + (contentItem.height - linkText.height) / 2
-	font.pixelSize: linkText.textStyle.textSize
+	font.pixelSize: textStyle.textSize
 	font.underline: UiPluginModel.a11yButtonShapeActive
-	font.weight: linkText.textStyle.fontWeight
+	font.weight: textStyle.fontWeight
 	horizontalPadding: Style.dimens.control_horizontalPadding
 	implicitWidth: linkText.visible ? (implicitContentWidth + leftPadding + rightPadding) : implicitHeight
 	verticalPadding: Style.dimens.control_verticalPadding
@@ -90,7 +90,7 @@ GAbstractButton {
 				lineHeight: root.textStyle.lineHeight
 				maximumLineCount: 1
 				text: root.text
-				textStyle: Style.text.link
+				textStyle: root.textStyle
 				visible: text !== ""
 			}
 		}

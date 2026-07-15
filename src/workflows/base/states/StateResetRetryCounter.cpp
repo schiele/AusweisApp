@@ -54,11 +54,14 @@ void StateResetRetryCounter::onResetRetryCounterDone(QSharedPointer<BaseCardComm
 
 			case StatusCode::ACCESS_DENIED:
 				updateStatus(GlobalStatus::Code::Card_Puk_Blocked);
-				Q_EMIT fireAbort(FailureCode::Reason::Establish_Pace_Channel_Puk_Inoperative);
+				Q_EMIT fireAbort(FailureCode::Reason::Reset_Retry_Counter_Puk_Inoperative);
 				return;
 
 			default:
 				qCCritical(statemachine).nospace() << "Received an unexpected StatusCode (" << code << "), cannot reset retry counter";
+				updateStatus(GlobalStatus::Code::Card_Unexpected_Transmit_Status);
+				Q_EMIT fireAbort(FailureCode::Reason::Reset_Retry_Counter_Unexpected_StatusCode);
+				return;
 		}
 	}
 	else

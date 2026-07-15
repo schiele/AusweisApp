@@ -94,7 +94,7 @@ Item {
 				implicitWidth: row.width + 2 * Style.dimens.pane_padding
 
 				onActiveFocusChanged: if (activeFocus) {
-					logEntryList.handleItemFocused(index);
+					logEntryList.centerViewAtIndex(index);
 				}
 
 				Row {

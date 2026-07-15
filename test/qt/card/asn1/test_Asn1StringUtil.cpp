@@ -25,10 +25,11 @@ class test_Asn1StringUtil
 			ASN1_UTF8STRING* asn1String = ASN1_UTF8STRING_new();
 
 			Asn1StringUtil::setValue("abc"_L1, asn1String);
-			QCOMPARE(asn1String->length, 3);
-			QCOMPARE(asn1String->data[0], static_cast<uchar>('a'));
-			QCOMPARE(asn1String->data[1], static_cast<uchar>('b'));
-			QCOMPARE(asn1String->data[2], static_cast<uchar>('c'));
+			const auto* data = ASN1_STRING_get0_data(asn1String);
+			QCOMPARE(ASN1_STRING_length(asn1String), 3);
+			QCOMPARE(data[0], static_cast<uchar>('a'));
+			QCOMPARE(data[1], static_cast<uchar>('b'));
+			QCOMPARE(data[2], static_cast<uchar>('c'));
 
 			ASN1_STRING_free(asn1String);
 		}

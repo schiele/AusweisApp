@@ -42,7 +42,6 @@ class AppUpdateDataModel
 	Q_PROPERTY(QString version READ getVersion NOTIFY fireAppUpdateDataChanged)
 	Q_PROPERTY(QUrl url READ getUrl NOTIFY fireAppUpdateDataChanged)
 	Q_PROPERTY(int size READ getSize NOTIFY fireAppUpdateDataChanged)
-	Q_PROPERTY(QUrl checksumUrl READ getChecksumUrl NOTIFY fireAppUpdateDataChanged)
 
 	private:
 		bool mAppcastFinished;
@@ -54,8 +53,6 @@ class AppUpdateDataModel
 		int mAppcastTotal;
 
 		QString errorFromStatusCode(GlobalStatus::Code pCode) const;
-		QString supportInfoFromStatusCode(GlobalStatus::Code pCode) const;
-		[[nodiscard]] QString getDownloadFolder() const;
 
 		[[nodiscard]] QDateTime lastAppcastDate() const;
 		void setLastAppcastDate(const QDateTime& pDate);
@@ -95,15 +92,13 @@ class AppUpdateDataModel
 		[[nodiscard]] QString getVersion() const;
 		[[nodiscard]] const QUrl& getUrl() const;
 		[[nodiscard]] int getSize() const;
-		[[nodiscard]] const QUrl& getChecksumUrl() const;
 		[[nodiscard]] Q_INVOKABLE bool download();
 		[[nodiscard]] Q_INVOKABLE bool abortDownload();
 
 	Q_SIGNALS:
 		void fireAppUpdateDataChanged();
 		void fireDownloadProgressChanged();
-		void fireAppUpdateAborted();
-		void fireAppUpdateFailed(const QString& pError, const QString& pSupportInfo);
+		void fireAppUpdateFailed(const QString& pError);
 		void fireAppDownloadFinished();
 		void fireAppcastUpdateTextChanged();
 		void fireAppcastNoUpdateTextChanged();

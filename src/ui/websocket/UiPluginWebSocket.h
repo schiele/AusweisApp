@@ -37,6 +37,7 @@ class UiPluginWebSocket
 
 	private Q_SLOTS:
 		void doShutdown() override;
+		void onServerError(QWebSocketProtocol::CloseCode closeCode);
 		void onWorkflowStarted(const QSharedPointer<WorkflowRequest>& pRequest) override;
 		void onWorkflowFinished(const QSharedPointer<WorkflowRequest>& pRequest) override;
 		void onUiDomination(const UiPlugin* pUi, const QString& pInformation, bool pAccepted) override;

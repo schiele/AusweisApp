@@ -158,6 +158,7 @@ FlickableSectionPage {
 		id: hintItem
 
 		Layout.fillWidth: true
+		buttonTooltip: linkToOpen
 		linkToOpen: root.hintButtonLink
 		//: DESKTOP
 		title: qsTr("Hint")

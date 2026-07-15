@@ -5,17 +5,17 @@
     <name>AbortedProgressView</name>
     <message>
         <source>Aborting process and informing the service provider</source>
-        <extracomment>DESKTOP The user aborted the authentication process, according to TR we need to inform the service provider</extracomment>
+        <extracomment>MOBILE The user aborted the authentication process, according to TR we need to inform the service provider</extracomment>
         <translation>Переривання процесу й інформування постачальника послуг</translation>
     </message>
     <message>
         <source>Please wait a moment.</source>
-        <extracomment>DESKTOP Information message about cancellation process with present network connectivity</extracomment>
+        <extracomment>MOBILE Information message about cancellation process with present network connectivity</extracomment>
         <translation>Трохи зачекайте.</translation>
     </message>
     <message>
         <source>Network problems detected, trying to reach server within 30 seconds.</source>
-        <extracomment>DESKTOP Information message about cancellation process without working network connectivity</extracomment>
+        <extracomment>MOBILE Information message about cancellation process without working network connectivity</extracomment>
         <translation>Виявлено проблеми з мережею, виконується спроба зв’язатися з сервером протягом 30 секунд.</translation>
     </message>
 </context>
@@ -86,7 +86,7 @@
     </message>
     <message>
         <source>Back to setup</source>
-        <extracomment>ALL_PLATFORM</extracomment>
+        <extracomment>ALL_PLATFORMS</extracomment>
         <translation>Повернутися до налаштувань</translation>
     </message>
     <message>
@@ -159,6 +159,13 @@ MOBILE The card reader requests the user&apos;s attention.</extracomment>
         <translation>Зверніть увагу на дисплей свого пристрою читання карток.</translation>
     </message>
     <message>
+        <source>Open website</source>
+        <extracomment>DESKTOP
+----------
+MOBILE</extracomment>
+        <translation>Відкрити сайт</translation>
+    </message>
+    <message>
         <source>Send log</source>
         <extracomment>MOBILE</extracomment>
         <translation>Надіслати журнал</translation>
@@ -205,12 +212,16 @@ MOBILE The card reader requests the user&apos;s attention.</extracomment>
     </message>
     <message>
         <source>Back to start page</source>
-        <extracomment>MOBILE</extracomment>
+        <extracomment>DESKTOP
+----------
+MOBILE</extracomment>
         <translation>Повернутися до початкової сторінки</translation>
     </message>
     <message>
         <source>Back to setup</source>
-        <extracomment>MOBILE</extracomment>
+        <extracomment>DESKTOP
+----------
+MOBILE</extracomment>
         <translation>Повернутися до налаштувань</translation>
     </message>
     <message>
@@ -313,6 +324,14 @@ MOBILE</extracomment>
         <source>Cancel</source>
         <extracomment>ALL_PLATFORMS</extracomment>
         <translation>Скасувати</translation>
+    </message>
+</context>
+<context>
+    <name>BaseDevicesListDelegate</name>
+    <message>
+        <source>Device %1</source>
+        <extracomment>MOBILE</extracomment>
+        <translation>Пристрій %1</translation>
     </message>
 </context>
 <context>
@@ -566,11 +585,6 @@ MOBILE</extracomment>
         <extracomment>DESKTOP</extracomment>
         <translation>Тут показано лише підключені пристрої читання карток.</translation>
     </message>
-    <message>
-        <source>No card reader connected</source>
-        <extracomment>DESKTOP</extracomment>
-        <translation>Підключеного пристрою читання карток не виявлено</translation>
-    </message>
 </context>
 <context>
     <name>ChangePinController</name>
@@ -592,6 +606,11 @@ MOBILE Processing screen label while the card communication is running before th
         <source>Please wait a moment.</source>
         <extracomment>DESKTOP Generic progress message during PIN change process.</extracomment>
         <translation>Трохи зачекайте.</translation>
+    </message>
+    <message>
+        <source>Open website</source>
+        <extracomment>DESKTOP</extracomment>
+        <translation>Відкрити сайт</translation>
     </message>
     <message>
         <source>Please do not move the ID card.</source>
@@ -960,11 +979,6 @@ MOBILE</extracomment>
         <translation>Не вдалося отримати доступ до ID-картки</translation>
     </message>
     <message>
-        <source>It was not possible to establish a stable connection with your ID card.&lt;br&gt;&lt;br&gt;Please start the check again. Try a different card position and make sure not to move the card during the test.&lt;br&gt;&lt;br&gt;If a connection to the ID card cannot be established even with different card positions, this indicates that the NFC interface of your mobile device cannot supply the ID card with sufficient power.&lt;br&gt;&lt;br&gt;Smartphones compatible with %1 can be found on our &lt;a href=&quot;%2&quot;&gt;website&lt;/a&gt;.</source>
-        <extracomment>ALL_PLATFORMS</extracomment>
-        <translation>Не вдалося встановити стабільне з’єднання з вашою ID-карткою.&lt;br&gt;&lt;br&gt;Почніть перевірку ще раз. Спробуйте змінити положення картки та не рухайте її під час тесту.&lt;br&gt;&lt;br&gt;Якщо з’єднання з ID-карткою не вдається встановити навіть у різних положеннях, це означає, що інтерфейс NFC вашого мобільного пристрою не може забезпечити ID-картку достатньою потужністю.&lt;br&gt;&lt;br&gt;Ви можете знайти смартфони, сумісні з %1, на нашому &lt;a href=&quot;%2&quot;&gt;сайті&lt;/a&gt;.</translation>
-    </message>
-    <message>
         <source>ID card PIN suspended</source>
         <extracomment>ALL_PLATFORMS</extracomment>
         <translation>PIN-код ID-картки призупинено</translation>
@@ -973,6 +987,16 @@ MOBILE</extracomment>
         <source>The ID card PIN has been entered incorrectly 2 times in a row. This is why you must first enter the 6-digit Card Access Number (CAN) for the next identification process. You can find it at the bottom right of the front of your ID card.</source>
         <extracomment>ALL_PLATFORMS Sentence 1 of 3 of CAN explanation</extracomment>
         <translation>PIN-код ID-картки було введено неправильно 2 рази поспіль. Тому для наступного процесу ідентифікації вам потрібно спочатку ввести 6-значний номер доступу до картки (CAN). Ви можете знайти його в нижньому правому куті на лицьовому боці своєї ID-картки.</translation>
+    </message>
+    <message>
+        <source>Smartphones compatible with %1 can be found on our website.</source>
+        <extracomment>ALL_PLATFORMS</extracomment>
+        <translation>Ви можете знайти смартфони, сумісні з %1, на нашому сайті.</translation>
+    </message>
+    <message>
+        <source>It was not possible to establish a stable connection with your ID card.&lt;br&gt;&lt;br&gt;Please start the check again. Try a different card position and make sure not to move the card during the test.&lt;br&gt;&lt;br&gt;If a connection to the ID card cannot be established even with different card positions, this indicates that the NFC interface of your mobile device cannot supply the ID card with sufficient power.</source>
+        <extracomment>ALL_PLATFORMS</extracomment>
+        <translation>Не вдалося встановити стабільне з’єднання з вашою ID-карткою.&lt;br&gt;&lt;br&gt;Почніть перевірку ще раз. Спробуйте змінити положення картки та не рухайте її під час тесту.&lt;br&gt;&lt;br&gt;Якщо з’єднання з ID-карткою не вдається встановити навіть у різних положеннях, це означає, що інтерфейс NFC вашого мобільного пристрою не може забезпечити ID-картку достатньою потужністю.</translation>
     </message>
     <message>
         <source>You may now try the function: &quot;See my personal data&quot;.</source>
@@ -1407,10 +1431,16 @@ MOBILE</extracomment>
     </message>
 </context>
 <context>
-    <name>DevicesListDelegate</name>
+    <name>DeviceNameView</name>
     <message>
-        <source>Device %1. %2.</source>
-        <translation>Пристрій %1. %2.</translation>
+        <source>Device name</source>
+        <extracomment>MOBILE</extracomment>
+        <translation>Назва пристрою</translation>
+    </message>
+    <message>
+        <source>Change device name</source>
+        <extracomment>MOBILE</extracomment>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1634,14 +1664,6 @@ MOBILE</extracomment>
     </message>
 </context>
 <context>
-    <name>GCollapsible</name>
-    <message>
-        <source>Currently selected is %1</source>
-        <extracomment>ALL_PLATFORMS</extracomment>
-        <translation>Наразі обрано %1</translation>
-    </message>
-</context>
-<context>
     <name>GContinueButton</name>
     <message>
         <source>Continue</source>
@@ -1666,6 +1688,14 @@ MOBILE</extracomment>
     </message>
 </context>
 <context>
+    <name>GRadioGroup</name>
+    <message>
+        <source>Currently selected is %1</source>
+        <extracomment>MOBILE</extracomment>
+        <translation>Наразі обрано %1</translation>
+    </message>
+</context>
+<context>
     <name>GStagedProgressBar</name>
     <message>
         <source>Step %1 of %2. This step is %3 percent complete.</source>
@@ -1676,8 +1706,9 @@ MOBILE</extracomment>
 <context>
     <name>GTextField</name>
     <message>
-        <source>Maximum allowed length reached.</source>
-        <translation>Досягнуто максимально дозволеної довжини.</translation>
+        <source>A maximum of %1 characters is allowed.</source>
+        <extracomment>ALL_PLATFORMS</extracomment>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2027,6 +2058,24 @@ MOBILE The paired smartphone was removed since it did not respond to connection 
     </message>
 </context>
 <context>
+    <name>LogFilterView</name>
+    <message>
+        <source>Filter</source>
+        <extracomment>MOBILE</extracomment>
+        <translation>Фільтр</translation>
+    </message>
+    <message>
+        <source>Level</source>
+        <extracomment>MOBILE</extracomment>
+        <translation>Рівень</translation>
+    </message>
+    <message>
+        <source>Category</source>
+        <extracomment>MOBILE</extracomment>
+        <translation>Категорія</translation>
+    </message>
+</context>
+<context>
     <name>LogTitleBarControls</name>
     <message>
         <source>Share log</source>
@@ -2083,21 +2132,6 @@ MOBILE The paired smartphone was removed since it did not respond to connection 
         <source>Delete</source>
         <extracomment>DESKTOP</extracomment>
         <translation>Видалити</translation>
-    </message>
-    <message>
-        <source>Filter</source>
-        <extracomment>MOBILE</extracomment>
-        <translation>Фільтр</translation>
-    </message>
-    <message>
-        <source>Level</source>
-        <extracomment>MOBILE</extracomment>
-        <translation>Рівень</translation>
-    </message>
-    <message>
-        <source>Category</source>
-        <extracomment>MOBILE</extracomment>
-        <translation>Категорія</translation>
     </message>
     <message>
         <source>Currently there are no log entries matching your filter.</source>
@@ -3121,19 +3155,14 @@ MOBILE</extracomment>
 <context>
     <name>OnboardingCompletionView</name>
     <message>
-        <source>provider list</source>
-        <extracomment>ALL_PLATFORMS</extracomment>
-        <translation>список постачальників</translation>
-    </message>
-    <message>
         <source>Complete setup</source>
         <extracomment>ALL_PLATFORMS</extracomment>
         <translation>Завершити налаштування</translation>
     </message>
     <message>
-        <source>If you are asked to authenticate yourself online on a provider&apos;s website, the provider will automatically redirect you to %1. The app guides you through the authentication process and then takes you back to the provider&apos;s website. You can find many examples of use in the %2.</source>
-        <extracomment>ALL_PLATFORMS %1 will be replaced with the application name, %2 will be replaced with &quot;provider list&quot; as hyperlink.</extracomment>
-        <translation>Якщо вас попросять пройти автентифікацію в Інтернеті на вебсайті постачальника, він автоматично перенаправить вас на %1. Програма скерує вас через процес автентифікації, а потім поверне на вебсайт постачальника. Ви можете знайти багато прикладів використання в %2.</translation>
+        <source>If you are asked to authenticate yourself online on a provider&apos;s website, the provider will automatically redirect you to %1. The app guides you through the authentication process and then takes you back to the provider&apos;s website.</source>
+        <extracomment>ALL_PLATFORMS %1 will be replaced with the application name</extracomment>
+        <translation>Якщо вас попросять пройти автентифікацію в Інтернеті на вебсайті постачальника, він автоматично перенаправить вас на %1. Програма скерує вас через процес автентифікації, а потім поверне на вебсайт постачальника.</translation>
     </message>
     <message>
         <source>Use the eID function</source>
@@ -3144,6 +3173,16 @@ MOBILE</extracomment>
         <source>You can use %1 to authenticate yourself to providers online</source>
         <extracomment>ALL_PLATFORMS %1 will be replaced with the application name</extracomment>
         <translation>Ви можете використовувати %1 для автентифікації в Інтернеті для постачальників</translation>
+    </message>
+    <message>
+        <source>Open website</source>
+        <extracomment>ALL_PLATFORMS</extracomment>
+        <translation>Відкрити сайт</translation>
+    </message>
+    <message>
+        <source>You can find many examples of use in the provider list.</source>
+        <extracomment>ALL_PLATFORMS</extracomment>
+        <translation>Ви можете знайти багато прикладів використання в список постачальників.</translation>
     </message>
 </context>
 <context>
@@ -3552,32 +3591,32 @@ MOBILE</extracomment>
     <name>PairingProcessInfo</name>
     <message>
         <source>Connect both devices to the %1same network%2, e.g. via WLAN.</source>
-        <extracomment>ALL_PLATFORM Assistance text for pairing new devices. Step 2 of 5. %1 and %2 are for bold formatting.</extracomment>
+        <extracomment>ALL_PLATFORMS Assistance text for pairing new devices. Step 2 of 5. %1 and %2 are for bold formatting.</extracomment>
         <translation>Підключіть обидва пристрої до %1тієї самої мережі%2, наприклад, за допомогою WLAN.</translation>
     </message>
     <message>
         <source>Then select %1Pair (new) device%2. You may need to activate NFC first.</source>
-        <extracomment>ALL_PLATFORM Assistance text for pairing new devices. Step 4 of 5. %1 and %2 are for bold formatting.</extracomment>
+        <extracomment>ALL_PLATFORMS Assistance text for pairing new devices. Step 4 of 5. %1 and %2 are for bold formatting.</extracomment>
         <translation>Потім виберіть %1Створити пару з (новим) пристроєм%2. Можливо, спочатку потрібно буде активувати NFC.</translation>
     </message>
     <message>
         <source>As soon as a pairing code is displayed on the smartphone, you can use it for pairing here.</source>
-        <extracomment>ALL_PLATFORM Assistance text for pairing new devices. Step 5 of 5</extracomment>
+        <extracomment>ALL_PLATFORMS Assistance text for pairing new devices. Step 5 of 5</extracomment>
         <translation>Як тільки на смартфоні відобразиться код створення пари, тут ви зможете використовувати його для створення пари.</translation>
     </message>
     <message>
         <source>My smartphone does not show up</source>
-        <extracomment>ALL_PLATFORM</extracomment>
+        <extracomment>ALL_PLATFORMS</extracomment>
         <translation>Мій смартфон не відображається</translation>
     </message>
     <message>
         <source>%3Install and open%4 the %3%1%4 (at least version %2) on your NFC-enabled smartphone that you want to use as a card reader.</source>
-        <extracomment>ALL_PLATFORM Assistance text for pairing new devices. Step 1 of 5. %1 is a placeholder for the app name. %2 is a version placeholder. %3 and %4 are for bold formatting.</extracomment>
+        <extracomment>ALL_PLATFORMS Assistance text for pairing new devices. Step 1 of 5. %1 is a placeholder for the app name. %2 is a version placeholder. %3 and %4 are for bold formatting.</extracomment>
         <translation>%3Встановіть і відкрийте %4 %3%1%4 (версія не менше %2) на вашому смартфоні з функцією NFC, який ви хочете використовувати як пристрій читання карток.</translation>
     </message>
     <message>
         <source>On the NFC-enabled smartphone, select the %1Card reader%2 menu item in the lower menu bar. You may need to skip the initial setup first.</source>
-        <extracomment>ALL_PLATFORM Assistance text for pairing new devices. Step 3 of 5. %1 and %2 are for bold formatting.</extracomment>
+        <extracomment>ALL_PLATFORMS Assistance text for pairing new devices. Step 3 of 5. %1 and %2 are for bold formatting.</extracomment>
         <translation>На смартфоні з функцією NFC виберіть пункт меню %1Пристрій читання карток%2 у нижньому рядку меню. Можливо, вам доведеться пропустити початкове налаштування.</translation>
     </message>
 </context>
@@ -3671,6 +3710,14 @@ MOBILE</extracomment>
         <source>Testmode for the integrated functions deactivated.</source>
         <extracomment>ALL_PLATFORMS Used in notifications when the user taps the icon</extracomment>
         <translation>Тестовий режим для інтегрованих функцій вимкнено.</translation>
+    </message>
+</context>
+<context>
+    <name>PlatformTextField</name>
+    <message>
+        <source>Maximum allowed length reached.</source>
+        <extracomment>ALL_PLATFORMS</extracomment>
+        <translation>Досягнуто максимально дозволеної довжини.</translation>
     </message>
 </context>
 <context>
@@ -3787,19 +3834,6 @@ MOBILE</extracomment>
         <source>Yes, I also want to use a PC/Mac</source>
         <extracomment>MOBILE</extracomment>
         <translation>Так, я також хочу використовувати ПК/Mac</translation>
-    </message>
-</context>
-<context>
-    <name>PrivacyStatement</name>
-    <message>
-        <source>Your personal data is neither saved nor processed in any way. Please see our %1 for details on how your personal data is processed.</source>
-        <extracomment>ALL_PLATFORMS</extracomment>
-        <translation>Ваші особисті дані жодним чином не зберігаються та не обробляються. Див. %1 для отримання відомостей про те, як обробляються ваші особисті дані.</translation>
-    </message>
-    <message>
-        <source>data privacy statement</source>
-        <extracomment>ALL_PLATFORMS Text of the self authentication html link inside of a sentence</extracomment>
-        <translation>заяву про конфіденційність даних</translation>
     </message>
 </context>
 <context>
@@ -3944,6 +3978,11 @@ DESKTOP Title of the proxy credentials popup.</extracomment>
         <source>Tap the button to complete the authentication and return to the provider.</source>
         <extracomment>MOBILE Redirect information when automatic redirect is disabled</extracomment>
         <translation>Торкніться кнопки, щоб завершити автентифікацію і повернутися до постачальника.</translation>
+    </message>
+    <message>
+        <source>Back to provider</source>
+        <extracomment>ALL_PLATFORMS</extracomment>
+        <translation>Повернутися до постачальника</translation>
     </message>
     <message>
         <source>Authentication successful</source>
@@ -4165,11 +4204,6 @@ DESKTOP Title of the proxy credentials popup.</extracomment>
         <source>Waiting for pairing</source>
         <extracomment>MOBILE</extracomment>
         <translation>Очікування на створення пари</translation>
-    </message>
-    <message>
-        <source>Start pairing of a new device</source>
-        <extracomment>MOBILE</extracomment>
-        <translation>Почати створення пари з новим пристроєм</translation>
     </message>
     <message>
         <source>Where do I enter the pairing code?</source>
@@ -4433,6 +4467,16 @@ MOBILE</extracomment>
         <extracomment>ALL_PLATFORMS</extracomment>
         <translation>Ідентифікувати</translation>
     </message>
+    <message>
+        <source>Data privacy statement</source>
+        <extracomment>ALL_PLATFORMS Buttontext for the link to the data privacy statement</extracomment>
+        <translation>Заяву про конфіденційність даних</translation>
+    </message>
+    <message>
+        <source>Your personal data is neither saved nor processed in any way. Please see our data privacy statement for details on how your personal data is processed.</source>
+        <extracomment>ALL_PLATFORMS</extracomment>
+        <translation>Ваші особисті дані жодним чином не зберігаються та не обробляються. Див. Заяву про конфіденційність даних для отримання відомостей про те, як обробляються ваші особисті дані.</translation>
+    </message>
 </context>
 <context>
     <name>SelfAuthenticationData</name>
@@ -4571,12 +4615,12 @@ MOBILE</extracomment>
     </message>
     <message>
         <source>New Logfile</source>
-        <extracomment>ALL_PLATFORMS</extracomment>
+        <extracomment>MOBILE</extracomment>
         <translation>Новий файл журналу</translation>
     </message>
     <message>
         <source>15 days old Logfile</source>
-        <extracomment>ALL_PLATFORMS</extracomment>
+        <extracomment>MOBILE</extracomment>
         <translation>Файл журналу строком 15 днів</translation>
     </message>
     <message>
@@ -5147,6 +5191,16 @@ MOBILE</extracomment>
         <translation>Попередження. Ваша операційна система більше не підтримується</translation>
     </message>
     <message>
+        <source>Open website</source>
+        <extracomment>DESKTOP</extracomment>
+        <translation>Відкрити сайт</translation>
+    </message>
+    <message>
+        <source>If this does not help, contact our support.</source>
+        <extracomment>DESKTOP</extracomment>
+        <translation>Якщо це не допомагає, зверніться до служби підтримки.</translation>
+    </message>
+    <message>
         <source>Troubleshooting and user support for the %1 is no longer available for your current operating system. Version %2 has not been tested with your current operating system, use is at your own risk.</source>
         <extracomment>DESKTOP Text of the popup that is shown when the requested update is not compatible with the OS.</extracomment>
         <translation>Усунення несправностей та підтримка користувачів для %1 більше не доступні для вашої поточної операційної системи. Версію %2 не було протестовано з вашою поточною операційною системою, тому ви використовуєте її на власний ризик.</translation>
@@ -5206,16 +5260,6 @@ MOBILE</extracomment>
         <source>Download size</source>
         <extracomment>DESKTOP Download size of the available update in megabyte.</extracomment>
         <translation>Розмір завантаження</translation>
-    </message>
-    <message>
-        <source>Download link</source>
-        <extracomment>DESKTOP Plaintext link to the update download.</extracomment>
-        <translation>Посилання для завантаження</translation>
-    </message>
-    <message>
-        <source>Checksum link</source>
-        <extracomment>DESKTOP Link to download checksum to verify the downloaded update file.</extracomment>
-        <translation>Посилання на контрольну суму</translation>
     </message>
 </context>
 <context>
@@ -5477,19 +5521,14 @@ MOBILE</extracomment>
         <translation>Отримані дані пошкоджено. Перевірте підключення до мережі та спробуйте перезапустити оновлення.</translation>
     </message>
     <message>
-        <source>The update could not be started automatically after a successful download. Please try to do a manual update. You can find the downloaded file %1here%2.</source>
+        <source>The update could not be started automatically after a successful download. Please try again.</source>
         <extracomment>DESKTOP Text of the popup that is shown when the execution of the update failed (1/2).</extracomment>
-        <translation>Не вдалося запустити оновлення автоматично після успішного завантаження. Спробуйте виконати оновлення вручну. Завантажений файл можна знайти %1тут%2.</translation>
+        <translation type="unfinished">Не вдалося запустити оновлення автоматично після успішного завантаження. Спробуйте виконати оновлення вручну.</translation>
     </message>
     <message>
         <source>An unknown network error occurred. Check your network connection and try to restart the update.</source>
         <extracomment>DESKTOP Generic text of the popup that is shown when the app download failed.</extracomment>
         <translation>Невідома помилка мережі. Перевірте підключення до мережі та спробуйте перезапустити оновлення.</translation>
-    </message>
-    <message>
-        <source>If this does not help, contact our %1support%2.</source>
-        <extracomment>DESKTOP Text of the popup that is shown when the execution of the update failed (2/2).</extracomment>
-        <translation>Якщо це не допомагає, зверніться до %1служби підтримки%2.</translation>
     </message>
     <message>
         <source>An update is available (version %1).</source>
@@ -6139,11 +6178,6 @@ MOBILE</extracomment>
 <context>
     <name>governikus::GlobalStatus</name>
     <message>
-        <source>A secure connection to the provider could not be established. Check the network connection and try again later. If this doesn&apos;t help, contact our %1support%2.</source>
-        <extracomment>ALL_PLATFORMS Technical error description. Generic message with link to support section of the homepage. %1: HTML hyperlink start tag %2: HTML hyperlink end tag</extracomment>
-        <translation>Не вдалося встановити безпечне підключення до постачальника. Перевірте підключення до мережі і спробуйте пізніше. Якщо це не допомагає, зверніться до %1служби підтримки%2.</translation>
-    </message>
-    <message>
         <source>No error occurred.</source>
         <extracomment>ALL_PLATFORMS No actual error occurred, required to provide a message for status code No_Error.</extracomment>
         <translation>Без помилок.</translation>
@@ -6459,6 +6493,11 @@ MOBILE</extracomment>
         <translation>Програма не отримала повідомлення StartPaosResponse від сервера.</translation>
     </message>
     <message>
+        <source>A secure connection to the provider could not be established. Check the network connection and try again later.</source>
+        <extracomment>ALL_PLATFORMS</extracomment>
+        <translation>Не вдалося встановити безпечне підключення до постачальника. Перевірте підключення до мережі і спробуйте пізніше.</translation>
+    </message>
+    <message>
         <source>The server could not process the client request.</source>
         <extracomment>ALL_PLATFORMS Technical error description.</extracomment>
         <translation>Сервер не зміг обробити запит клієнта.</translation>
@@ -6743,14 +6782,19 @@ ALL_PLATFORMS The wrong ID card PIN was entered twice, the next attempt requires
         <translation>Драйвер не встановлено</translation>
     </message>
     <message>
-        <source>Please download and install the driver you can find at: %1</source>
-        <extracomment>ALL_PLATFORMS The driver for card reader needs to be installed, the download link is provided in the message.</extracomment>
-        <translation>Завантажте й установіть драйвер, який можна знайти за посиланням: %1</translation>
+        <source>Please download and install the driver you can find at:</source>
+        <extracomment>ALL_PLATFORMS</extracomment>
+        <translation>Завантажте й установіть драйвер, який можна знайти за посиланням:</translation>
     </message>
     <message>
         <source>This card reader is not officially supported and may not work as expected.</source>
         <extracomment>ALL_PLATFORMS</extracomment>
         <translation>Цей пристрій читання карток офіційно не підтримується і може не працювати належним чином.</translation>
+    </message>
+    <message>
+        <source>No card reader connected</source>
+        <extracomment>DESKTOP</extracomment>
+        <translation>Підключеного пристрою читання карток не виявлено</translation>
     </message>
     <message>
         <source>hh:mm:ss AP</source>
@@ -7113,6 +7157,7 @@ ALL_PLATFORMS Additional date format with unknown day</extracomment>
     <name>governikus::UiPluginProxy</name>
     <message>
         <source>Reverse proxy plugin is enabled</source>
+        <extracomment>DESKTOP</extracomment>
         <translation>Плагін зворотного проксі ввімкнено</translation>
     </message>
 </context>
@@ -7214,6 +7259,11 @@ ALL_PLATFORMS Additional date format with unknown day</extracomment>
     <message>
         <source>Contact your local citizens&apos; office (Bürgeramt) to apply for a new ID card or to unblock the ID card.</source>
         <translation>Зверніться до місцевого відділу обслуговування громадян (Bürgeramt), щоб подати заяву на отримання нової ID-картки або розблокувати ID-картку.</translation>
+    </message>
+    <message>
+        <source>If this doesn&apos;t help, contact our support.</source>
+        <extracomment>ALL_PLATFORMS</extracomment>
+        <translation>Якщо це не допомагає, зверніться до служби підтримки.</translation>
     </message>
     <message>
         <source>The used ID card is not accepted by the server. Please remove the ID card from your device or card reader and use a suitable ID card or contact the service provider.</source>

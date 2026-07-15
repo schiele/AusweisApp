@@ -16,9 +16,9 @@ Rectangle {
 	id: root
 
 	required property SectionPage contentItem
-	readonly property TitleBarSettings currentSettings: contentItem.titleBarSettings
+	readonly property TitleBarSettings currentSettings: contentItem?.titleBarSettings ?? defaultSettings
 	property alias showPane: titlePane.visible
-	readonly property string title: contentItem.title
+	readonly property string title: contentItem?.title ?? ""
 
 	signal showUpdate
 	signal startClicked
@@ -177,5 +177,9 @@ Rectangle {
 			left: parent.left
 			right: parent.right
 		}
+	}
+	TitleBarSettings {
+		id: defaultSettings
+
 	}
 }

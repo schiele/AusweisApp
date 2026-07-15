@@ -31,7 +31,7 @@ class test_StateCertificateDescriptionCheck
 		void init()
 		{
 			mAuthContext.reset(new TestAuthContext(":/paos/DIDAuthenticateEAC1.xml"_L1));
-			mAuthContext->setTcTokenUrl(QUrl("https://test.governikus-eid.de:443/Autent-DemoApplication/RequestServlet?provider=demo_epa_can&redirect=true"_L1));
+			mAuthContext->setTcTokenUrl(QUrl("https://test.governikus-eid.de/Autent-DemoApplication/api/eid/request"_L1));
 
 			mState.reset(StateBuilder::createState<StateCertificateDescriptionCheck>(mAuthContext));
 
@@ -105,7 +105,7 @@ class test_StateCertificateDescriptionCheck
 
 		void subjectUrlNoSameOrigin()
 		{
-			mAuthContext->setTcTokenUrl(QUrl("https://dev-demo.governikus-eid.de:8442/Autent-DemoApplication/RequestServlet;jsessionid=14w5aKuENyd2D4ZsMmuaeX2g"_L1));
+			mAuthContext->setTcTokenUrl(QUrl("https://other.governikus-eid.de/Autent-DemoApplication/api/eid/request"_L1));
 
 			QSignalSpy spy(mState.data(), &StateCertificateDescriptionCheck::fireAbort);
 

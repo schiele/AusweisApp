@@ -14,8 +14,8 @@ SectionPage {
 	default property alias pageData: flickable.layoutData
 	property alias spacing: flickable.spacing
 
-	function positionViewAtItem(pItem, pPositionItemAtMiddle = false) {
-		Utils.positionFlickableAtItem(flickable, pItem, pPositionItemAtMiddle);
+	function positionViewAtItem(pItem) {
+		Utils.positionFlickableAtItem(flickable, pItem);
 	}
 	function scrollPageDown() {
 		flickable.scrollPageDown();

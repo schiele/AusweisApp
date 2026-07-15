@@ -14,23 +14,17 @@ import Governikus.Type
 GListView {
 	id: root
 
-	function isListElementEmptyFunc(pItem) {
-		let delegate = pItem as ListEntryDelegate;
-		if (delegate)
-			return delegate.text === "";
-		return true;
-	}
-
 	anchors.fill: parent
 	displayMarginBeginning: Style.dimens.pane_padding
 	displayMarginEnd: Style.dimens.pane_padding
 	model: ApplicationModel.getLicenseText()
 
 	delegate: ListEntryDelegate {
+		enabled: text !== ''
 		z: 0
 
 		onActiveFocusChanged: if (activeFocus) {
-			root.handleItemFocused(index);
+			root.centerViewAtIndex(index);
 		}
 	}
 	highlight: Item {

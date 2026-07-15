@@ -13,6 +13,8 @@ ResultView {
 	buttonText: suggestionData.continueButtonText
 	header: suggestionData.header
 	hintBoxesTitle: suggestionData.hintBoxesTitle
+	hintButtonLink: suggestionData.hintButtonLink
+	hintButtonText: suggestionData.hintButtonText
 	hintText: suggestionData.hintText
 	linkToOpen: suggestionData.linkToOpen
 	text: suggestionData.text

@@ -58,6 +58,10 @@ Q_IMPORT_PLUGIN(UiPluginAidl)
 
 #ifndef INTEGRATED_SDK
 Q_IMPORT_PLUGIN(UiPluginQml)
+
+	#if !defined(QT_NO_DEBUG) && !defined(Q_OS_IOS) && !defined(Q_OS_ANDROID)
+Q_IMPORT_PLUGIN(UiPluginDev)
+	#endif
 #endif
 
 #if defined(INTEGRATED_SDK) && !defined(Q_OS_ANDROID) && !defined(CONTAINER_SDK)

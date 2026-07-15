@@ -16,7 +16,8 @@ class MsgHandlerAuth
 {
 	private:
 		QUrl createUrl(const QString& pUrl);
-		void initAuth(const QUrl& pTcTokenUrl) const;
+		AuthContext::HeaderMap createMap(const QJsonValue& pCustomHeader);
+		void initAuth(const QUrl& pTcTokenUrl, const AuthContext::HeaderMap& pCustomHeader) const;
 
 	public:
 		MsgHandlerAuth();

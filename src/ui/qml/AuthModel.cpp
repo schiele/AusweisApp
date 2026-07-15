@@ -3,9 +3,13 @@
  */
 
 #include "AuthModel.h"
+
+#include "AppSettings.h"
 #include "context/SelfAuthContext.h"
 
+
 using namespace governikus;
+
 
 AuthModel::AuthModel()
 	: WorkflowModel()
@@ -181,7 +185,10 @@ QString AuthModel::getResultViewButtonText() const
 	{
 		return QString();
 	}
-	if (mContext.objectCast<SelfAuthContext>() || getRefreshUrl().isEmpty())
+	if (mContext.objectCast<SelfAuthContext>()
+			|| getRefreshUrl().isEmpty()
+			|| mContext->autoFinishBeforeQuit()
+			|| Env::getSingleton<AppSettings>()->getGeneralSettings().isAutoRedirectAfterAuthentication())
 	{
 		//: ALL_PLATFORMS
 		return tr("Back to start page");
@@ -198,6 +205,30 @@ QUrl AuthModel::getResultViewButtonLink() const
 		return mContext->getRefreshUrl();
 	}
 	return QUrl();
+}
+
+
+bool AuthModel::getAutoFinishBeforeQuit() const
+{
+	if (mContext)
+	{
+		return mContext->autoFinishBeforeQuit();
+	}
+
+	return false;
+}
+
+
+void AuthModel::cancelWorkflowToQuit()
+{
+	if (mContext)
+	{
+		mContext->requestAutoFinishBeforeQuit();
+		Q_EMIT fireAutoFinishBeforeQuitChanged();
+
+		cancelWorkflow();
+	}
+
 }
 
 

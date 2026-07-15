@@ -17,9 +17,9 @@ import Governikus.Type
 Controller {
 	id: root
 
-	readonly property bool editRightsShown: root.stackView.currentItem instanceof EditRights
-	readonly property bool enterPasswordShown: root.stackView.currentItem instanceof EnterPasswordView
-	readonly property bool workflowShown: root.stackView.currentItem instanceof GeneralWorkflow
+	readonly property bool editRightsShown: stackView?.currentItem instanceof EditRights
+	readonly property bool enterPasswordShown: stackView?.currentItem instanceof EnterPasswordView
+	readonly property bool workflowShown: stackView?.currentItem instanceof GeneralWorkflow
 
 	function processStateChange(pState) {
 		switch (pState) {

@@ -296,8 +296,8 @@ def pipeline(variables, inputs):
         log.info(f'Pipeline started: {pipeline.web_url}')
     except Exception as e:
         log.error(f'Cannot start pipeline: {e}')
-        return False
-    return True
+        return 1
+    return 0
 
 
 def api(url, stdout=True):
@@ -343,6 +343,7 @@ def show():
 def packages():
     from datetime import datetime, timedelta, timezone
 
+    to_delete = []
     now = datetime.now(timezone.utc)
     page = '1'
     while page:
@@ -364,25 +365,30 @@ def packages():
                         f'| {entry["version"]} '
                         f'| {entry["name"]}'
                     )
-                    if parser.packages == 'delete':
-                        log.info('Delete outdated package')
-                        response = requests.delete(
-                            entry['_links']['delete_api_path'],
-                            headers=parser.headers(),
-                        )
-                        if response.status_code != 204:
-                            log.error(
-                                'Deletion of package failed: '
-                                f'{response.status_code} {response.text}'
-                            )
-                            return False
+                    to_delete.append(entry)
                 else:
                     log.info(
                         f'Package relevant: {entry["id"]} '
                         f'| {entry["version"]} '
                         f'| {entry["name"]}'
                     )
-    return True
+
+    if parser.packages == 'delete':
+        for entry in to_delete:
+            log.info(f'Delete outdated package: {entry["id"]}')
+            response = requests.delete(
+                entry['_links']['delete_api_path'],
+                headers=parser.headers(),
+            )
+
+            if response.status_code != 204:
+                log.error(
+                    'Deletion of package failed: '
+                    f'{response.status_code} {response.text}'
+                )
+                return 1
+
+        return 0
 
 
 def download_logs():
@@ -521,6 +527,7 @@ def main():
     if parser.dry_run:
         log.info(variables)
         log.info(inputs)
+        return 0
     else:
         return pipeline(variables, inputs)
 
